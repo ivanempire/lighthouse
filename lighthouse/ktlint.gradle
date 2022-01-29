@@ -1,0 +1,17 @@
+ktlint {
+    version = "0.43.2"
+    debug = false
+    verbose = true
+    android = true
+    outputToConsole = true
+    outputColorName = "GREEN"
+    ignoreFailures = false
+    enableExperimentalRules = true
+    kotlinScriptAdditionalPaths {
+        include fileTree("scripts/")
+    }
+    filter {
+        exclude("**/generated/**")
+        include("**/kotlin/**")
+    }
+}

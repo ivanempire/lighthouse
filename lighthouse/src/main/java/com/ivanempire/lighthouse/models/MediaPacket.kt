@@ -1,15 +1,16 @@
 package com.ivanempire.lighthouse.models
 
-import com.ivanempire.lighthouse.models.NotificationSubtype.*
 import java.net.URL
+import java.util.UUID
 
 open class MediaPacket(
     open val host: MediaHost,
-    open val notificationType: String,
+    open val notificationType: NotificationType,
     open val notificationSubtype: NotificationSubtype,
-    open val usn: String,
+    open val usn: UniqueServiceName,
     open val configId: Int,
-    open val bootId: Int
+    open val bootId: Int,
+    open val uuid: UUID
 )
 
 /**
@@ -29,14 +30,15 @@ data class AliveMediaPacket(
     override val host: MediaHost,
     val cache: Int,
     val location: URL,
-    override val notificationType: String,
-    override val notificationSubtype: NotificationSubtype = ALIVE,
+    override val notificationType: NotificationType,
+    override val notificationSubtype: NotificationSubtype = NotificationSubtype.ALIVE,
     val server: String,
-    override val usn: String,
+    override val usn: UniqueServiceName,
     override val bootId: Int,
     override val configId: Int,
-    val searchPort: Int
-) : MediaPacket(host, notificationType, notificationSubtype, usn, bootId, configId)
+    val searchPort: Int,
+    override val uuid: UUID
+) : MediaPacket(host, notificationType, notificationSubtype, usn, bootId, configId, uuid)
 
 /**
  * NOTIFY * HTTP/1.1
@@ -53,14 +55,15 @@ data class AliveMediaPacket(
 data class UpdateMediaPacket(
     override val host: MediaHost,
     val location: URL,
-    override val notificationType: String,
-    override val notificationSubtype: NotificationSubtype = UPDATE,
-    override val usn: String,
+    override val notificationType: NotificationType,
+    override val notificationSubtype: NotificationSubtype = NotificationSubtype.UPDATE,
+    override val usn: UniqueServiceName,
     override val bootId: Int,
     override val configId: Int,
     val nextBootId: Int,
-    val searchPort: Int
-) : MediaPacket(host, notificationType, notificationSubtype, usn, bootId, configId)
+    val searchPort: Int,
+    override val uuid: UUID
+) : MediaPacket(host, notificationType, notificationSubtype, usn, bootId, configId, uuid)
 
 /**
  * NOTIFY * HTTP/1.1
@@ -73,9 +76,10 @@ data class UpdateMediaPacket(
  */
 data class ByeByeMediaPacket(
     override val host: MediaHost,
-    override val notificationType: String,
-    override val notificationSubtype: NotificationSubtype = BYEBYE,
-    override val usn: String,
+    override val notificationType: NotificationType,
+    override val notificationSubtype: NotificationSubtype = NotificationSubtype.BYEBYE,
+    override val usn: UniqueServiceName,
     override val bootId: Int,
-    override val configId: Int
-) : MediaPacket(host, notificationType, notificationSubtype, usn, bootId, configId)
+    override val configId: Int,
+    override val uuid: UUID
+) : MediaPacket(host, notificationType, notificationSubtype, usn, bootId, configId, uuid)

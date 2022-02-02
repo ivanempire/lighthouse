@@ -2,13 +2,13 @@ package com.ivanempire.lighthouse.socket
 
 import android.net.wifi.WifiManager
 import android.util.Log
+import java.net.DatagramPacket
+import java.net.InetAddress
+import java.net.MulticastSocket
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.isActive
-import java.net.DatagramPacket
-import java.net.InetAddress
-import java.net.MulticastSocket
 
 class MulticastSocketListener(
     private val wifiManager: WifiManager
@@ -60,6 +60,7 @@ class MulticastSocketListener(
     private companion object {
         const val MULTICAST_LOCK_TAG = "LighthouseLock"
         const val MULTICAST_ADDRESS = "239.255.255.250"
+
         // Try 1028 too, 512
         const val MULTICAST_DATAGRAM_SIZE = 512
         const val MULTICAST_PORT = 1900

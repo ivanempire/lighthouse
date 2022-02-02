@@ -1,16 +1,25 @@
 package com.ivanempire.lighthouse.models
 
+import java.net.InetAddress
+
 data class MediaHost(
-    val address: String,
+    val address: InetAddress,
     val port: Int
 ) {
     companion object {
         fun parseFromString(sourceString: String): MediaHost {
-            val splitData = sourceString.split(":")
-            return MediaHost(
-                address = splitData[1],
-                port = splitData[2].toInt()
-            )
+            return if (sourceString == "N/A") {
+                MediaHost(
+                    InetAddress.getByName("127.0.0.1"),
+                    port = -1
+                )
+            } else {
+                val splitData = sourceString.split(":")
+                MediaHost(
+                    address = InetAddress.getByName(splitData[0]),
+                    port = splitData[1].toInt()
+                )
+            }
         }
     }
 }

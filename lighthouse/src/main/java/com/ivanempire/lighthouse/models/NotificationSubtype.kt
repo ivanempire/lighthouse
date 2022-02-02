@@ -1,6 +1,6 @@
 package com.ivanempire.lighthouse.models
 
-import java.util.*
+import java.util.Locale
 
 enum class NotificationSubtype(val rawString: String) {
 
@@ -10,7 +10,11 @@ enum class NotificationSubtype(val rawString: String) {
 
     companion object {
         fun getByRawValue(rawValue: String): StartLine? {
-            return StartLine.values().firstOrNull { it.rawString == rawValue.uppercase(Locale.getDefault()) }
+            return StartLine.values().firstOrNull {
+                it.rawString == rawValue.uppercase(
+                    Locale.getDefault()
+                )
+            }
         }
     }
 }

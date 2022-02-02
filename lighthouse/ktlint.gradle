@@ -7,6 +7,7 @@ ktlint {
     outputColorName = "GREEN"
     ignoreFailures = false
     enableExperimentalRules = true
+    disabledRules = ["max-line-length"]
     kotlinScriptAdditionalPaths {
         include fileTree("scripts/")
     }

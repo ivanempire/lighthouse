@@ -1,0 +1,19 @@
+name: Build
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v2
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./gradlew
+      - name: Run lint checks on library module
+        run: ./gradlew :lighthouse:ktlintCheck
+      - name: Unit test the library module
+        run: ./gradlew :lighthouse:test
+      - name: Build release version of library
+        run: ./gradlew :lighthouse:assembleRelease

@@ -57,14 +57,14 @@ class AliveMediaPacketParserTest {
         )
         assertEquals("N/A", parsedPacket.server)
         assertEquals(
-            NotificationType("urn:schemas-upnp-org:service:ConnectionManager:1"),
+            NotificationType("uuid:b9783ad2-d548-9793-0eb9-42db373ade07"),
             parsedPacket.notificationType
         )
         assertEquals(UniqueServiceName("N/A"), parsedPacket.usn)
         assertEquals(-1, parsedPacket.bootId)
         assertEquals(-1, parsedPacket.configId)
         assertEquals(1900, parsedPacket.searchPort)
-        assertEquals(UUID(0, 0), parsedPacket.uuid)
+        assertEquals(UUID.fromString("b9783ad2-d548-9793-0eb9-42db373ade07"), parsedPacket.uuid)
     }
 
     @Test
@@ -101,7 +101,7 @@ class AliveMediaPacketParserTest {
         val INCOMPLETE_PACKET = hashMapOf(
             "CACHE-CONTROL" to "max-age=1800",
             "LOCATION" to "http://192.168.1.190:8091/b9783ad2-d548-9793-0eb9-42db373ade07.xml",
-            "NT" to "urn:schemas-upnp-org:service:ConnectionManager:1",
+            "NT" to "uuid:b9783ad2-d548-9793-0eb9-42db373ade07",
             "SEARCHPORT.UPNP.ORG" to "1900"
         )
     }

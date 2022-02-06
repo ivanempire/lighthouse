@@ -1,10 +1,10 @@
 package com.ivanempire.lighthouse.parsers
 
+import com.ivanempire.lighthouse.models.ByeByeMediaPacket
 import com.ivanempire.lighthouse.models.MediaHost
 import com.ivanempire.lighthouse.models.NotificationType
 import com.ivanempire.lighthouse.models.UniqueServiceName
 import com.ivanempire.lighthouse.parsers.ByeByeMediaPacketParserTest.Fixtures.COMPLETE_PACKET
-import com.ivanempire.lighthouse.parsers.ByeByeMediaPacketParserTest.Fixtures.EMPTY_PACKET
 import com.ivanempire.lighthouse.parsers.ByeByeMediaPacketParserTest.Fixtures.INCOMPLETE_PACKET
 import java.net.InetAddress
 import java.util.UUID
@@ -18,7 +18,7 @@ class ByeByeMediaPacketParserTest {
     @Test
     fun `parses complete packet correctly`() {
         sut = ByeByeMediaPacketParser(COMPLETE_PACKET)
-        val parsedPacket = sut.parseMediaPacket()
+        val parsedPacket = sut.parseMediaPacket() as ByeByeMediaPacket
 
         assertEquals(MediaHost(InetAddress.getByName("239.255.255.250"), 1900), parsedPacket.host)
         assertEquals(
@@ -54,7 +54,7 @@ class ByeByeMediaPacketParserTest {
 
     @Test
     fun `parses empty packet correctly`() {
-        sut = ByeByeMediaPacketParser(EMPTY_PACKET)
+        sut = ByeByeMediaPacketParser(hashMapOf())
         val parsedPacket = sut.parseMediaPacket()
 
         assertEquals(parsedPacket.host, MediaHost(InetAddress.getByName("127.0.0.1"), -1))
@@ -80,7 +80,5 @@ class ByeByeMediaPacketParserTest {
             "NT" to "urn:schemas-upnp-org:service:RenderingControl:1",
             "NTS" to "ssdp:byebye"
         )
-
-        val EMPTY_PACKET = hashMapOf<String, String>()
     }
 }

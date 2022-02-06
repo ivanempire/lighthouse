@@ -1,8 +1,11 @@
 package com.ivanempire.lighthouse.parsers
 
+import com.ivanempire.lighthouse.models.Constants
 import com.ivanempire.lighthouse.models.MediaPacket
 import com.ivanempire.lighthouse.models.NotificationType
 import com.ivanempire.lighthouse.models.UniqueServiceName
+import java.net.MalformedURLException
+import java.net.URL
 import java.util.UUID
 
 abstract class MediaPacketParser {
@@ -33,5 +36,21 @@ abstract class MediaPacketParser {
         }
 
         return emptyUUID
+    }
+
+    internal fun parseCacheControl(rawValue: String): Int {
+        return if (rawValue == Constants.NOT_AVAILABLE) {
+            Constants.NOT_AVAILABLE_NUM
+        } else {
+            rawValue.substringAfter("=", "-1").toInt()
+        }
+    }
+
+    internal fun parseUrl(rawValue: String): URL {
+        return try {
+            URL(rawValue)
+        } catch (ex: MalformedURLException) {
+            URL("http://127.0.0.1/")
+        }
     }
 }

@@ -1,6 +1,5 @@
 package com.ivanempire.lighthouse.parsers
 
-import com.ivanempire.lighthouse.models.Constants
 import com.ivanempire.lighthouse.models.HeaderKeys
 import com.ivanempire.lighthouse.models.MediaHost
 import com.ivanempire.lighthouse.models.MediaPacket
@@ -13,29 +12,29 @@ class UpdateMediaPacketParser(
     private val headerSet: HashMap<String, String>
 ) : MediaPacketParser() {
 
-    private val host: MediaHost by lazy {
-        MediaHost.parseFromString(headerSet[HeaderKeys.HOST] ?: Constants.NOT_AVAILABLE)
+    private val host: MediaHost? by lazy {
+        MediaHost.parseFromString(headerSet[HeaderKeys.HOST])
     }
 
-    private val location: URL by lazy {
-        parseUrl(headerSet[HeaderKeys.LOCATION] ?: Constants.NOT_AVAILABLE)
+    private val location: URL? by lazy {
+        parseUrl(headerSet[HeaderKeys.LOCATION])
     }
 
-    private val notificationType: NotificationType by lazy {
-        NotificationType(headerSet[HeaderKeys.NOTIFICATION_TYPE] ?: Constants.NOT_AVAILABLE)
+    private val notificationType: NotificationType? by lazy {
+        NotificationType.parseFromString(headerSet[HeaderKeys.NOTIFICATION_TYPE])
     }
 
-    private val uniqueServiceName: UniqueServiceName by lazy {
-        UniqueServiceName(headerSet[HeaderKeys.UNIQUE_SERVICE_NAME] ?: Constants.NOT_AVAILABLE)
+    private val uniqueServiceName: UniqueServiceName? by lazy {
+        UniqueServiceName.parseFromString(headerSet[HeaderKeys.UNIQUE_SERVICE_NAME])
     }
 
-    private val bootId = headerSet[HeaderKeys.BOOTID]?.toInt() ?: Constants.NOT_AVAILABLE_NUM
+    private val bootId = headerSet[HeaderKeys.BOOTID]?.toInt()
 
-    private val configId = headerSet[HeaderKeys.CONFIGID]?.toInt() ?: Constants.NOT_AVAILABLE_NUM
+    private val configId = headerSet[HeaderKeys.CONFIGID]?.toInt()
 
-    private val nextBootId = headerSet[HeaderKeys.NEXTBOOTID]?.toInt() ?: Constants.NOT_AVAILABLE_NUM
+    private val nextBootId = headerSet[HeaderKeys.NEXTBOOTID]?.toInt()
 
-    private val searchPort = headerSet[HeaderKeys.SEARCHPORT]?.toInt() ?: Constants.NOT_AVAILABLE_NUM
+    private val searchPort = headerSet[HeaderKeys.SEARCHPORT]?.toInt()
 
     override fun parseMediaPacket(): MediaPacket {
         return UpdateMediaPacket(

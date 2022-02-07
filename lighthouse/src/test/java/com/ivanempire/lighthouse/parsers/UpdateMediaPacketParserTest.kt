@@ -63,9 +63,9 @@ class UpdateMediaPacketParserTest {
             ),
             parsedPacket.usn
         )
-        assertEquals(-1, parsedPacket.bootId)
+        assertEquals(null, parsedPacket.bootId)
         assertEquals(201, parsedPacket.configId)
-        assertEquals(-1, parsedPacket.nextBootId)
+        assertEquals(null, parsedPacket.nextBootId)
         assertEquals(1000, parsedPacket.searchPort)
         assertEquals(UUID.fromString("b9783ad2-d548-9793-0eb9-42db373ade07"), parsedPacket.uuid)
     }
@@ -75,15 +75,15 @@ class UpdateMediaPacketParserTest {
         sut = UpdateMediaPacketParser(hashMapOf())
         val parsedPacket = sut.parseMediaPacket() as UpdateMediaPacket
 
-        assertEquals(MediaHost(InetAddress.getByName("127.0.0.1"), -1), parsedPacket.host)
-        assertEquals(URL("http://127.0.0.1/"), parsedPacket.location)
-        assertEquals(NotificationType("N/A"), parsedPacket.notificationType)
-        assertEquals(UniqueServiceName("N/A"), parsedPacket.usn)
-        assertEquals(-1, parsedPacket.bootId)
-        assertEquals(-1, parsedPacket.configId)
-        assertEquals(-1, parsedPacket.nextBootId)
-        assertEquals(-1, parsedPacket.searchPort)
-        assertEquals(UUID(0, 0), parsedPacket.uuid)
+        assertEquals(null, parsedPacket.host)
+        assertEquals(null, parsedPacket.location)
+        assertEquals(null, parsedPacket.notificationType)
+        assertEquals(null, parsedPacket.usn)
+        assertEquals(null, parsedPacket.bootId)
+        assertEquals(null, parsedPacket.configId)
+        assertEquals(null, parsedPacket.nextBootId)
+        assertEquals(null, parsedPacket.searchPort)
+        assertEquals(null, parsedPacket.uuid)
     }
 
     object Fixtures {

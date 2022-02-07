@@ -1,6 +1,5 @@
 package com.ivanempire.lighthouse.parsers
 
-import com.ivanempire.lighthouse.models.Constants
 import com.ivanempire.lighthouse.models.MediaPacket
 import com.ivanempire.lighthouse.models.NotificationType
 import com.ivanempire.lighthouse.models.UniqueServiceName
@@ -15,19 +14,20 @@ abstract class MediaPacketParser {
             "([a-f0-9]{8}(-[a-f0-9]{4}){4}[a-f0-9]{8})",
             RegexOption.IGNORE_CASE
         )
-        val emptyUUID = UUID(0, 0)
-        operator fun invoke() {
-        }
+
+//        operator fun invoke(): MediaPacket {
+//
+//        }
     }
 
     abstract fun parseMediaPacket(): MediaPacket
 
     internal fun parseIdentifier(
-        notificationType: NotificationType,
-        uniqueServiceName: UniqueServiceName
-    ): UUID {
-        val ntMatch = identifierRegex.find(notificationType.rawString)
-        val usnMatch = identifierRegex.find(uniqueServiceName.rawString)
+        notificationType: NotificationType?,
+        uniqueServiceName: UniqueServiceName?
+    ): UUID? {
+        val ntMatch = notificationType?.rawString?.let { identifierRegex.find(it) }
+        val usnMatch = uniqueServiceName?.rawString?.let { identifierRegex.find(it) }
 
         if (ntMatch != null) {
             return UUID.fromString(ntMatch.value)
@@ -35,22 +35,18 @@ abstract class MediaPacketParser {
             return UUID.fromString(usnMatch.value)
         }
 
-        return emptyUUID
+        return null
     }
 
-    internal fun parseCacheControl(rawValue: String): Int {
-        return if (rawValue == Constants.NOT_AVAILABLE) {
-            Constants.NOT_AVAILABLE_NUM
-        } else {
-            rawValue.substringAfter("=", "-1").toInt()
-        }
+    internal fun parseCacheControl(rawValue: String?): Int? {
+        return rawValue?.substringAfter("=", "-1")?.toInt()
     }
 
-    internal fun parseUrl(rawValue: String): URL {
+    internal fun parseUrl(rawValue: String?): URL? {
         return try {
             URL(rawValue)
         } catch (ex: MalformedURLException) {
-            URL("http://127.0.0.1/")
+            null
         }
     }
 }

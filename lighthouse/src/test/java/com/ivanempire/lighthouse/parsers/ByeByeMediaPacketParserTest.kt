@@ -41,15 +41,18 @@ class ByeByeMediaPacketParserTest {
         sut = ByeByeMediaPacketParser(INCOMPLETE_PACKET)
         val parsedPacket = sut.parseMediaPacket()
 
-        assertEquals(parsedPacket.host, MediaHost(InetAddress.getByName("239.255.255.250"), 1900))
         assertEquals(
-            parsedPacket.notificationType,
-            NotificationType("urn:schemas-upnp-org:service:RenderingControl:1")
+            MediaHost(InetAddress.getByName("239.255.255.250"), 1900),
+            parsedPacket.host
         )
-        assertEquals(parsedPacket.usn, UniqueServiceName("N/A"))
-        assertEquals(parsedPacket.bootId, -1)
-        assertEquals(parsedPacket.configId, -1)
-        assertEquals(parsedPacket.uuid, UUID(0, 0))
+        assertEquals(
+            NotificationType("urn:schemas-upnp-org:service:RenderingControl:1"),
+            parsedPacket.notificationType
+        )
+        assertEquals(null, parsedPacket.usn)
+        assertEquals(null, parsedPacket.bootId)
+        assertEquals(null, parsedPacket.configId)
+        assertEquals(null, parsedPacket.uuid)
     }
 
     @Test
@@ -57,12 +60,12 @@ class ByeByeMediaPacketParserTest {
         sut = ByeByeMediaPacketParser(hashMapOf())
         val parsedPacket = sut.parseMediaPacket()
 
-        assertEquals(parsedPacket.host, MediaHost(InetAddress.getByName("127.0.0.1"), -1))
-        assertEquals(parsedPacket.notificationType, NotificationType("N/A"))
-        assertEquals(parsedPacket.usn, UniqueServiceName("N/A"))
-        assertEquals(parsedPacket.bootId, -1)
-        assertEquals(parsedPacket.configId, -1)
-        assertEquals(parsedPacket.uuid, UUID(0, 0))
+        assertEquals(null, parsedPacket.host)
+        assertEquals(null, parsedPacket.notificationType)
+        assertEquals(null, parsedPacket.usn)
+        assertEquals(null, parsedPacket.bootId)
+        assertEquals(null, parsedPacket.configId)
+        assertEquals(null, parsedPacket.uuid)
     }
 
     object Fixtures {

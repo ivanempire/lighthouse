@@ -13,8 +13,3 @@ object HeaderKeys {
     const val SEARCHPORT = "SEARCHPORT.UPNP.ORG"
     const val NEXTBOOTID = "NEXTBOOTID.UPNP.ORG"
 }
-
-object Constants {
-    const val NOT_AVAILABLE = "N/A"
-    const val NOT_AVAILABLE_NUM = -1
-}

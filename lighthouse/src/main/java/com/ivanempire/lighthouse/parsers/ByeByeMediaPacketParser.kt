@@ -1,8 +1,6 @@
 package com.ivanempire.lighthouse.parsers
 
 import com.ivanempire.lighthouse.models.ByeByeMediaPacket
-import com.ivanempire.lighthouse.models.Constants.NOT_AVAILABLE
-import com.ivanempire.lighthouse.models.Constants.NOT_AVAILABLE_NUM
 import com.ivanempire.lighthouse.models.HeaderKeys
 import com.ivanempire.lighthouse.models.MediaHost
 import com.ivanempire.lighthouse.models.MediaPacket
@@ -13,21 +11,21 @@ class ByeByeMediaPacketParser(
     private val headerSet: HashMap<String, String>
 ) : MediaPacketParser() {
 
-    private val host: MediaHost by lazy {
-        MediaHost.parseFromString(headerSet[HeaderKeys.HOST] ?: NOT_AVAILABLE)
+    private val host: MediaHost? by lazy {
+        MediaHost.parseFromString(headerSet[HeaderKeys.HOST])
     }
 
-    private val notificationType: NotificationType by lazy {
-        NotificationType(headerSet[HeaderKeys.NOTIFICATION_TYPE] ?: NOT_AVAILABLE)
+    private val notificationType: NotificationType? by lazy {
+        NotificationType.parseFromString(headerSet[HeaderKeys.NOTIFICATION_TYPE])
     }
 
-    private val uniqueServiceName: UniqueServiceName by lazy {
-        UniqueServiceName(headerSet[HeaderKeys.UNIQUE_SERVICE_NAME] ?: NOT_AVAILABLE)
+    private val uniqueServiceName: UniqueServiceName? by lazy {
+        UniqueServiceName.parseFromString(headerSet[HeaderKeys.UNIQUE_SERVICE_NAME])
     }
 
-    private val bootId = headerSet[HeaderKeys.BOOTID]?.toInt() ?: NOT_AVAILABLE_NUM
+    private val bootId = headerSet[HeaderKeys.BOOTID]?.toInt()
 
-    private val configId = headerSet[HeaderKeys.CONFIGID]?.toInt() ?: NOT_AVAILABLE_NUM
+    private val configId = headerSet[HeaderKeys.CONFIGID]?.toInt()
 
     override fun parseMediaPacket(): MediaPacket {
         return ByeByeMediaPacket(

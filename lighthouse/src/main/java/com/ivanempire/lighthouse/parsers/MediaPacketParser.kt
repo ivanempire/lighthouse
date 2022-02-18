@@ -18,6 +18,7 @@ abstract class MediaPacketParser {
 //        operator fun invoke(): MediaPacket {
 //
 //        }
+        // CHECK CONFIGIG, NEXTBOOTID, BOOTID behavior ==> incrementation
     }
 
     abstract fun parseMediaPacket(): MediaPacket

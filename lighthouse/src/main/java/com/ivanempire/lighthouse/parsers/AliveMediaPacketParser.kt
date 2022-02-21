@@ -37,11 +37,11 @@ class AliveMediaPacketParser(
         UniqueServiceName.parseFromString(headerSet[HeaderKeys.UNIQUE_SERVICE_NAME])
     }
 
-    private val bootId = headerSet[HeaderKeys.BOOTID]?.toInt()
+    private val bootId = headerSet[HeaderKeys.BOOTID]?.toInt() ?: -1
 
-    private val configId = headerSet[HeaderKeys.CONFIGID]?.toInt()
+    private val configId = headerSet[HeaderKeys.CONFIGID]?.toInt() ?: -1
 
-    private val searchPort = headerSet[HeaderKeys.SEARCHPORT]?.toInt()
+    private val searchPort = headerSet[HeaderKeys.SEARCHPORT]?.toInt() ?: -1
 
     override fun parseMediaPacket(): MediaPacket {
         return AliveMediaPacket(

@@ -66,3 +66,8 @@ class MulticastSocketListener(
         const val MULTICAST_PORT = 1900
     }
 }
+
+internal fun DatagramPacket.cleanPacket(): String {
+    val cleanedData = this.data.filter { it != 0.toByte() }.toByteArray()
+    return cleanedData.map { it.toString() }.toString()
+}

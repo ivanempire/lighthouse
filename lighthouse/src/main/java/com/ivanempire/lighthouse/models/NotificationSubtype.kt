@@ -4,16 +4,20 @@ import java.util.Locale
 
 enum class NotificationSubtype(val rawString: String) {
 
-    ALIVE("ssdp:alive"),
-    UPDATE("ssdp:update"),
-    BYEBYE("ssdp:byebye");
+    ALIVE("SSDP:ALIVE"),
+    UPDATE("SSDP:UPDATE"),
+    BYEBYE("SSDP:BYEBYE");
 
     companion object {
-        fun getByRawValue(rawValue: String): StartLine? {
-            return StartLine.values().firstOrNull {
-                it.rawString == rawValue.uppercase(
-                    Locale.getDefault()
-                )
+        fun getByRawValue(rawValue: String?): NotificationSubtype? {
+            return if (rawValue == null) {
+                null
+            } else {
+                values().firstOrNull {
+                    it.rawString == rawValue.uppercase(
+                        Locale.getDefault()
+                    )
+                }
             }
         }
     }

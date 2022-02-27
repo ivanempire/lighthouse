@@ -1,23 +1,18 @@
-package com.ivanempire.lighthouse.parsers
+package com.ivanempire.lighthouse.parsers.packets
 
-import com.ivanempire.lighthouse.models.HeaderKeys
-import com.ivanempire.lighthouse.models.MediaHost
-import com.ivanempire.lighthouse.models.MediaPacket
-import com.ivanempire.lighthouse.models.NotificationType
-import com.ivanempire.lighthouse.models.UniqueServiceName
-import com.ivanempire.lighthouse.models.UpdateMediaPacket
-import java.net.URL
+import com.ivanempire.lighthouse.models.packets.ByeByeMediaPacket
+import com.ivanempire.lighthouse.models.packets.HeaderKeys
+import com.ivanempire.lighthouse.models.packets.MediaHost
+import com.ivanempire.lighthouse.models.packets.MediaPacket
+import com.ivanempire.lighthouse.models.packets.NotificationType
+import com.ivanempire.lighthouse.models.packets.UniqueServiceName
 
-class UpdateMediaPacketParser(
+class ByeByeMediaPacketParser(
     private val headerSet: HashMap<String, String>
 ) : MediaPacketParser() {
 
     private val host: MediaHost? by lazy {
         MediaHost.parseFromString(headerSet[HeaderKeys.HOST])
-    }
-
-    private val location: URL? by lazy {
-        parseUrl(headerSet[HeaderKeys.LOCATION])
     }
 
     private val notificationType: NotificationType? by lazy {
@@ -32,20 +27,13 @@ class UpdateMediaPacketParser(
 
     private val configId = headerSet[HeaderKeys.CONFIGID]?.toInt()
 
-    private val nextBootId = headerSet[HeaderKeys.NEXTBOOTID]?.toInt()
-
-    private val searchPort = headerSet[HeaderKeys.SEARCHPORT]?.toInt()
-
     override fun parseMediaPacket(): MediaPacket {
-        return UpdateMediaPacket(
+        return ByeByeMediaPacket(
             host = host,
-            location = location,
             notificationType = notificationType,
             usn = uniqueServiceName,
             bootId = bootId,
             configId = configId,
-            nextBootId = nextBootId,
-            searchPort = searchPort,
             uuid = parseIdentifier(notificationType, uniqueServiceName)
         )
     }

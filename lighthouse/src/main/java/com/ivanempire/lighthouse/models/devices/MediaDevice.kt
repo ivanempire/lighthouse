@@ -1,4 +1,4 @@
-package com.ivanempire.lighthouse.models
+package com.ivanempire.lighthouse.models.devices
 
 import java.net.URL
 import java.util.UUID

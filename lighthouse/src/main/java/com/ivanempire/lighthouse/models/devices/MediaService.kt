@@ -1,4 +1,4 @@
-package com.ivanempire.lighthouse.models
+package com.ivanempire.lighthouse.models.devices
 
 /**
  * Base class representing a service that a media device supports

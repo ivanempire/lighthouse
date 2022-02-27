@@ -1,12 +1,12 @@
-package com.ivanempire.lighthouse.parsers
+package com.ivanempire.lighthouse.parsers.packets
 
-import com.ivanempire.lighthouse.models.AliveMediaPacket
-import com.ivanempire.lighthouse.models.HeaderKeys
-import com.ivanempire.lighthouse.models.MediaDeviceServer
-import com.ivanempire.lighthouse.models.MediaHost
-import com.ivanempire.lighthouse.models.MediaPacket
-import com.ivanempire.lighthouse.models.NotificationType
-import com.ivanempire.lighthouse.models.UniqueServiceName
+import com.ivanempire.lighthouse.models.packets.AliveMediaPacket
+import com.ivanempire.lighthouse.models.packets.HeaderKeys
+import com.ivanempire.lighthouse.models.devices.MediaDeviceServer
+import com.ivanempire.lighthouse.models.packets.MediaHost
+import com.ivanempire.lighthouse.models.packets.MediaPacket
+import com.ivanempire.lighthouse.models.packets.NotificationType
+import com.ivanempire.lighthouse.models.packets.UniqueServiceName
 import java.net.URL
 
 class AliveMediaPacketParser(

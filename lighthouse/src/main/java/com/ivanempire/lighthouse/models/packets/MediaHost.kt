@@ -1,4 +1,4 @@
-package com.ivanempire.lighthouse.models
+package com.ivanempire.lighthouse.models.packets
 
 import com.ivanempire.lighthouse.SomeName
 import java.net.InetAddress

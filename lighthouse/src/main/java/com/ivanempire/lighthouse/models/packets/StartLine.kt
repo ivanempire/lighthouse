@@ -1,4 +1,4 @@
-package com.ivanempire.lighthouse.models
+package com.ivanempire.lighthouse.models.packets
 
 import java.util.Locale
 

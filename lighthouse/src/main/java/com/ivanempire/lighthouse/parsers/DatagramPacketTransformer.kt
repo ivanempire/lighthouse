@@ -1,6 +1,6 @@
 package com.ivanempire.lighthouse.parsers
 
-import com.ivanempire.lighthouse.models.StartLine
+import com.ivanempire.lighthouse.models.packets.StartLine
 import java.net.DatagramPacket
 import java.nio.charset.Charset
 

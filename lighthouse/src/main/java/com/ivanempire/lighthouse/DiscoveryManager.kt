@@ -1,9 +1,9 @@
 package com.ivanempire.lighthouse
 
 import com.ivanempire.lighthouse.models.LighthouseState
-import com.ivanempire.lighthouse.models.MediaDevice
+import com.ivanempire.lighthouse.models.devices.MediaDevice
 import com.ivanempire.lighthouse.parsers.DatagramPacketTransformer
-import com.ivanempire.lighthouse.parsers.MediaPacketParser
+import com.ivanempire.lighthouse.parsers.packets.MediaPacketParser
 import com.ivanempire.lighthouse.socket.MulticastSocketListener
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull

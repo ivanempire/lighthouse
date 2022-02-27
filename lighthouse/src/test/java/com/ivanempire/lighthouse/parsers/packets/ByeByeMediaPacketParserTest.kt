@@ -1,11 +1,11 @@
-package com.ivanempire.lighthouse.parsers
+package com.ivanempire.lighthouse.parsers.packets
 
-import com.ivanempire.lighthouse.models.ByeByeMediaPacket
-import com.ivanempire.lighthouse.models.MediaHost
-import com.ivanempire.lighthouse.models.NotificationType
-import com.ivanempire.lighthouse.models.UniqueServiceName
-import com.ivanempire.lighthouse.parsers.ByeByeMediaPacketParserTest.Fixtures.COMPLETE_PACKET
-import com.ivanempire.lighthouse.parsers.ByeByeMediaPacketParserTest.Fixtures.INCOMPLETE_PACKET
+import com.ivanempire.lighthouse.models.packets.ByeByeMediaPacket
+import com.ivanempire.lighthouse.models.packets.MediaHost
+import com.ivanempire.lighthouse.models.packets.NotificationType
+import com.ivanempire.lighthouse.models.packets.UniqueServiceName
+import com.ivanempire.lighthouse.parsers.packets.ByeByeMediaPacketParserTest.Fixtures.COMPLETE_PACKET
+import com.ivanempire.lighthouse.parsers.packets.ByeByeMediaPacketParserTest.Fixtures.INCOMPLETE_PACKET
 import java.net.InetAddress
 import java.util.UUID
 import org.junit.Assert.assertEquals

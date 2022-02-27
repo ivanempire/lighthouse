@@ -1,5 +1,6 @@
-package com.ivanempire.lighthouse.models
+package com.ivanempire.lighthouse.models.packets
 
+import com.ivanempire.lighthouse.models.devices.MediaDeviceServer
 import java.net.URL
 import java.util.UUID
 

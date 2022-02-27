@@ -1,4 +1,4 @@
-package com.ivanempire.lighthouse.models
+package com.ivanempire.lighthouse.models.packets
 
 object HeaderKeys {
     const val HOST = "HOST"

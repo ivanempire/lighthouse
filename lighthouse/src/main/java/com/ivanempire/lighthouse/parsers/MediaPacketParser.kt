@@ -5,6 +5,7 @@ import com.ivanempire.lighthouse.models.MediaPacket
 import com.ivanempire.lighthouse.models.NotificationSubtype
 import com.ivanempire.lighthouse.models.NotificationType
 import com.ivanempire.lighthouse.models.UniqueServiceName
+import java.lang.IllegalStateException
 import java.net.MalformedURLException
 import java.net.URL
 import java.util.UUID
@@ -54,30 +55,22 @@ abstract class MediaPacketParser {
     }
 
     companion object {
-        operator fun invoke(datagramString: String): MediaPacket {
-            val keyValuePairs = datagramString.split("\r\n")
-
-            val packetHeaders = hashMapOf<String, String>()
-            keyValuePairs.forEach {
-                val splitField = it.split(PACKET_DELIMITER, ignoreCase = false, limit = 2)
-                packetHeaders[splitField[0].trim().uppercase()] = splitField[1].trim()
-            }
-
-            val latestPacket = when (
-                NotificationSubtype.getByRawValue(
-                    packetHeaders[HeaderKeys.NOTIFICATION_SUBTYPE]
-                )
-            ) {
+        operator fun invoke(packetHeaders: HashMap<String, String>): MediaPacket {
+            val notificationSubtype = NotificationSubtype.getByRawValue(
+                packetHeaders[HeaderKeys.NOTIFICATION_SUBTYPE]
+            )
+            val latestPacket = when (notificationSubtype) {
                 NotificationSubtype.ALIVE -> AliveMediaPacketParser(packetHeaders)
                 NotificationSubtype.UPDATE -> UpdateMediaPacketParser(packetHeaders)
                 NotificationSubtype.BYEBYE -> ByeByeMediaPacketParser(packetHeaders)
-                else -> null
+                else -> throw IllegalStateException(
+                    "Somehow we got an invalid NotificationSubtype: $notificationSubtype"
+                )
             }
 
-            return latestPacket?.parseMediaPacket()!! // TODO
+            return latestPacket.parseMediaPacket()
         }
 
-        private const val PACKET_DELIMITER = ":"
         private val REGEX_UUID = Regex(
             "([a-f0-9]{8}(-[a-f0-9]{4}){4}[a-f0-9]{8})",
             RegexOption.IGNORE_CASE

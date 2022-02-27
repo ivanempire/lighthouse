@@ -65,8 +65,8 @@ class AliveMediaPacketParserTest {
             parsedPacket.notificationType
         )
         assertEquals(null, parsedPacket.usn)
-        assertEquals(null, parsedPacket.bootId)
-        assertEquals(null, parsedPacket.configId)
+        assertEquals(-1, parsedPacket.bootId)
+        assertEquals(-1, parsedPacket.configId)
         assertEquals(1900, parsedPacket.searchPort)
         assertEquals(UUID.fromString("b9783ad2-d548-9793-0eb9-42db373ade07"), parsedPacket.uuid)
     }
@@ -82,9 +82,9 @@ class AliveMediaPacketParserTest {
         assertEquals(null, parsedPacket.server)
         assertEquals(null, parsedPacket.notificationType)
         assertEquals(null, parsedPacket.usn)
-        assertEquals(null, parsedPacket.bootId)
-        assertEquals(null, parsedPacket.configId)
-        assertEquals(null, parsedPacket.searchPort)
+        assertEquals(-1, parsedPacket.bootId)
+        assertEquals(-1, parsedPacket.configId)
+        assertEquals(-1, parsedPacket.searchPort)
         assertEquals(null, parsedPacket.uuid)
     }
 

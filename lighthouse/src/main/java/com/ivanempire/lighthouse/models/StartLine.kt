@@ -4,9 +4,9 @@ import java.util.Locale
 
 enum class StartLine(val rawString: String) {
 
-    NOTIFY("NOTIFY * HTTP/1.1\r\n"),
-    SEARCH("M-SEARCH * HTTP/1.1\r\n"),
-    OK("HTTP/1.1 200 OK\r\n");
+    NOTIFY("NOTIFY * HTTP/1.1"),
+    SEARCH("M-SEARCH * HTTP/1.1"),
+    OK("HTTP/1.1 200 OK");
 
     companion object {
         fun getByRawValue(rawValue: String): StartLine? {

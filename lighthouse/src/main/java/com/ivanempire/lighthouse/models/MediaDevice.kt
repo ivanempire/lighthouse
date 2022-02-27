@@ -12,14 +12,14 @@ abstract class MediaDevice
 /**
  * A specific version of a [MediaDevice] that is built from SSDP discovery information. This is
  * what the consumers of the SDK receive after discovery has found results on the network
- * @param identifier The unique identifier of this device
+ * @param uuid The unique identifier of this device
  * @param location The URL which can be called to get the complete XML description of this device
  * @param server The server information of the root device
  * @param serviceList The list of services that are present on the root and embedded devices
  * @param deviceList The list of devices (embedded AND root) present on this device
  */
 data class AbridgedMediaDevice(
-    val identifier: UUID,
+    val uuid: UUID,
     val location: URL,
     val server: MediaDeviceServer,
     val serviceList: List<AdvertisedMediaService>,

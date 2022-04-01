@@ -7,6 +7,7 @@ import com.ivanempire.lighthouse.models.packets.UuidDeviceAttribute
 import com.ivanempire.lighthouse.parsers.packets.NotificationTypeParserTest.Fixtures.NT_DEVICETYPE_DOMAIN
 import com.ivanempire.lighthouse.parsers.packets.NotificationTypeParserTest.Fixtures.NT_DEVICETYPE_SCHEMA
 import com.ivanempire.lighthouse.parsers.packets.NotificationTypeParserTest.Fixtures.NT_DEVICEUUID
+import com.ivanempire.lighthouse.parsers.packets.NotificationTypeParserTest.Fixtures.NT_REAL_SERVICE1
 import com.ivanempire.lighthouse.parsers.packets.NotificationTypeParserTest.Fixtures.NT_ROOTDEVICE
 import com.ivanempire.lighthouse.parsers.packets.NotificationTypeParserTest.Fixtures.NT_SERVICETYPE_DOMAIN
 import com.ivanempire.lighthouse.parsers.packets.NotificationTypeParserTest.Fixtures.NT_SERVICETYPE_SCHEMA
@@ -68,6 +69,13 @@ class NotificationTypeParserTest {
         assertEquals("domain-name", domainModelResults.domain)
         assertEquals("serviceType", domainModelResults.serviceType)
         assertEquals("ver", domainModelResults.serviceVersion)
+
+        val realServiceResult1 = sut.parseThing(NT_REAL_SERVICE1)
+        assertTrue(realServiceResult1 is ServiceAttribute)
+        val realServiceSchema1 = realServiceResult1 as ServiceAttribute
+        assertEquals(null, realServiceSchema1.domain)
+        assertEquals("ConnectionManager", realServiceSchema1.serviceType)
+        assertEquals("1", realServiceSchema1.serviceVersion)
     }
 
     object Fixtures {
@@ -78,5 +86,7 @@ class NotificationTypeParserTest {
 
         const val NT_SERVICETYPE_SCHEMA = "urn:schemas-upnp-org:service:serviceType:ver"
         const val NT_SERVICETYPE_DOMAIN = "urn:domain-name:service:serviceType:ver"
+
+        const val NT_REAL_SERVICE1 = "urn:schemas-upnp-org:service:ConnectionManager:1"
     }
 }

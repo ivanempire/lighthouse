@@ -67,7 +67,6 @@ abstract class MediaPacketParser {
                     "Somehow we got an invalid NotificationSubtype: $notificationSubtype"
                 )
             }
-
             return latestPacket.parseMediaPacket()
         }
 

@@ -46,7 +46,8 @@ class UpdateMediaPacketParser(
             configId = configId,
             nextBootId = nextBootId,
             searchPort = searchPort,
-            uuid = parseIdentifier(notificationType, uniqueServiceName)
+            uuid = parseIdentifier(notificationType, uniqueServiceName),
+            deviceAttribute = null
         )
     }
 }

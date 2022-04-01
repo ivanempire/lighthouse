@@ -34,7 +34,8 @@ class ByeByeMediaPacketParser(
             usn = uniqueServiceName,
             bootId = bootId,
             configId = configId,
-            uuid = parseIdentifier(notificationType, uniqueServiceName)
+            uuid = parseIdentifier(notificationType, uniqueServiceName),
+            deviceAttribute = null
         )
     }
 }

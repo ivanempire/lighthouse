@@ -1,8 +1,8 @@
 package com.ivanempire.lighthouse.parsers.packets
 
+import com.ivanempire.lighthouse.models.devices.MediaDeviceServer
 import com.ivanempire.lighthouse.models.packets.AliveMediaPacket
 import com.ivanempire.lighthouse.models.packets.HeaderKeys
-import com.ivanempire.lighthouse.models.devices.MediaDeviceServer
 import com.ivanempire.lighthouse.models.packets.MediaHost
 import com.ivanempire.lighthouse.models.packets.MediaPacket
 import com.ivanempire.lighthouse.models.packets.NotificationType
@@ -54,7 +54,8 @@ class AliveMediaPacketParser(
             uuid = parseIdentifier(notificationType, uniqueServiceName),
             bootId = bootId,
             configId = configId,
-            searchPort = searchPort
+            searchPort = searchPort,
+            deviceAttribute = null
         )
     }
 }

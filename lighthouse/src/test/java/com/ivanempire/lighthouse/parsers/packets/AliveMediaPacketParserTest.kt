@@ -1,7 +1,7 @@
 package com.ivanempire.lighthouse.parsers.packets
 
-import com.ivanempire.lighthouse.models.packets.AliveMediaPacket
 import com.ivanempire.lighthouse.models.devices.MediaDeviceServer
+import com.ivanempire.lighthouse.models.packets.AliveMediaPacket
 import com.ivanempire.lighthouse.models.packets.MediaHost
 import com.ivanempire.lighthouse.models.packets.NotificationType
 import com.ivanempire.lighthouse.models.packets.UniqueServiceName

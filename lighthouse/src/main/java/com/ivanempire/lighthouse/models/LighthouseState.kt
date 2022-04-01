@@ -11,22 +11,20 @@ import java.lang.IllegalStateException
 // NEXTBOOTID.UPNP.ORG ==> next bootId to use
 object LighthouseState {
 
-  private val deviceList = mutableListOf<AbridgedMediaDevice>()
+    private val deviceList = mutableListOf<AbridgedMediaDevice>()
 
-  fun parseMediaPacket(latestPacket: MediaPacket): List<MediaDevice> {
-    return when (latestPacket) {
-      //is AliveMediaPacket -> parseAliveMediaPacket(latestPacket)
-      //is UpdateMediaPacket -> parseUpdateMediaPacket(latestPacket)
-      is ByeByeMediaPacket -> parseByeByeMediaPacket(latestPacket)
-      else -> throw IllegalStateException("")
+    fun parseMediaPacket(latestPacket: MediaPacket): List<MediaDevice> {
+        return when (latestPacket) {
+            // is AliveMediaPacket -> parseAliveMediaPacket(latestPacket)
+            // is UpdateMediaPacket -> parseUpdateMediaPacket(latestPacket)
+            is ByeByeMediaPacket -> parseByeByeMediaPacket(latestPacket)
+            else -> throw IllegalStateException("")
+        }
     }
-  }
 
-  private fun parseByeByeMediaPacket(latestPacket: ByeByeMediaPacket): List<MediaDevice> {
-    val targetDevice = deviceList.firstOrNull { it.uuid == latestPacket.uuid } ?: return deviceList
+    private fun parseByeByeMediaPacket(latestPacket: ByeByeMediaPacket): List<MediaDevice> {
+        val targetDevice = deviceList.firstOrNull { it.uuid == latestPacket.uuid } ?: return deviceList
 
-    return emptyList()
-  }
-
-
+        return emptyList()
+    }
 }

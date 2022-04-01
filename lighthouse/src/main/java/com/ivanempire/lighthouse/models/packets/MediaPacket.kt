@@ -4,14 +4,15 @@ import com.ivanempire.lighthouse.models.devices.MediaDeviceServer
 import java.net.URL
 import java.util.UUID
 
-open class MediaPacket(
+sealed class MediaPacket(
     open val host: MediaHost?,
     open val notificationType: NotificationType?,
     open val notificationSubtype: NotificationSubtype,
     open val usn: UniqueServiceName?,
     open val configId: Int?,
     open val bootId: Int?,
-    open val uuid: UUID?
+    open val uuid: UUID?,
+    open val deviceAttribute: DeviceAttribute?
 )
 
 /**
@@ -38,8 +39,18 @@ data class AliveMediaPacket(
     override val bootId: Int?,
     override val configId: Int?,
     val searchPort: Int?,
-    override val uuid: UUID?
-) : MediaPacket(host, notificationType, notificationSubtype, usn, bootId, configId, uuid)
+    override val uuid: UUID?,
+    override val deviceAttribute: DeviceAttribute?
+) : MediaPacket(
+    host,
+    notificationType,
+    notificationSubtype,
+    usn,
+    bootId,
+    configId,
+    uuid,
+    deviceAttribute
+)
 
 /**
  * NOTIFY * HTTP/1.1
@@ -63,8 +74,18 @@ data class UpdateMediaPacket(
     override val configId: Int?,
     val nextBootId: Int?,
     val searchPort: Int?,
-    override val uuid: UUID?
-) : MediaPacket(host, notificationType, notificationSubtype, usn, bootId, configId, uuid)
+    override val uuid: UUID?,
+    override val deviceAttribute: DeviceAttribute?
+) : MediaPacket(
+    host,
+    notificationType,
+    notificationSubtype,
+    usn,
+    bootId,
+    configId,
+    uuid,
+    deviceAttribute
+)
 
 /**
  * NOTIFY * HTTP/1.1
@@ -82,5 +103,15 @@ data class ByeByeMediaPacket(
     override val usn: UniqueServiceName?,
     override val bootId: Int?,
     override val configId: Int?,
-    override val uuid: UUID?
-) : MediaPacket(host, notificationType, notificationSubtype, usn, bootId, configId, uuid)
+    override val uuid: UUID?,
+    override val deviceAttribute: DeviceAttribute?
+) : MediaPacket(
+    host,
+    notificationType,
+    notificationSubtype,
+    usn,
+    bootId,
+    configId,
+    uuid,
+    deviceAttribute
+)

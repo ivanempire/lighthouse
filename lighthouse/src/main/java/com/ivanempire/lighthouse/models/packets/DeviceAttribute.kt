@@ -1,14 +1,8 @@
 package com.ivanempire.lighthouse.models.packets
 
-import java.util.UUID
-
 sealed class DeviceAttribute
 
 object RootDeviceAttribute : DeviceAttribute()
-
-data class UuidDeviceAttribute(
-    val uuid: UUID
-) : DeviceAttribute()
 
 data class EmbeddedDeviceAttribute(
     val domain: String? = null,
@@ -16,7 +10,7 @@ data class EmbeddedDeviceAttribute(
     val deviceVersion: String
 ) : DeviceAttribute()
 
-data class ServiceAttribute(
+data class EmbeddedServiceAttribute(
     val domain: String? = null,
     val serviceType: String,
     val serviceVersion: String

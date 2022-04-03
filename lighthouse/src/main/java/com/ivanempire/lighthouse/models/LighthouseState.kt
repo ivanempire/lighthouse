@@ -12,7 +12,6 @@ import com.ivanempire.lighthouse.models.packets.EmbeddedServiceAttribute
 import com.ivanempire.lighthouse.models.packets.MediaPacket
 import com.ivanempire.lighthouse.models.packets.RootDeviceAttribute
 import java.lang.IllegalStateException
-import java.util.*
 
 // BOOTID.UPNP.ORG     ==> changes, means device will reboot; see how to handle this
 // CONFIGID.UPNP.ORG   ==> changes, pull new XML description
@@ -39,10 +38,10 @@ object LighthouseState {
     private fun parseAliveMediaPacket(latestPacket: AliveMediaPacket): List<MediaDevice> {
         /**
          *     val uuid: UUID,
-        val location: URL,
-        val server: MediaDeviceServer,
-        val serviceList: List<AdvertisedMediaService>,
-        val deviceList: List<AdvertisedMediaDevice>
+         val location: URL,
+         val server: MediaDeviceServer,
+         val serviceList: List<AdvertisedMediaService>,
+         val deviceList: List<AdvertisedMediaDevice>
          */
         val targetDevice = deviceList.firstOrNull { it.uuid == latestPacket.uuid }
         if (targetDevice == null) {
@@ -74,7 +73,6 @@ object LighthouseState {
             deviceList.add(newDevice)
             return deviceList
         } else {
-
         }
     }
 

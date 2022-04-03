@@ -20,10 +20,10 @@ abstract class MediaDevice
  */
 data class AbridgedMediaDevice(
     val uuid: UUID,
-    val location: URL,
-    val server: MediaDeviceServer,
-    val serviceList: List<AdvertisedMediaService>,
-    val deviceList: List<AdvertisedMediaDevice>
+    val location: URL?,
+    val server: MediaDeviceServer?,
+    val serviceList: MutableList<AdvertisedMediaService> = emptyList(),
+    val deviceList: MutableList<AdvertisedMediaDevice> = emptyList()
 ) : MediaDevice() {
     // TODO: Implement XML call
     val description: RootMediaDevice?
@@ -41,7 +41,7 @@ data class AbridgedMediaDevice(
  */
 data class AdvertisedMediaDevice(
     val deviceType: String,
-    val deviceVersion: Int
+    val deviceVersion: String
 ) : MediaDevice()
 
 /**

@@ -39,7 +39,7 @@ data class AliveMediaPacket(
     override val bootId: Int?,
     override val configId: Int?,
     val searchPort: Int?,
-    override val uuid: UUID?,
+    override val uuid: UUID = UUID(0, 0),
     override val deviceAttribute: DeviceAttribute?
 ) : MediaPacket(
     host,

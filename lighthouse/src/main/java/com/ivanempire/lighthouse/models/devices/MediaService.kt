@@ -15,7 +15,7 @@ open class MediaService(
  */
 data class AdvertisedMediaService(
     override val serviceType: String,
-    val serviceVersion: Int
+    val serviceVersion: String
 ) : MediaService(serviceType)
 
 /**

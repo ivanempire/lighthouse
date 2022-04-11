@@ -11,7 +11,7 @@ sealed class MediaPacket(
     open val usn: UniqueServiceName?,
     open val configId: Int?,
     open val bootId: Int?,
-    open val uuid: UUID?,
+    open val uuid: UUID,
     open val deviceAttribute: DeviceAttribute?
 )
 
@@ -39,7 +39,7 @@ data class AliveMediaPacket(
     override val bootId: Int?,
     override val configId: Int?,
     val searchPort: Int?,
-    override val uuid: UUID = UUID(0, 0),
+    override val uuid: UUID,
     override val deviceAttribute: DeviceAttribute?
 ) : MediaPacket(
     host,
@@ -74,7 +74,7 @@ data class UpdateMediaPacket(
     override val configId: Int?,
     val nextBootId: Int?,
     val searchPort: Int?,
-    override val uuid: UUID?,
+    override val uuid: UUID,
     override val deviceAttribute: DeviceAttribute?
 ) : MediaPacket(
     host,
@@ -103,7 +103,7 @@ data class ByeByeMediaPacket(
     override val usn: UniqueServiceName?,
     override val bootId: Int?,
     override val configId: Int?,
-    override val uuid: UUID?,
+    override val uuid: UUID,
     override val deviceAttribute: DeviceAttribute?
 ) : MediaPacket(
     host,

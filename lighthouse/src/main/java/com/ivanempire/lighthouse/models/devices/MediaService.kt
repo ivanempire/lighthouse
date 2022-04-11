@@ -33,3 +33,12 @@ data class DetailedMediaService(
     val controlUrl: String,
     val eventUrl: String
 ) : MediaService(serviceType)
+
+internal fun MutableList<AdvertisedMediaService>.addIfNew(newService: AdvertisedMediaService): List<MediaService> {
+    return if (this.contains(newService)) {
+        this
+    } else {
+        this.add(newService)
+        this
+    }
+}

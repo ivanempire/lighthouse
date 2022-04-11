@@ -22,8 +22,8 @@ data class AbridgedMediaDevice(
     val uuid: UUID,
     val location: URL?,
     val server: MediaDeviceServer?,
-    val serviceList: MutableList<AdvertisedMediaService> = emptyList(),
-    val deviceList: MutableList<AdvertisedMediaDevice> = emptyList()
+    val serviceList: MutableList<AdvertisedMediaService> = mutableListOf(),
+    val deviceList: MutableList<AdvertisedMediaDevice> = mutableListOf()
 ) : MediaDevice() {
     // TODO: Implement XML call
     val description: RootMediaDevice?
@@ -42,7 +42,17 @@ data class AbridgedMediaDevice(
 data class AdvertisedMediaDevice(
     val deviceType: String,
     val deviceVersion: String
-) : MediaDevice()
+) : MediaDevice() {
+
+    override fun equals(other: Any?) = (other is AdvertisedMediaDevice) &&
+        deviceType == other.deviceType && deviceVersion == other.deviceVersion
+
+    override fun hashCode(): Int {
+        var result = deviceType.hashCode()
+        result = 31 * result + deviceVersion.hashCode()
+        return result
+    }
+}
 
 /**
  * A more refined, but not concrete, version of a [MediaDevice]. This class represents common
@@ -123,3 +133,12 @@ data class EmbeddedMediaDevice(
 ) : DetailedMediaDevice(
     deviceType, friendlyName, manufacturer, manufacturerURL, modelDescription, modelName, modelNumber, modelUrl, serialNumber, udn, serviceList
 )
+
+internal fun MutableList<AdvertisedMediaDevice>.addIfNew(newDevice: AdvertisedMediaDevice): List<MediaDevice> {
+    return if (this.contains(newDevice)) {
+        this
+    } else {
+        this.add(newDevice)
+        this
+    }
+}

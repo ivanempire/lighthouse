@@ -85,7 +85,7 @@ class AliveMediaPacketParserTest {
         assertEquals(-1, parsedPacket.bootId)
         assertEquals(-1, parsedPacket.configId)
         assertEquals(-1, parsedPacket.searchPort)
-        assertEquals(null, parsedPacket.uuid)
+        assertEquals(UUID(0, 0), parsedPacket.uuid)
     }
 
     object Fixtures {

@@ -1,5 +1,6 @@
 package com.ivanempire.lighthouse.parsers.packets
 
+import android.util.Log
 import com.ivanempire.lighthouse.models.packets.HeaderKeys
 import com.ivanempire.lighthouse.models.packets.MediaPacket
 import com.ivanempire.lighthouse.models.packets.NotificationSubtype
@@ -23,7 +24,7 @@ abstract class MediaPacketParser {
     internal fun parseIdentifier(
         notificationType: NotificationType?,
         uniqueServiceName: UniqueServiceName?
-    ): UUID? {
+    ): UUID {
         val ntMatch = notificationType?.rawString?.let { REGEX_UUID.find(it) }
         val usnMatch = uniqueServiceName?.rawString?.let { REGEX_UUID.find(it) }
 
@@ -33,7 +34,14 @@ abstract class MediaPacketParser {
             return UUID.fromString(usnMatch.value)
         }
 
-        return null
+        Log.w(
+            TAG,
+            "Could not match UUID from NT and USN fields, returning zeroed one:" +
+                "NT: $notificationType" +
+                "USN: $uniqueServiceName"
+        )
+
+        return UUID(0, 0)
     }
 
     internal fun parseCacheControl(rawValue: String?): Int? {
@@ -55,6 +63,7 @@ abstract class MediaPacketParser {
     }
 
     companion object {
+        private val TAG = this::class.java.simpleName
         operator fun invoke(packetHeaders: HashMap<String, String>): MediaPacket {
             val notificationSubtype = NotificationSubtype.getByRawValue(
                 packetHeaders[HeaderKeys.NOTIFICATION_SUBTYPE]

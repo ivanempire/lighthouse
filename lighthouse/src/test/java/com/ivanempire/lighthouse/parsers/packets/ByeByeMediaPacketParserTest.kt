@@ -52,7 +52,7 @@ class ByeByeMediaPacketParserTest {
         assertEquals(null, parsedPacket.usn)
         assertEquals(null, parsedPacket.bootId)
         assertEquals(null, parsedPacket.configId)
-        assertEquals(null, parsedPacket.uuid)
+        assertEquals(UUID(0, 0), parsedPacket.uuid)
     }
 
     @Test
@@ -65,7 +65,7 @@ class ByeByeMediaPacketParserTest {
         assertEquals(null, parsedPacket.usn)
         assertEquals(null, parsedPacket.bootId)
         assertEquals(null, parsedPacket.configId)
-        assertEquals(null, parsedPacket.uuid)
+        assertEquals(UUID(0, 0), parsedPacket.uuid)
     }
 
     object Fixtures {

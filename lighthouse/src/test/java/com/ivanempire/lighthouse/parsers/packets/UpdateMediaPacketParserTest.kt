@@ -83,7 +83,7 @@ class UpdateMediaPacketParserTest {
         assertEquals(null, parsedPacket.configId)
         assertEquals(null, parsedPacket.nextBootId)
         assertEquals(null, parsedPacket.searchPort)
-        assertEquals(null, parsedPacket.uuid)
+        assertEquals(UUID(0, 0), parsedPacket.uuid)
     }
 
     object Fixtures {

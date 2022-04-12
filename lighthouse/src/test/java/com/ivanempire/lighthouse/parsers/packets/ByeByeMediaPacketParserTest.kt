@@ -61,7 +61,7 @@ class ByeByeMediaPacketParserTest {
         val parsedPacket = sut.parseMediaPacket()
 
         assertEquals(null, parsedPacket.host)
-        assertEquals(null, parsedPacket.notificationType)
+        assertEquals(NotificationType(null), parsedPacket.notificationType)
         assertEquals(null, parsedPacket.usn)
         assertEquals(null, parsedPacket.bootId)
         assertEquals(null, parsedPacket.configId)

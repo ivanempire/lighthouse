@@ -1,16 +1,3 @@
 package com.ivanempire.lighthouse.models.packets
 
-import com.ivanempire.lighthouse.SomeName
-
-data class NotificationType(val rawString: String) {
-
-    companion object : SomeName<NotificationType?> {
-        override fun parseFromString(rawValue: String?): NotificationType? {
-            return if (rawValue == null) {
-                null
-            } else {
-                NotificationType(rawValue)
-            }
-        }
-    }
-}
+data class NotificationType(val rawString: String?)

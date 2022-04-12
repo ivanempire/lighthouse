@@ -20,8 +20,8 @@ class UpdateMediaPacketParser(
         parseUrl(headerSet[HeaderKeys.LOCATION])
     }
 
-    private val notificationType: NotificationType? by lazy {
-        NotificationType.parseFromString(headerSet[HeaderKeys.NOTIFICATION_TYPE])
+    private val notificationType: NotificationType by lazy {
+        NotificationType(headerSet[HeaderKeys.NOTIFICATION_TYPE])
     }
 
     private val uniqueServiceName: UniqueServiceName? by lazy {

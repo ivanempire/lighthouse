@@ -77,7 +77,7 @@ class UpdateMediaPacketParserTest {
 
         assertEquals(null, parsedPacket.host)
         assertEquals(null, parsedPacket.location)
-        assertEquals(null, parsedPacket.notificationType)
+        assertEquals(NotificationType(null), parsedPacket.notificationType)
         assertEquals(null, parsedPacket.usn)
         assertEquals(null, parsedPacket.bootId)
         assertEquals(null, parsedPacket.configId)

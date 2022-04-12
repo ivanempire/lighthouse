@@ -6,7 +6,7 @@ import java.util.UUID
 
 sealed class MediaPacket(
     open val host: MediaHost?,
-    open val notificationType: NotificationType?,
+    open val notificationType: NotificationType,
     open val notificationSubtype: NotificationSubtype,
     open val usn: UniqueServiceName?,
     open val configId: Int?,
@@ -32,7 +32,7 @@ data class AliveMediaPacket(
     override val host: MediaHost?,
     val cache: Int?,
     val location: URL?,
-    override val notificationType: NotificationType?,
+    override val notificationType: NotificationType,
     override val notificationSubtype: NotificationSubtype = NotificationSubtype.ALIVE,
     val server: MediaDeviceServer?,
     override val usn: UniqueServiceName?,
@@ -67,7 +67,7 @@ data class AliveMediaPacket(
 data class UpdateMediaPacket(
     override val host: MediaHost?,
     val location: URL?,
-    override val notificationType: NotificationType?,
+    override val notificationType: NotificationType,
     override val notificationSubtype: NotificationSubtype = NotificationSubtype.UPDATE,
     override val usn: UniqueServiceName?,
     override val bootId: Int?,
@@ -98,7 +98,7 @@ data class UpdateMediaPacket(
  */
 data class ByeByeMediaPacket(
     override val host: MediaHost?,
-    override val notificationType: NotificationType?,
+    override val notificationType: NotificationType,
     override val notificationSubtype: NotificationSubtype = NotificationSubtype.BYEBYE,
     override val usn: UniqueServiceName?,
     override val bootId: Int?,

@@ -80,7 +80,7 @@ class AliveMediaPacketParserTest {
         assertEquals(null, parsedPacket.cache)
         assertEquals(null, parsedPacket.location)
         assertEquals(null, parsedPacket.server)
-        assertEquals(null, parsedPacket.notificationType)
+        assertEquals(NotificationType(null), parsedPacket.notificationType)
         assertEquals(null, parsedPacket.usn)
         assertEquals(-1, parsedPacket.bootId)
         assertEquals(-1, parsedPacket.configId)

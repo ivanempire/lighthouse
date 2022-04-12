@@ -6,6 +6,7 @@ import com.ivanempire.lighthouse.models.packets.NotificationType
 import com.ivanempire.lighthouse.models.packets.UniqueServiceName
 import com.ivanempire.lighthouse.parsers.packets.ByeByeMediaPacketParserTest.Fixtures.COMPLETE_PACKET
 import com.ivanempire.lighthouse.parsers.packets.ByeByeMediaPacketParserTest.Fixtures.INCOMPLETE_PACKET
+import java.lang.IllegalStateException
 import java.net.InetAddress
 import java.util.UUID
 import org.junit.Assert.assertEquals
@@ -55,7 +56,7 @@ class ByeByeMediaPacketParserTest {
         assertEquals(UUID(0, 0), parsedPacket.uuid)
     }
 
-    @Test
+    @Test(expected = IllegalStateException::class)
     fun `parses empty packet correctly`() {
         sut = ByeByeMediaPacketParser(hashMapOf())
         val parsedPacket = sut.parseMediaPacket()
@@ -81,7 +82,8 @@ class ByeByeMediaPacketParserTest {
         val INCOMPLETE_PACKET = hashMapOf(
             "HOST" to "239.255.255.250:1900",
             "NT" to "urn:schemas-upnp-org:service:RenderingControl:1",
-            "NTS" to "ssdp:byebye"
+            "NTS" to "ssdp:byebye",
+            "USN" to "uuid:b9783ad2-d548-9793-0eb9-42db373ade07::urn:schemas-upnp-org:service:RenderingControl:1"
         )
     }
 }

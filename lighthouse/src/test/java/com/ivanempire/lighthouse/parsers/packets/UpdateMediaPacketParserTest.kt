@@ -6,6 +6,7 @@ import com.ivanempire.lighthouse.models.packets.UniqueServiceName
 import com.ivanempire.lighthouse.models.packets.UpdateMediaPacket
 import com.ivanempire.lighthouse.parsers.packets.UpdateMediaPacketParserTest.Fixtures.COMPLETE_PACKET
 import com.ivanempire.lighthouse.parsers.packets.UpdateMediaPacketParserTest.Fixtures.INCOMPLETE_PACKET
+import java.lang.IllegalStateException
 import java.net.InetAddress
 import java.net.URL
 import java.util.UUID
@@ -70,7 +71,7 @@ class UpdateMediaPacketParserTest {
         assertEquals(UUID.fromString("b9783ad2-d548-9793-0eb9-42db373ade07"), parsedPacket.uuid)
     }
 
-    @Test
+    @Test(expected = IllegalStateException::class)
     fun `parses empty packet correctly`() {
         sut = UpdateMediaPacketParser(hashMapOf())
         val parsedPacket = sut.parseMediaPacket() as UpdateMediaPacket

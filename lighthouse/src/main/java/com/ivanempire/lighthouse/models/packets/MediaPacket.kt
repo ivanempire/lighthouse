@@ -8,11 +8,10 @@ sealed class MediaPacket(
     open val host: MediaHost?,
     open val notificationType: NotificationType,
     open val notificationSubtype: NotificationSubtype,
-    open val usn: UniqueServiceName?,
+    open val usn: UniqueServiceName,
     open val configId: Int?,
     open val bootId: Int?,
-    open val uuid: UUID,
-    open val deviceAttribute: DeviceAttribute?
+    open val uuid: UUID
 )
 
 /**
@@ -35,12 +34,11 @@ data class AliveMediaPacket(
     override val notificationType: NotificationType,
     override val notificationSubtype: NotificationSubtype = NotificationSubtype.ALIVE,
     val server: MediaDeviceServer?,
-    override val usn: UniqueServiceName?,
+    override val usn: UniqueServiceName,
     override val bootId: Int?,
     override val configId: Int?,
     val searchPort: Int?,
-    override val uuid: UUID,
-    override val deviceAttribute: DeviceAttribute?
+    override val uuid: UUID
 ) : MediaPacket(
     host,
     notificationType,
@@ -48,8 +46,7 @@ data class AliveMediaPacket(
     usn,
     bootId,
     configId,
-    uuid,
-    deviceAttribute
+    uuid
 )
 
 /**
@@ -69,13 +66,12 @@ data class UpdateMediaPacket(
     val location: URL?,
     override val notificationType: NotificationType,
     override val notificationSubtype: NotificationSubtype = NotificationSubtype.UPDATE,
-    override val usn: UniqueServiceName?,
+    override val usn: UniqueServiceName,
     override val bootId: Int?,
     override val configId: Int?,
     val nextBootId: Int?,
     val searchPort: Int?,
-    override val uuid: UUID,
-    override val deviceAttribute: DeviceAttribute?
+    override val uuid: UUID
 ) : MediaPacket(
     host,
     notificationType,
@@ -83,8 +79,7 @@ data class UpdateMediaPacket(
     usn,
     bootId,
     configId,
-    uuid,
-    deviceAttribute
+    uuid
 )
 
 /**
@@ -100,11 +95,10 @@ data class ByeByeMediaPacket(
     override val host: MediaHost?,
     override val notificationType: NotificationType,
     override val notificationSubtype: NotificationSubtype = NotificationSubtype.BYEBYE,
-    override val usn: UniqueServiceName?,
+    override val usn: UniqueServiceName,
     override val bootId: Int?,
     override val configId: Int?,
-    override val uuid: UUID,
-    override val deviceAttribute: DeviceAttribute?
+    override val uuid: UUID
 ) : MediaPacket(
     host,
     notificationType,
@@ -112,6 +106,5 @@ data class ByeByeMediaPacket(
     usn,
     bootId,
     configId,
-    uuid,
-    deviceAttribute
+    uuid
 )

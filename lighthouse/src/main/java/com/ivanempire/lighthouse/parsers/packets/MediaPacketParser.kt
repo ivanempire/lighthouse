@@ -26,13 +26,14 @@ abstract class MediaPacketParser {
         uniqueServiceName: UniqueServiceName?
     ): UUID {
         val ntMatch = notificationType?.rawString?.let { REGEX_UUID.find(it) }
-        val usnMatch = uniqueServiceName?.rawString?.let { REGEX_UUID.find(it) }
+        // val usnMatch = uniqueServiceName?.rawString?.let { REGEX_UUID.find(it) }
 
         if (ntMatch != null) {
             return UUID.fromString(ntMatch.value)
-        } else if (usnMatch != null) {
-            return UUID.fromString(usnMatch.value)
         }
+//        else if (usnMatch != null) {
+//            return UUID.fromString(usnMatch.value)
+//        }
 
         Log.w(
             TAG,

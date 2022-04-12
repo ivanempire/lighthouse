@@ -19,8 +19,8 @@ class ByeByeMediaPacketParser(
         NotificationType(headerSet[HeaderKeys.NOTIFICATION_TYPE])
     }
 
-    private val uniqueServiceName: UniqueServiceName? by lazy {
-        UniqueServiceName.parseFromString(headerSet[HeaderKeys.UNIQUE_SERVICE_NAME])
+    private val uniqueServiceName: UniqueServiceName by lazy {
+        UniqueServiceName(headerSet[HeaderKeys.UNIQUE_SERVICE_NAME])
     }
 
     private val bootId = headerSet[HeaderKeys.BOOTID]?.toInt()
@@ -34,8 +34,7 @@ class ByeByeMediaPacketParser(
             usn = uniqueServiceName,
             bootId = bootId,
             configId = configId,
-            uuid = parseIdentifier(notificationType, uniqueServiceName),
-            deviceAttribute = null
+            uuid = parseIdentifier(notificationType, uniqueServiceName)
         )
     }
 }

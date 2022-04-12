@@ -1,18 +1,10 @@
 package com.ivanempire.lighthouse.models
 
-import android.util.Log
 import com.ivanempire.lighthouse.models.devices.AbridgedMediaDevice
-import com.ivanempire.lighthouse.models.devices.AdvertisedMediaDevice
-import com.ivanempire.lighthouse.models.devices.AdvertisedMediaService
 import com.ivanempire.lighthouse.models.devices.MediaDevice
-import com.ivanempire.lighthouse.models.devices.addIfNew
 import com.ivanempire.lighthouse.models.packets.AliveMediaPacket
 import com.ivanempire.lighthouse.models.packets.ByeByeMediaPacket
-import com.ivanempire.lighthouse.models.packets.DeviceAttribute
-import com.ivanempire.lighthouse.models.packets.EmbeddedDeviceAttribute
-import com.ivanempire.lighthouse.models.packets.EmbeddedServiceAttribute
 import com.ivanempire.lighthouse.models.packets.MediaPacket
-import com.ivanempire.lighthouse.models.packets.RootDeviceAttribute
 import java.lang.IllegalStateException
 
 // BOOTID.UPNP.ORG     ==> changes, means device will reboot; see how to handle this
@@ -48,43 +40,14 @@ object LighthouseState {
                 location = latestPacket.location,
                 server = latestPacket.server
             )
-            val updatedDevice = updateDeviceAttributes(baseDevice, latestPacket.deviceAttribute)
-            deviceList.add(updatedDevice)
+            // val updatedDevice = updateDeviceAttributes(baseDevice, latestPacket.deviceAttribute)
+            // deviceList.add(updatedDevice)
             deviceList
         } else {
-            val updatedDevice = updateDeviceAttributes(targetDevice, latestPacket.deviceAttribute)
-            deviceList.add(updatedDevice)
+            // val updatedDevice = updateDeviceAttributes(targetDevice, latestPacket.deviceAttribute)
+            // deviceList.add(updatedDevice)
             deviceList
         }
-    }
-
-    private fun updateDeviceAttributes(
-        baseDevice: AbridgedMediaDevice,
-        latestAttribute: DeviceAttribute?
-    ): AbridgedMediaDevice {
-        if (latestAttribute == null) {
-            return baseDevice
-        }
-        when (latestAttribute) {
-            is RootDeviceAttribute -> {
-                Log.d(TAG, "Found root device for UUID: ${baseDevice.uuid}")
-            }
-            is EmbeddedDeviceAttribute -> {
-                val embeddedDevice = AdvertisedMediaDevice(
-                    deviceType = latestAttribute.deviceType,
-                    deviceVersion = latestAttribute.deviceVersion
-                )
-                baseDevice.deviceList.addIfNew(embeddedDevice)
-            }
-            is EmbeddedServiceAttribute -> {
-                val embeddedService = AdvertisedMediaService(
-                    serviceType = latestAttribute.serviceType,
-                    serviceVersion = latestAttribute.serviceVersion
-                )
-                baseDevice.serviceList.addIfNew(embeddedService)
-            }
-        }
-        return baseDevice
     }
 
     // Ah damn this needs to handle service removal too

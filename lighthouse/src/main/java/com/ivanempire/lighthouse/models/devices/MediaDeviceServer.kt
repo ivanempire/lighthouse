@@ -1,15 +1,12 @@
 package com.ivanempire.lighthouse.models.devices
 
-import com.ivanempire.lighthouse.SomeName
-
 data class MediaDeviceServer(
     val osVersion: String,
     val upnpVersion: String,
     val productVersion: String
 ) {
-    companion object : SomeName<MediaDeviceServer?> {
-
-        override fun parseFromString(rawValue: String?): MediaDeviceServer? {
+    companion object {
+        fun parseFromString(rawValue: String?): MediaDeviceServer? {
             return if (rawValue == null) {
                 null
             } else {

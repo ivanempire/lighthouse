@@ -33,8 +33,8 @@ class AliveMediaPacketParser(
         NotificationType(headerSet[HeaderKeys.NOTIFICATION_TYPE])
     }
 
-    private val uniqueServiceName: UniqueServiceName? by lazy {
-        UniqueServiceName.parseFromString(headerSet[HeaderKeys.UNIQUE_SERVICE_NAME])
+    private val uniqueServiceName: UniqueServiceName by lazy {
+        UniqueServiceName(headerSet[HeaderKeys.UNIQUE_SERVICE_NAME])
     }
 
     private val bootId = headerSet[HeaderKeys.BOOTID]?.toInt() ?: -1
@@ -54,8 +54,7 @@ class AliveMediaPacketParser(
             uuid = parseIdentifier(notificationType, uniqueServiceName),
             bootId = bootId,
             configId = configId,
-            searchPort = searchPort,
-            deviceAttribute = null
+            searchPort = searchPort
         )
     }
 }

@@ -7,6 +7,7 @@ import com.ivanempire.lighthouse.models.packets.NotificationType
 import com.ivanempire.lighthouse.models.packets.UniqueServiceName
 import com.ivanempire.lighthouse.parsers.packets.AliveMediaPacketParserTest.Fixtures.COMPLETE_PACKET
 import com.ivanempire.lighthouse.parsers.packets.AliveMediaPacketParserTest.Fixtures.INCOMPLETE_PACKET
+import java.lang.IllegalStateException
 import java.net.InetAddress
 import java.net.URL
 import java.util.UUID
@@ -71,7 +72,7 @@ class AliveMediaPacketParserTest {
         assertEquals(UUID.fromString("b9783ad2-d548-9793-0eb9-42db373ade07"), parsedPacket.uuid)
     }
 
-    @Test
+    @Test(expected = IllegalStateException::class)
     fun `parses empty packet correctly`() {
         sut = AliveMediaPacketParser(hashMapOf())
         val parsedPacket = sut.parseMediaPacket() as AliveMediaPacket
@@ -106,6 +107,7 @@ class AliveMediaPacketParserTest {
             "CACHE-CONTROL" to "max-age=1800",
             "LOCATION" to "http://192.168.1.190:8091/b9783ad2-d548-9793-0eb9-42db373ade07.xml",
             "NT" to "uuid:b9783ad2-d548-9793-0eb9-42db373ade07",
+            "USN" to "uuid:b9783ad2-d548-9793-0eb9-42db373ade07::urn:schemas-upnp-org:service:ConnectionManager:1",
             "SEARCHPORT.UPNP.ORG" to "1900"
         )
     }

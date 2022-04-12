@@ -24,8 +24,8 @@ class UpdateMediaPacketParser(
         NotificationType(headerSet[HeaderKeys.NOTIFICATION_TYPE])
     }
 
-    private val uniqueServiceName: UniqueServiceName? by lazy {
-        UniqueServiceName.parseFromString(headerSet[HeaderKeys.UNIQUE_SERVICE_NAME])
+    private val uniqueServiceName: UniqueServiceName by lazy {
+        UniqueServiceName(headerSet[HeaderKeys.UNIQUE_SERVICE_NAME])
     }
 
     private val bootId = headerSet[HeaderKeys.BOOTID]?.toInt()
@@ -46,8 +46,7 @@ class UpdateMediaPacketParser(
             configId = configId,
             nextBootId = nextBootId,
             searchPort = searchPort,
-            uuid = parseIdentifier(notificationType, uniqueServiceName),
-            deviceAttribute = null
+            uuid = parseIdentifier(notificationType, uniqueServiceName)
         )
     }
 }

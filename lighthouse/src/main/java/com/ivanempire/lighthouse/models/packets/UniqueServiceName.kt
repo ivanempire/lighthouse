@@ -3,74 +3,50 @@ package com.ivanempire.lighthouse.models.packets
 import java.lang.IllegalStateException
 import java.util.UUID
 
+val REGEX_UUID = Regex(
+    "([a-f0-9]{8}(-[a-f0-9]{4}){4}[a-f0-9]{8})",
+    RegexOption.IGNORE_CASE
+)
+val UPNP_SCHEMA_MARKER = ":schemas-upnp-org:"
+
 abstract class UniqueServiceName(
     open val uuid: UUID
 ) {
     companion object {
-        operator fun invoke(usnString: String?): UniqueServiceName {
-            if (usnString == null) {
-                throw IllegalStateException(
-                    "Device did not advertise a USN"
+        operator fun invoke(rawValue: String): UniqueServiceName {
+            val isRootMessage = rawValue.indexOf(URN_MARKER) == -1 && rawValue.isNotEmpty()
+            if (isRootMessage) {
+                return RootDeviceInformation(rawValue.parseUuid())
+            }
+
+            val isDeviceMessage = rawValue.indexOf(DEVICE_MARKER) != -1
+            if (isDeviceMessage) {
+                val deviceInfoPair = rawValue.createPair(DEVICE_MARKER)
+                return EmbeddedDeviceInformation(
+                    uuid = rawValue.parseUuid(),
+                    deviceType = deviceInfoPair.first,
+                    deviceVersion = deviceInfoPair.second,
+                    domain = rawValue.parseDomain()
                 )
             }
 
-            val deviceStartIndex = usnString.indexOf(DEVICE_MARKER)
-            val serviceStartIndex = usnString.indexOf(SERVICE_MARKER)
-            return if (deviceStartIndex != -1) {
-                parseDeviceInfo(usnString, deviceStartIndex)
-            } else if (serviceStartIndex != -1) {
-                parseServiceInfo(usnString, serviceStartIndex)
-            } else {
-                // Root device is a little complicated
-                // uuid:device-UUID::upnp:rootdevice || uuid:device-UUID
-                // TODO
-                RootDeviceInformation(UUID.randomUUID())
-            }
-        }
-
-        private fun parseDeviceInfo(usnString: String, deviceStartIndex: Int): EmbeddedDeviceInformation {
-            val deviceInfo = usnString.substring(deviceStartIndex + 8).split(":")
-            var baseInformation = EmbeddedDeviceInformation(
-                deviceType = deviceInfo[0],
-                deviceVersion = deviceInfo[1],
-                // TODO
-                uuid = UUID.randomUUID()
-            )
-
-            val schemasIndex = usnString.indexOf(UPNP_SCHEMA_MARKER)
-            if (schemasIndex == -1) {
-                val serviceDomain = usnString.substring(4, deviceStartIndex)
-                baseInformation = baseInformation.copy(domain = serviceDomain)
+            val isServiceMessage = rawValue.indexOf(SERVICE_MARKER) != -1
+            if (isServiceMessage) {
+                val serviceInfoPair = rawValue.createPair(SERVICE_MARKER)
+                return EmbeddedServiceInformation(
+                    uuid = rawValue.parseUuid(),
+                    serviceType = serviceInfoPair.first,
+                    serviceVersion = serviceInfoPair.second,
+                    domain = rawValue.parseDomain()
+                )
             }
 
-            return baseInformation
+            throw IllegalStateException("Awh hell naw")
         }
 
-        private fun parseServiceInfo(usnString: String, serviceStartIndex: Int): EmbeddedServiceInformation {
-            val serviceInfo = usnString.substring(serviceStartIndex + 9).split(
-                INFO_DELIMITER
-            )
-
-            var baseInformation = EmbeddedServiceInformation(
-                serviceType = serviceInfo[0],
-                serviceVersion = serviceInfo[1],
-                // TODO
-                uuid = UUID.randomUUID()
-            )
-
-            val schemasIndex = usnString.indexOf(UPNP_SCHEMA_MARKER)
-            if (schemasIndex == -1) {
-                val serviceDomain = usnString.substring(4, serviceStartIndex)
-                baseInformation = baseInformation.copy(domain = serviceDomain)
-            }
-
-            return baseInformation
-        }
-
-        const val INFO_DELIMITER = ":"
-        const val DEVICE_MARKER = ":device:"
-        const val SERVICE_MARKER = ":service:"
-        const val UPNP_SCHEMA_MARKER = ":schemas-upnp-org:"
+        private val DEVICE_MARKER = ":device:"
+        private val SERVICE_MARKER = ":service:"
+        private val URN_MARKER = "::urn:"
     }
 }
 
@@ -91,3 +67,29 @@ data class EmbeddedServiceInformation(
     val serviceVersion: String,
     val domain: String? = null
 ) : UniqueServiceName(uuid)
+
+private fun String.parseUuid(): UUID {
+    val uuidMatch = REGEX_UUID.find(this)
+    return if (uuidMatch != null) {
+        UUID.fromString(uuidMatch.value)
+    } else {
+        UUID(0, 0)
+    }
+}
+
+private fun String.createPair(markerTag: String): Pair<String, String> {
+    val splitInfo = this.split(markerTag)[1].split(":")
+    return Pair(
+        splitInfo[0],
+        splitInfo[1]
+    )
+}
+
+private fun String.parseDomain(): String? {
+    val domainMarkerIndex = this.indexOf(UPNP_SCHEMA_MARKER)
+    return if (domainMarkerIndex != -1) {
+        null
+    } else {
+        this.substring(0, domainMarkerIndex)
+    }
+}

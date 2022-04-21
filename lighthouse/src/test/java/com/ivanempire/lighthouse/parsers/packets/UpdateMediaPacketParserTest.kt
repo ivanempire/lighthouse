@@ -41,7 +41,7 @@ class UpdateMediaPacketParserTest {
         assertEquals(201, parsedPacket.configId)
         assertEquals(112, parsedPacket.nextBootId)
         assertEquals(839, parsedPacket.searchPort)
-        assertEquals(UUID.fromString("b9783ad2-d548-9793-0eb9-42db373ade07"), parsedPacket.uuid)
+        assertEquals(UUID.fromString("b9783ad2-d548-9793-0eb9-42db373ade07"), parsedPacket.usn.uuid)
     }
 
     @Test
@@ -68,7 +68,7 @@ class UpdateMediaPacketParserTest {
         assertEquals(201, parsedPacket.configId)
         assertEquals(null, parsedPacket.nextBootId)
         assertEquals(1000, parsedPacket.searchPort)
-        assertEquals(UUID.fromString("b9783ad2-d548-9793-0eb9-42db373ade07"), parsedPacket.uuid)
+        assertEquals(UUID.fromString("b9783ad2-d548-9793-0eb9-42db373ade07"), parsedPacket.usn.uuid)
     }
 
     @Test(expected = IllegalStateException::class)
@@ -84,7 +84,7 @@ class UpdateMediaPacketParserTest {
         assertEquals(null, parsedPacket.configId)
         assertEquals(null, parsedPacket.nextBootId)
         assertEquals(null, parsedPacket.searchPort)
-        assertEquals(UUID(0, 0), parsedPacket.uuid)
+        assertEquals(UUID(0, 0), parsedPacket.usn.uuid)
     }
 
     object Fixtures {

@@ -2,7 +2,6 @@ package com.ivanempire.lighthouse.models.packets
 
 import com.ivanempire.lighthouse.models.devices.MediaDeviceServer
 import java.net.URL
-import java.util.UUID
 
 sealed class MediaPacket(
     open val host: MediaHost?,
@@ -10,8 +9,7 @@ sealed class MediaPacket(
     open val notificationSubtype: NotificationSubtype,
     open val usn: UniqueServiceName,
     open val configId: Int?,
-    open val bootId: Int?,
-    open val uuid: UUID
+    open val bootId: Int?
 )
 
 /**
@@ -37,16 +35,14 @@ data class AliveMediaPacket(
     override val usn: UniqueServiceName,
     override val bootId: Int?,
     override val configId: Int?,
-    val searchPort: Int?,
-    override val uuid: UUID
+    val searchPort: Int?
 ) : MediaPacket(
     host,
     notificationType,
     notificationSubtype,
     usn,
     bootId,
-    configId,
-    uuid
+    configId
 )
 
 /**
@@ -70,16 +66,14 @@ data class UpdateMediaPacket(
     override val bootId: Int?,
     override val configId: Int?,
     val nextBootId: Int?,
-    val searchPort: Int?,
-    override val uuid: UUID
+    val searchPort: Int?
 ) : MediaPacket(
     host,
     notificationType,
     notificationSubtype,
     usn,
     bootId,
-    configId,
-    uuid
+    configId
 )
 
 /**
@@ -97,14 +91,12 @@ data class ByeByeMediaPacket(
     override val notificationSubtype: NotificationSubtype = NotificationSubtype.BYEBYE,
     override val usn: UniqueServiceName,
     override val bootId: Int?,
-    override val configId: Int?,
-    override val uuid: UUID
+    override val configId: Int?
 ) : MediaPacket(
     host,
     notificationType,
     notificationSubtype,
     usn,
     bootId,
-    configId,
-    uuid
+    configId
 )

@@ -1,6 +1,7 @@
 package com.ivanempire.lighthouse.parsers.packets
 
 import com.ivanempire.lighthouse.models.packets.ByeByeMediaPacket
+import com.ivanempire.lighthouse.models.packets.EmbeddedServiceInformation
 import com.ivanempire.lighthouse.models.packets.MediaHost
 import com.ivanempire.lighthouse.models.packets.NotificationType
 import com.ivanempire.lighthouse.models.packets.UniqueServiceName
@@ -34,7 +35,7 @@ class ByeByeMediaPacketParserTest {
         )
         assertEquals(123, parsedPacket.bootId)
         assertEquals(342, parsedPacket.configId)
-        assertEquals(UUID.fromString("b9783ad2-d548-9793-0eb9-42db373ade07"), parsedPacket.uuid)
+        assertEquals(UUID.fromString("b9783ad2-d548-9793-0eb9-42db373ade07"), parsedPacket.usn.uuid)
     }
 
     @Test
@@ -50,10 +51,17 @@ class ByeByeMediaPacketParserTest {
             NotificationType("urn:schemas-upnp-org:service:RenderingControl:1"),
             parsedPacket.notificationType
         )
-        assertEquals(null, parsedPacket.usn)
+        assertEquals(
+            EmbeddedServiceInformation(
+                UUID.fromString("b9783ad2-d548-9793-0eb9-42db373ade07"),
+                "RenderingControl",
+                "1",
+                null
+            ),
+            parsedPacket.usn
+        )
         assertEquals(null, parsedPacket.bootId)
         assertEquals(null, parsedPacket.configId)
-        assertEquals(UUID(0, 0), parsedPacket.uuid)
     }
 
     @Test(expected = IllegalStateException::class)
@@ -66,7 +74,7 @@ class ByeByeMediaPacketParserTest {
         assertEquals(null, parsedPacket.usn)
         assertEquals(null, parsedPacket.bootId)
         assertEquals(null, parsedPacket.configId)
-        assertEquals(UUID(0, 0), parsedPacket.uuid)
+        assertEquals(UUID(0, 0), parsedPacket.usn.uuid)
     }
 
     object Fixtures {

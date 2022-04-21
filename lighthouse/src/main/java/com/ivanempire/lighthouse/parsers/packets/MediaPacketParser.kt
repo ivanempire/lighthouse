@@ -1,49 +1,15 @@
 package com.ivanempire.lighthouse.parsers.packets
 
-import android.util.Log
 import com.ivanempire.lighthouse.models.packets.HeaderKeys
 import com.ivanempire.lighthouse.models.packets.MediaPacket
 import com.ivanempire.lighthouse.models.packets.NotificationSubtype
-import com.ivanempire.lighthouse.models.packets.NotificationType
-import com.ivanempire.lighthouse.models.packets.UniqueServiceName
 import java.lang.IllegalStateException
 import java.net.MalformedURLException
 import java.net.URL
-import java.util.UUID
 
 abstract class MediaPacketParser {
 
     abstract fun parseMediaPacket(): MediaPacket
-
-    /**
-     * Parses unique identifier for the advertised device or service. Combined into one function
-     * for now because of the >6 possible combinations that will be handled later
-     * @param notificationType Current packet's advertised [NotificationType]
-     * @param uniqueServiceName Current packet's advertised [UniqueServiceName]
-     */
-    internal fun parseIdentifier(
-        notificationType: NotificationType?,
-        uniqueServiceName: UniqueServiceName?
-    ): UUID {
-        val ntMatch = notificationType?.rawString?.let { REGEX_UUID.find(it) }
-        // val usnMatch = uniqueServiceName?.rawString?.let { REGEX_UUID.find(it) }
-
-        if (ntMatch != null) {
-            return UUID.fromString(ntMatch.value)
-        }
-//        else if (usnMatch != null) {
-//            return UUID.fromString(usnMatch.value)
-//        }
-
-        Log.w(
-            TAG,
-            "Could not match UUID from NT and USN fields, returning zeroed one:" +
-                "NT: $notificationType" +
-                "USN: $uniqueServiceName"
-        )
-
-        return UUID(0, 0)
-    }
 
     internal fun parseCacheControl(rawValue: String?): Int? {
         return rawValue?.substringAfter("=", "-1")?.toInt()
@@ -64,7 +30,6 @@ abstract class MediaPacketParser {
     }
 
     companion object {
-        private val TAG = this::class.java.simpleName
         operator fun invoke(packetHeaders: HashMap<String, String>): MediaPacket {
             val notificationSubtype = NotificationSubtype.getByRawValue(
                 packetHeaders[HeaderKeys.NOTIFICATION_SUBTYPE]
@@ -79,10 +44,5 @@ abstract class MediaPacketParser {
             }
             return latestPacket.parseMediaPacket()
         }
-
-        private val REGEX_UUID = Regex(
-            "([a-f0-9]{8}(-[a-f0-9]{4}){4}[a-f0-9]{8})",
-            RegexOption.IGNORE_CASE
-        )
     }
 }

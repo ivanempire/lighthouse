@@ -2,6 +2,7 @@ package com.ivanempire.lighthouse.parsers.packets
 
 import com.ivanempire.lighthouse.models.devices.MediaDeviceServer
 import com.ivanempire.lighthouse.models.packets.AliveMediaPacket
+import com.ivanempire.lighthouse.models.packets.EmbeddedServiceInformation
 import com.ivanempire.lighthouse.models.packets.MediaHost
 import com.ivanempire.lighthouse.models.packets.NotificationType
 import com.ivanempire.lighthouse.models.packets.UniqueServiceName
@@ -46,7 +47,7 @@ class AliveMediaPacketParserTest {
         assertEquals(245, parsedPacket.bootId)
         assertEquals(564, parsedPacket.configId)
         assertEquals(1900, parsedPacket.searchPort)
-        assertEquals(UUID.fromString("b9783ad2-d548-9793-0eb9-42db373ade07"), parsedPacket.uuid)
+        assertEquals(UUID.fromString("b9783ad2-d548-9793-0eb9-42db373ade07"), parsedPacket.usn.uuid)
     }
 
     @Test
@@ -65,11 +66,19 @@ class AliveMediaPacketParserTest {
             NotificationType("uuid:b9783ad2-d548-9793-0eb9-42db373ade07"),
             parsedPacket.notificationType
         )
-        assertEquals(null, parsedPacket.usn)
+        assertEquals(
+            EmbeddedServiceInformation(
+                UUID.fromString("b9783ad2-d548-9793-0eb9-42db373ade07"),
+                "ConnectionManager",
+                "1",
+                null
+            ),
+            parsedPacket.usn
+        )
         assertEquals(-1, parsedPacket.bootId)
         assertEquals(-1, parsedPacket.configId)
         assertEquals(1900, parsedPacket.searchPort)
-        assertEquals(UUID.fromString("b9783ad2-d548-9793-0eb9-42db373ade07"), parsedPacket.uuid)
+        assertEquals(UUID.fromString("b9783ad2-d548-9793-0eb9-42db373ade07"), parsedPacket.usn.uuid)
     }
 
     @Test(expected = IllegalStateException::class)
@@ -86,7 +95,7 @@ class AliveMediaPacketParserTest {
         assertEquals(-1, parsedPacket.bootId)
         assertEquals(-1, parsedPacket.configId)
         assertEquals(-1, parsedPacket.searchPort)
-        assertEquals(UUID(0, 0), parsedPacket.uuid)
+        assertEquals(UUID(0, 0), parsedPacket.usn.uuid)
     }
 
     object Fixtures {

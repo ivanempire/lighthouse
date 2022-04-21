@@ -3,6 +3,10 @@ package com.ivanempire.lighthouse.models.packets
 import java.lang.IllegalStateException
 import java.util.UUID
 
+private val DEVICE_MARKER = ":device:"
+private val SERVICE_MARKER = ":service:"
+private val URN_MARKER = "urn:"
+
 val REGEX_UUID = Regex(
     "([a-f0-9]{8}(-[a-f0-9]{4}){4}[a-f0-9]{8})",
     RegexOption.IGNORE_CASE
@@ -43,10 +47,6 @@ abstract class UniqueServiceName(
 
             throw IllegalStateException("Awh hell naw")
         }
-
-        private val DEVICE_MARKER = ":device:"
-        private val SERVICE_MARKER = ":service:"
-        private val URN_MARKER = "::urn:"
     }
 }
 
@@ -90,6 +90,7 @@ private fun String.parseDomain(): String? {
     return if (domainMarkerIndex != -1) {
         null
     } else {
-        this.substring(0, domainMarkerIndex)
+        val domainHalf = this.split(URN_MARKER)[1]
+        domainHalf.substring(0, domainHalf.indexOf(":"))
     }
 }

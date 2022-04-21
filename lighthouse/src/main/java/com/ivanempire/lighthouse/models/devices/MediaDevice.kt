@@ -38,10 +38,12 @@ data class AbridgedMediaDevice(
  * querying the XML description endpoint
  * @param deviceType The device type that is obtained from the USN or NT packet fields
  * @param deviceVersion The device version
+ * @param domain The device domain
  */
 data class AdvertisedMediaDevice(
     val deviceType: String,
-    val deviceVersion: String
+    val deviceVersion: String,
+    val domain: String? = null
 ) : MediaDevice() {
 
     override fun equals(other: Any?) = (other is AdvertisedMediaDevice) &&
@@ -133,12 +135,3 @@ data class EmbeddedMediaDevice(
 ) : DetailedMediaDevice(
     deviceType, friendlyName, manufacturer, manufacturerURL, modelDescription, modelName, modelNumber, modelUrl, serialNumber, udn, serviceList
 )
-
-internal fun MutableList<AdvertisedMediaDevice>.addIfNew(newDevice: AdvertisedMediaDevice): List<MediaDevice> {
-    return if (this.contains(newDevice)) {
-        this
-    } else {
-        this.add(newDevice)
-        this
-    }
-}

@@ -12,10 +12,12 @@ open class MediaService(
  * A specific version of a [MediaService], populated exclusively from SSDP packets
  * @param serviceType The service type that is obtained from the USN or NT packet fields
  * @param serviceVersion The service version
+ * @param domain The service domain
  */
 data class AdvertisedMediaService(
     override val serviceType: String,
-    val serviceVersion: String
+    val serviceVersion: String,
+    val domain: String? = null
 ) : MediaService(serviceType)
 
 /**
@@ -33,12 +35,3 @@ data class DetailedMediaService(
     val controlUrl: String,
     val eventUrl: String
 ) : MediaService(serviceType)
-
-internal fun MutableList<AdvertisedMediaService>.addIfNew(newService: AdvertisedMediaService): List<MediaService> {
-    return if (this.contains(newService)) {
-        this
-    } else {
-        this.add(newService)
-        this
-    }
-}

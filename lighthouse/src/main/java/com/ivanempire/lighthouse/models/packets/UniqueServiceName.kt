@@ -68,6 +68,10 @@ data class EmbeddedServiceInformation(
     val domain: String? = null
 ) : UniqueServiceName(uuid)
 
+/**
+ * Attempts to parse the UUID from a USN string, returns a
+ * zeroed-out identifier otherwise
+ */
 private fun String.parseUuid(): UUID {
     val uuidMatch = REGEX_UUID.find(this)
     return if (uuidMatch != null) {
@@ -77,6 +81,9 @@ private fun String.parseUuid(): UUID {
     }
 }
 
+/**
+ * Creates a string pair of device or service information <type, version>
+ */
 private fun String.createPair(markerTag: String): Pair<String, String> {
     val splitInfo = this.split(markerTag)[1].split(":")
     return Pair(
@@ -85,6 +92,9 @@ private fun String.createPair(markerTag: String): Pair<String, String> {
     )
 }
 
+/**
+ * Attempts to extract the domain from a USN string, null otherwise
+ */
 private fun String.parseDomain(): String? {
     val domainMarkerIndex = this.indexOf(UPNP_SCHEMA_MARKER)
     return if (domainMarkerIndex != -1) {

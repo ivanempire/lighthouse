@@ -1,7 +1,10 @@
 package com.ivanempire.lighthouse.models
 
 import com.ivanempire.lighthouse.models.devices.AbridgedMediaDevice
+import com.ivanempire.lighthouse.models.devices.AdvertisedMediaDevice
+import com.ivanempire.lighthouse.models.devices.AdvertisedMediaService
 import com.ivanempire.lighthouse.models.devices.MediaDevice
+import com.ivanempire.lighthouse.models.packets.AliveMediaPacket
 import com.ivanempire.lighthouse.models.packets.ByeByeMediaPacket
 import com.ivanempire.lighthouse.models.packets.EmbeddedDeviceInformation
 import com.ivanempire.lighthouse.models.packets.EmbeddedServiceInformation
@@ -14,8 +17,6 @@ import java.lang.IllegalStateException
 // NEXTBOOTID.UPNP.ORG ==> next bootId to use
 object LighthouseState {
 
-    private val TAG = this::class.java.simpleName
-
     private val deviceList = arrayListOf<AbridgedMediaDevice>()
 
     fun setDeviceList(updatedList: List<AbridgedMediaDevice>): List<MediaDevice> {
@@ -26,31 +27,75 @@ object LighthouseState {
 
     fun parseMediaPacket(latestPacket: MediaPacket): List<MediaDevice> {
         return when (latestPacket) {
-            // is AliveMediaPacket -> parseAliveMediaPacket(latestPacket)
+            is AliveMediaPacket -> parseAliveMediaPacket(latestPacket)
             // is UpdateMediaPacket -> parseUpdateMediaPacket(latestPacket)
             is ByeByeMediaPacket -> parseByeByeMediaPacket(latestPacket)
             else -> throw IllegalStateException("")
         }
     }
 
-//    private fun parseAliveMediaPacket(latestPacket: AliveMediaPacket): List<MediaDevice> {
-//        val targetDevice = deviceList.firstOrNull { it.uuid == latestPacket.usn.uuid }
-//
-//        return if (targetDevice == null) {
-//            val baseDevice = AbridgedMediaDevice(
-//                // uuid = latestPacket.uuid,
-//                location = latestPacket.location,
-//                server = latestPacket.server
-//            )
-//            // val updatedDevice = updateDeviceAttributes(baseDevice, latestPacket.deviceAttribute)
-//            // deviceList.add(updatedDevice)
-//            deviceList
-//        } else {
-//            // val updatedDevice = updateDeviceAttributes(targetDevice, latestPacket.deviceAttribute)
-//            // deviceList.add(updatedDevice)
-//            deviceList
-//        }
-//    }
+    private fun parseAliveMediaPacket(latestPacket: AliveMediaPacket): List<MediaDevice> {
+        val targetDevice = deviceList.firstOrNull { it.uuid == latestPacket.usn.uuid }
+        val targetComponent = latestPacket.usn
+        if (targetDevice == null) {
+            val baseDevice = AbridgedMediaDevice(
+                uuid = targetComponent.uuid,
+                location = latestPacket.location,
+                server = latestPacket.server
+            )
+            when (targetComponent) {
+                is RootDeviceInformation -> { /* No-op */ }
+                is EmbeddedDeviceInformation -> {
+                    baseDevice.deviceList.add(
+                        AdvertisedMediaDevice(
+                            deviceType = targetComponent.deviceType,
+                            deviceVersion = targetComponent.deviceType,
+                            domain = targetComponent.domain
+                        )
+                    )
+                }
+                is EmbeddedServiceInformation -> {
+                    baseDevice.serviceList.add(
+                        AdvertisedMediaService(
+                            serviceType = targetComponent.serviceType,
+                            serviceVersion = targetComponent.serviceVersion,
+                            domain = targetComponent.domain
+                        )
+                    )
+                }
+            }
+            deviceList.add(baseDevice)
+        } else {
+            when (targetComponent) {
+                is RootDeviceInformation -> { /* No-op */ }
+                is EmbeddedDeviceInformation -> {
+                    val presentEmbedded = targetDevice.deviceList.firstOrNull { it.deviceType == targetComponent.deviceType }
+                    if (presentEmbedded == null) {
+                        targetDevice.deviceList.add(
+                            AdvertisedMediaDevice(
+                                deviceType = targetComponent.deviceType,
+                                deviceVersion = targetComponent.deviceVersion,
+                                domain = targetComponent.domain
+                            )
+                        )
+                    }
+                }
+                is EmbeddedServiceInformation -> {
+                    val presentEmbedded = targetDevice.deviceList.firstOrNull { it.deviceType == targetComponent.serviceType }
+                    if (presentEmbedded == null) {
+                        targetDevice.deviceList.add(
+                            AdvertisedMediaDevice(
+                                deviceType = targetComponent.serviceType,
+                                deviceVersion = targetComponent.serviceVersion,
+                                domain = targetComponent.domain
+                            )
+                        )
+                    }
+                }
+            }
+        }
+        return deviceList
+    }
 
     private fun parseByeByeMediaPacket(latestPacket: ByeByeMediaPacket): List<MediaDevice> {
         val targetComponent = latestPacket.usn

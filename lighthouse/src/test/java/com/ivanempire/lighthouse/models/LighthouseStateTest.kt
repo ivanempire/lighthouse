@@ -4,8 +4,13 @@ import com.ivanempire.lighthouse.models.LighthouseStateTest.Fixtures.SAMPLE_EMBE
 import com.ivanempire.lighthouse.models.LighthouseStateTest.Fixtures.SAMPLE_EMBEDDED_SERVICE_BYEBYE_PACKET_1
 import com.ivanempire.lighthouse.models.LighthouseStateTest.Fixtures.SAMPLE_MEDIA_DEVICE_1
 import com.ivanempire.lighthouse.models.LighthouseStateTest.Fixtures.SAMPLE_MEDIA_DEVICE_2
+import com.ivanempire.lighthouse.models.LighthouseStateTest.Fixtures.SAMPLE_MEDIA_DEVICE_3
+import com.ivanempire.lighthouse.models.LighthouseStateTest.Fixtures.SAMPLE_ROOT_ALIVE_PACKET_1
+import com.ivanempire.lighthouse.models.LighthouseStateTest.Fixtures.SAMPLE_ROOT_ALIVE_PACKET_4
 import com.ivanempire.lighthouse.models.LighthouseStateTest.Fixtures.SAMPLE_ROOT_BYEBYE_PACKET_1
 import com.ivanempire.lighthouse.models.LighthouseStateTest.Fixtures.SAMPLE_ROOT_BYEBYE_PACKET_2
+import com.ivanempire.lighthouse.models.LighthouseStateTest.Fixtures.SAMPLE_UUID_1
+import com.ivanempire.lighthouse.models.LighthouseStateTest.Fixtures.SAMPLE_UUID_4
 import com.ivanempire.lighthouse.models.LighthouseStateTest.Fixtures.SHELL_BYEBYE_PACKET
 import com.ivanempire.lighthouse.models.devices.AbridgedMediaDevice
 import com.ivanempire.lighthouse.models.devices.AdvertisedMediaDevice
@@ -15,11 +20,13 @@ import com.ivanempire.lighthouse.models.packets.AliveMediaPacket
 import com.ivanempire.lighthouse.models.packets.ByeByeMediaPacket
 import com.ivanempire.lighthouse.models.packets.EmbeddedDeviceInformation
 import com.ivanempire.lighthouse.models.packets.EmbeddedServiceInformation
+import com.ivanempire.lighthouse.models.packets.MediaHost
 import com.ivanempire.lighthouse.models.packets.NotificationSubtype
 import com.ivanempire.lighthouse.models.packets.NotificationType
 import com.ivanempire.lighthouse.models.packets.RootDeviceInformation
 import com.ivanempire.lighthouse.models.packets.UniqueServiceName
 import com.ivanempire.lighthouse.models.packets.UpdateMediaPacket
+import java.net.InetAddress
 import java.net.URL
 import java.util.UUID
 import org.junit.Assert.assertEquals
@@ -32,6 +39,45 @@ import org.mockito.Mockito.`when`
 class LighthouseStateTest {
 
     private lateinit var sut: LighthouseState
+
+    @Test
+    fun `given no devices correctly handles ALIVE packet`() {
+        sut = LighthouseState
+        sut.setDeviceList(emptyList())
+
+        val updatedList = sut.parseMediaPacket(SAMPLE_ROOT_ALIVE_PACKET_1)
+        val newDevice = updatedList[0] as AbridgedMediaDevice
+
+        assertEquals(1, updatedList.size)
+        assertEquals(SAMPLE_UUID_1, newDevice.uuid)
+        assertEquals(URL("https://127.0.0.1/whatever"), newDevice.location)
+        assertEquals(
+            MediaDeviceServer("Linux/3.18.71+", "UPnP/1.0", "GUPnP/1.0.5"),
+            newDevice.server
+        )
+        assertTrue(newDevice.deviceList.isEmpty())
+        assertTrue(newDevice.serviceList.isEmpty())
+    }
+
+    @Test
+    fun `given some devices correctly handles ALIVE packet`() {
+        sut = LighthouseState
+        sut.setDeviceList(
+            listOf(SAMPLE_MEDIA_DEVICE_1, SAMPLE_MEDIA_DEVICE_2, SAMPLE_MEDIA_DEVICE_3)
+        )
+
+        val updatedList = sut.parseMediaPacket(SAMPLE_ROOT_ALIVE_PACKET_4)
+        assertEquals(4, updatedList.size)
+        val newDevice = updatedList[3] as AbridgedMediaDevice
+        assertEquals(SAMPLE_UUID_4, newDevice.uuid)
+        assertEquals(URL("https://192.168.1.4/whatever"), newDevice.location)
+        assertEquals(
+            MediaDeviceServer("Linux/3.18.71+", "UPnP/1.0", "GUPnP/1.0.5"),
+            newDevice.server
+        )
+        assertTrue(newDevice.deviceList.isEmpty())
+        assertTrue(newDevice.serviceList.isEmpty())
+    }
 
     @Test
     fun `handles empty bye-bye packets correctly`() {
@@ -75,6 +121,8 @@ class LighthouseStateTest {
 
         val SAMPLE_UUID_1 = UUID.fromString("00000000-0000-0000-0000-000000000001")
         val SAMPLE_UUID_2 = UUID.fromString("00000000-0000-0000-0000-000000000002")
+        val SAMPLE_UUID_3 = UUID.fromString("00000000-0000-0000-0000-000000000003")
+        val SAMPLE_UUID_4 = UUID.fromString("00000000-0000-0000-0000-000000000004")
 
         val SAMPLE_EMBEDDED_SERVICE = AdvertisedMediaService(
             serviceType = "RenderingControl",
@@ -98,6 +146,14 @@ class LighthouseStateTest {
             uuid = SAMPLE_UUID_2,
             location = URL("https://127.0.0.1/whatever"),
             server = MediaDeviceServer("Linux/3.18.71+", "UPnP/1.0", "GUPnP/1.0.5"),
+            serviceList = mutableListOf(SAMPLE_EMBEDDED_SERVICE),
+            deviceList = mutableListOf(SAMPLE_EMBEDDED_DEVICE)
+        )
+
+        val SAMPLE_MEDIA_DEVICE_3 = AbridgedMediaDevice(
+            uuid = SAMPLE_UUID_3,
+            location = URL("https://127.0.0.10/whatever"),
+            server = MediaDeviceServer("Linux/1.1.1+", "UPnP/2.0", "GUPnP/1.0.9"),
             serviceList = mutableListOf(SAMPLE_EMBEDDED_SERVICE),
             deviceList = mutableListOf(SAMPLE_EMBEDDED_DEVICE)
         )
@@ -144,6 +200,32 @@ class LighthouseStateTest {
             ),
             bootId = 1,
             configId = 1
+        )
+
+        val SAMPLE_ROOT_ALIVE_PACKET_1 = AliveMediaPacket(
+            host = MediaHost(InetAddress.getByName("127.0.0.1"), 1900),
+            cache = 3600,
+            location = URL("https://127.0.0.1/whatever"),
+            notificationType = NotificationType(""),
+            notificationSubtype = NotificationSubtype.ALIVE,
+            server = MediaDeviceServer("Linux/3.18.71+", "UPnP/1.0", "GUPnP/1.0.5"),
+            usn = RootDeviceInformation(SAMPLE_UUID_1),
+            bootId = 10,
+            configId = 101,
+            searchPort = 1900
+        )
+
+        val SAMPLE_ROOT_ALIVE_PACKET_4 = AliveMediaPacket(
+            host = MediaHost(InetAddress.getByName("192.168.1.4"), 1900),
+            cache = 3600,
+            location = URL("https://192.168.1.4/whatever"),
+            notificationType = NotificationType(""),
+            notificationSubtype = NotificationSubtype.ALIVE,
+            server = MediaDeviceServer("Linux/3.18.71+", "UPnP/1.0", "GUPnP/1.0.5"),
+            usn = RootDeviceInformation(SAMPLE_UUID_4),
+            bootId = 10,
+            configId = 101,
+            searchPort = 1900
         )
     }
 }

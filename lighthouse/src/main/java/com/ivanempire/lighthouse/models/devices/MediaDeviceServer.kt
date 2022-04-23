@@ -1,5 +1,8 @@
 package com.ivanempire.lighthouse.models.devices
 
+import android.util.Log
+import java.lang.IllegalArgumentException
+
 data class MediaDeviceServer(
     val osVersion: String,
     val upnpVersion: String,
@@ -10,12 +13,21 @@ data class MediaDeviceServer(
             return if (rawValue == null) {
                 MediaDeviceServer("N/A", "N/A", "N/A")
             } else {
-                val serverInfo = rawValue.split(" ")
-                MediaDeviceServer(
-                    osVersion = serverInfo[0],
-                    upnpVersion = serverInfo[1],
-                    productVersion = serverInfo[2]
-                )
+                try {
+                    val serverInfo = rawValue.split(" ")
+                    require(serverInfo.size == 3)
+                    MediaDeviceServer(
+                        osVersion = serverInfo[0],
+                        upnpVersion = serverInfo[1],
+                        productVersion = serverInfo[2]
+                    )
+                } catch (ex: IllegalArgumentException) {
+                    Log.e(
+                        "MediaDeviceServer",
+                        "SERVER field not properly advertised as 'OS/version UPnP/2.0 product/version'"
+                    )
+                    return MediaDeviceServer("N/A", "N/A", "N/A")
+                }
             }
         }
     }

@@ -35,8 +35,7 @@ object LighthouseState {
 
     private fun parseUpdateMediaPacket(latestPacket: UpdateMediaPacket): List<MediaDevice> {
         var targetDevice = deviceList.firstOrNull { it.uuid == latestPacket.usn.uuid }
-        if (targetDevice == null) {
-        } else {
+        if (targetDevice != null) {
             targetDevice = targetDevice.copy(
                 host = latestPacket.host,
                 location = latestPacket.location,

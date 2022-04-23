@@ -64,9 +64,9 @@ class UpdateMediaPacketParserTest {
             ),
             parsedPacket.usn
         )
-        assertEquals(null, parsedPacket.bootId)
+        assertEquals(-1, parsedPacket.bootId)
         assertEquals(201, parsedPacket.configId)
-        assertEquals(null, parsedPacket.nextBootId)
+        assertEquals(-1, parsedPacket.nextBootId)
         assertEquals(1000, parsedPacket.searchPort)
         assertEquals(UUID.fromString("b9783ad2-d548-9793-0eb9-42db373ade07"), parsedPacket.usn.uuid)
     }

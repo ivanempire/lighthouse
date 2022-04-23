@@ -55,13 +55,13 @@ class AliveMediaPacketParserTest {
         sut = AliveMediaPacketParser(INCOMPLETE_PACKET)
         val parsedPacket = sut.parseMediaPacket() as AliveMediaPacket
 
-        assertEquals(null, parsedPacket.host)
+        assertEquals(MediaHost(InetAddress.getByName("127.0.0.1"), -1), parsedPacket.host)
         assertEquals(1800, parsedPacket.cache)
         assertEquals(
             URL("http://192.168.1.190:8091/b9783ad2-d548-9793-0eb9-42db373ade07.xml"),
             parsedPacket.location
         )
-        assertEquals(null, parsedPacket.server)
+        assertEquals(MediaHost(InetAddress.getByName("127.0.0.1"), -1), parsedPacket.host)
         assertEquals(
             NotificationType("uuid:b9783ad2-d548-9793-0eb9-42db373ade07"),
             parsedPacket.notificationType

@@ -9,7 +9,7 @@ data class MediaHost(
     companion object {
         fun parseFromString(rawValue: String?): MediaHost {
             return if (rawValue == null) {
-                MediaHost(InetAddress.getByName("127.0.0.1"), -1)
+                MediaHost(InetAddress.getByName("0.0.0.0"), -1)
             } else {
                 val splitData = rawValue.split(":")
                 MediaHost(

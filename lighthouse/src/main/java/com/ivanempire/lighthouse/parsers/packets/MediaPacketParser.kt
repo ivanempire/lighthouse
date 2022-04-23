@@ -25,7 +25,7 @@ abstract class MediaPacketParser {
         return try {
             URL(rawValue)
         } catch (ex: MalformedURLException) {
-            URL("http://127.0.0.1")
+            URL("http://0.0.0.0")
         }
     }
 

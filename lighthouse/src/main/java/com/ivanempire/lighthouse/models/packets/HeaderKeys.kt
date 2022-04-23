@@ -12,4 +12,5 @@ object HeaderKeys {
     const val CONFIGID = "CONFIGID.UPNP.ORG"
     const val SEARCHPORT = "SEARCHPORT.UPNP.ORG"
     const val NEXTBOOTID = "NEXTBOOTID.UPNP.ORG"
+    const val SECURE_LOCATION = "SECURELOCATION.UPNP.ORG"
 }

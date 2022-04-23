@@ -11,8 +11,8 @@ abstract class MediaPacketParser {
 
     abstract fun parseMediaPacket(): MediaPacket
 
-    internal fun parseCacheControl(rawValue: String?): Int? {
-        return rawValue?.substringAfter("=", "-1")?.toInt()
+    internal fun parseCacheControl(rawValue: String): Int {
+        return rawValue.substringAfter("=", "-1").toInt()
     }
 
     /**
@@ -21,11 +21,11 @@ abstract class MediaPacketParser {
      *
      * @param rawValue Raw string value of the XML endpoint obtained from the media packet
      */
-    internal fun parseUrl(rawValue: String?): URL? {
+    internal fun parseUrl(rawValue: String?): URL {
         return try {
             URL(rawValue)
         } catch (ex: MalformedURLException) {
-            null
+            URL("http://127.0.0.1")
         }
     }
 

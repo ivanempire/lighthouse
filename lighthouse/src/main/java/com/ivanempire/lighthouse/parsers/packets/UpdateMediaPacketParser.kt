@@ -12,11 +12,11 @@ class UpdateMediaPacketParser(
     private val headerSet: HashMap<String, String>
 ) : MediaPacketParser() {
 
-    private val host: MediaHost? by lazy {
+    private val host: MediaHost by lazy {
         MediaHost.parseFromString(headerSet[HeaderKeys.HOST])
     }
 
-    private val location: URL? by lazy {
+    private val location: URL by lazy {
         parseUrl(headerSet[HeaderKeys.LOCATION])
     }
 
@@ -28,13 +28,17 @@ class UpdateMediaPacketParser(
         UniqueServiceName(headerSet[HeaderKeys.UNIQUE_SERVICE_NAME] ?: "")
     }
 
-    private val bootId = headerSet[HeaderKeys.BOOTID]?.toInt()
+    private val bootId = headerSet[HeaderKeys.BOOTID]?.toInt() ?: -1
 
-    private val configId = headerSet[HeaderKeys.CONFIGID]?.toInt()
+    private val configId = headerSet[HeaderKeys.CONFIGID]?.toInt() ?: -1
 
-    private val nextBootId = headerSet[HeaderKeys.NEXTBOOTID]?.toInt()
+    private val nextBootId = headerSet[HeaderKeys.NEXTBOOTID]?.toInt() ?: -1
 
     private val searchPort = headerSet[HeaderKeys.SEARCHPORT]?.toInt()
+
+    private val secureLocation: URL? by lazy {
+        parseUrl(headerSet[HeaderKeys.SECURE_LOCATION])
+    }
 
     override fun parseMediaPacket(): MediaPacket {
         return UpdateMediaPacket(
@@ -45,7 +49,8 @@ class UpdateMediaPacketParser(
             bootId = bootId,
             configId = configId,
             nextBootId = nextBootId,
-            searchPort = searchPort
+            searchPort = searchPort,
+            secureLocation = secureLocation
         )
     }
 }

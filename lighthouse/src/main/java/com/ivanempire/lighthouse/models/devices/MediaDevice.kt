@@ -1,5 +1,6 @@
 package com.ivanempire.lighthouse.models.devices
 
+import com.ivanempire.lighthouse.models.packets.MediaHost
 import java.net.URL
 import java.util.UUID
 
@@ -20,7 +21,13 @@ abstract class MediaDevice
  */
 data class AbridgedMediaDevice(
     val uuid: UUID,
+    val host: MediaHost,
+    val cache: Int,
+    val bootId: Int,
+    val configId: Int,
+    val searchPort: Int?,
     val location: URL?,
+    val secureLocation: URL?,
     val server: MediaDeviceServer?,
     val serviceList: MutableList<AdvertisedMediaService> = mutableListOf(),
     val deviceList: MutableList<AdvertisedMediaDevice> = mutableListOf()

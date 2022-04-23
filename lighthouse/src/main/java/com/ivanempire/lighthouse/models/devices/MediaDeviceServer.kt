@@ -6,9 +6,9 @@ data class MediaDeviceServer(
     val productVersion: String
 ) {
     companion object {
-        fun parseFromString(rawValue: String?): MediaDeviceServer? {
+        fun parseFromString(rawValue: String?): MediaDeviceServer {
             return if (rawValue == null) {
-                null
+                MediaDeviceServer("N/A", "N/A", "N/A")
             } else {
                 val serverInfo = rawValue.split(" ")
                 MediaDeviceServer(

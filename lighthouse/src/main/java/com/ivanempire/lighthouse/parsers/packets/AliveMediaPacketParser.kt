@@ -13,19 +13,19 @@ class AliveMediaPacketParser(
     private val headerSet: HashMap<String, String>
 ) : MediaPacketParser() {
 
-    private val host: MediaHost? by lazy {
+    private val host: MediaHost by lazy {
         MediaHost.parseFromString(headerSet[HeaderKeys.HOST])
     }
 
-    private val cacheControl: Int? by lazy {
-        parseCacheControl(headerSet[HeaderKeys.CACHECONTROL])
+    private val cacheControl: Int by lazy {
+        parseCacheControl(headerSet[HeaderKeys.CACHECONTROL] ?: "-1")
     }
 
-    private val location: URL? by lazy {
+    private val location: URL by lazy {
         parseUrl(headerSet[HeaderKeys.LOCATION])
     }
 
-    private val server: MediaDeviceServer? by lazy {
+    private val server: MediaDeviceServer by lazy {
         MediaDeviceServer.parseFromString(headerSet[HeaderKeys.SERVER])
     }
 
@@ -43,6 +43,10 @@ class AliveMediaPacketParser(
 
     private val searchPort = headerSet[HeaderKeys.SEARCHPORT]?.toInt() ?: -1
 
+    private val secureLocation: URL? by lazy {
+        parseUrl(headerSet[HeaderKeys.SECURE_LOCATION])
+    }
+
     override fun parseMediaPacket(): MediaPacket {
         return AliveMediaPacket(
             host = host,
@@ -53,7 +57,8 @@ class AliveMediaPacketParser(
             usn = uniqueServiceName,
             bootId = bootId,
             configId = configId,
-            searchPort = searchPort
+            searchPort = searchPort,
+            secureLocation = secureLocation
         )
     }
 }

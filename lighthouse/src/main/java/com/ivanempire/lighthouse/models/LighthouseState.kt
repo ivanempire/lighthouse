@@ -10,7 +10,7 @@ import com.ivanempire.lighthouse.models.packets.EmbeddedDeviceInformation
 import com.ivanempire.lighthouse.models.packets.EmbeddedServiceInformation
 import com.ivanempire.lighthouse.models.packets.MediaPacket
 import com.ivanempire.lighthouse.models.packets.RootDeviceInformation
-import java.lang.IllegalStateException
+import com.ivanempire.lighthouse.models.packets.UpdateMediaPacket
 
 // BOOTID.UPNP.ORG     ==> changes, means device will reboot; see how to handle this
 // CONFIGID.UPNP.ORG   ==> changes, pull new XML description
@@ -28,10 +28,22 @@ object LighthouseState {
     fun parseMediaPacket(latestPacket: MediaPacket): List<MediaDevice> {
         return when (latestPacket) {
             is AliveMediaPacket -> parseAliveMediaPacket(latestPacket)
-            // is UpdateMediaPacket -> parseUpdateMediaPacket(latestPacket)
+            is UpdateMediaPacket -> parseUpdateMediaPacket(latestPacket)
             is ByeByeMediaPacket -> parseByeByeMediaPacket(latestPacket)
-            else -> throw IllegalStateException("")
         }
+    }
+
+    private fun parseUpdateMediaPacket(latestPacket: UpdateMediaPacket): List<MediaDevice> {
+        var targetDevice = deviceList.firstOrNull { it.uuid == latestPacket.usn.uuid }
+        if (targetDevice == null) {
+        } else {
+            targetDevice = targetDevice.copy(
+                host = latestPacket.host,
+                location = latestPacket.location,
+                bootId = latestPacket.nextBootId
+            )
+        }
+        return deviceList
     }
 
     private fun parseAliveMediaPacket(latestPacket: AliveMediaPacket): List<MediaDevice> {
@@ -40,8 +52,14 @@ object LighthouseState {
         if (targetDevice == null) {
             val baseDevice = AbridgedMediaDevice(
                 uuid = targetComponent.uuid,
+                host = latestPacket.host,
+                cache = latestPacket.cache,
+                bootId = latestPacket.bootId,
+                server = latestPacket.server,
+                configId = latestPacket.configId,
                 location = latestPacket.location,
-                server = latestPacket.server
+                searchPort = latestPacket.searchPort,
+                secureLocation = latestPacket.secureLocation
             )
             when (targetComponent) {
                 is RootDeviceInformation -> { /* No-op */ }

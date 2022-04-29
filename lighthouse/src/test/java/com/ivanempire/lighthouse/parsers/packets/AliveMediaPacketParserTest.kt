@@ -19,6 +19,7 @@ import java.util.UUID
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
+/** Tests [AliveMediaPacketParser] */
 class AliveMediaPacketParserTest {
 
     private lateinit var sut: AliveMediaPacketParser

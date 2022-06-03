@@ -31,8 +31,8 @@ class ByeByeMediaPacketParserTest {
         assertEquals(MediaHost(InetAddress.getByName("0.0.0.0"), -1), parsedPacket.host)
         assertEquals(NotificationType(""), parsedPacket.notificationType)
         assertEquals(NotificationSubtype.BYEBYE, parsedPacket.notificationSubtype)
-        assertEquals(-1, parsedPacket.bootId)
-        assertEquals(-1, parsedPacket.configId)
+        assertEquals(null, parsedPacket.bootId)
+        assertEquals(null, parsedPacket.configId)
     }
 
     @Test
@@ -53,7 +53,7 @@ class ByeByeMediaPacketParserTest {
         )
         assertEquals(NotificationSubtype.BYEBYE, parsedPacket.notificationSubtype)
         assertEquals(100, parsedPacket.bootId)
-        assertEquals(-1, parsedPacket.configId)
+        assertEquals(null, parsedPacket.configId)
     }
 
     @Test

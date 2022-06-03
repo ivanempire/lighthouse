@@ -21,7 +21,7 @@ class AliveMediaPacketParser(
         parseCacheControl(headerSet[HeaderKeys.CACHECONTROL] ?: "-1")
     }
 
-    private val location: URL by lazy {
+    private val location: URL? by lazy {
         parseUrl(headerSet[HeaderKeys.LOCATION])
     }
 
@@ -37,11 +37,11 @@ class AliveMediaPacketParser(
         UniqueServiceName(headerSet[HeaderKeys.UNIQUE_SERVICE_NAME] ?: "")
     }
 
-    private val bootId = headerSet[HeaderKeys.BOOTID]?.toInt() ?: -1
+    private val bootId = headerSet[HeaderKeys.BOOTID]?.toInt()
 
-    private val configId = headerSet[HeaderKeys.CONFIGID]?.toInt() ?: -1
+    private val configId = headerSet[HeaderKeys.CONFIGID]?.toInt()
 
-    private val searchPort = headerSet[HeaderKeys.SEARCHPORT]?.toInt() ?: -1
+    private val searchPort = headerSet[HeaderKeys.SEARCHPORT]?.toInt()
 
     private val secureLocation: URL? by lazy {
         parseUrl(headerSet[HeaderKeys.SECURE_LOCATION])

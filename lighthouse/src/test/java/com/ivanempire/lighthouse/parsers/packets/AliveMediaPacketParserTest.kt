@@ -30,14 +30,14 @@ class AliveMediaPacketParserTest {
         val parsedPacket = sut.parseMediaPacket() as AliveMediaPacket
 
         assertEquals(MediaHost(InetAddress.getByName("0.0.0.0"), -1), parsedPacket.host)
-        assertEquals(-1, parsedPacket.cache)
+        assertEquals(null, parsedPacket.cache)
         assertEquals(URL("http://0.0.0.0"), parsedPacket.location)
         assertEquals(MediaDeviceServer("N/A", "N/A", "N/A"), parsedPacket.server)
         assertEquals(NotificationSubtype.ALIVE, parsedPacket.notificationSubtype)
         assertEquals(NotificationType(""), parsedPacket.notificationType)
-        assertEquals(-1, parsedPacket.bootId)
-        assertEquals(-1, parsedPacket.configId)
-        assertEquals(-1, parsedPacket.searchPort)
+        assertEquals(null, parsedPacket.bootId)
+        assertEquals(null, parsedPacket.configId)
+        assertEquals(null, parsedPacket.searchPort)
         assertEquals(URL("http://0.0.0.0"), parsedPacket.secureLocation)
     }
 
@@ -58,10 +58,10 @@ class AliveMediaPacketParserTest {
             ),
             parsedPacket.usn
         )
-        assertEquals(-1, parsedPacket.bootId)
-        assertEquals(-1, parsedPacket.configId)
-        assertEquals(-1, parsedPacket.searchPort)
-        assertEquals(URL("http://0.0.0.0"), parsedPacket.secureLocation)
+        assertEquals(null, parsedPacket.bootId)
+        assertEquals(null, parsedPacket.configId)
+        assertEquals(null, parsedPacket.searchPort)
+        assertEquals(null, parsedPacket.secureLocation)
     }
 
     @Test

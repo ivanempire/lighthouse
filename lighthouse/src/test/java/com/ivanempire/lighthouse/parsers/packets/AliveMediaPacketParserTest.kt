@@ -58,10 +58,10 @@ class AliveMediaPacketParserTest {
             ),
             parsedPacket.usn
         )
-        assertEquals(null, parsedPacket.bootId)
-        assertEquals(null, parsedPacket.configId)
+        assertEquals(-1, parsedPacket.bootId)
+        assertEquals(-1, parsedPacket.configId)
         assertEquals(null, parsedPacket.searchPort)
-        assertEquals(null, parsedPacket.secureLocation)
+        assertEquals(URL("http://127.0.0.1/"), parsedPacket.secureLocation)
     }
 
     @Test

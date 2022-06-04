@@ -53,7 +53,7 @@ class ByeByeMediaPacketParserTest {
         )
         assertEquals(NotificationSubtype.BYEBYE, parsedPacket.notificationSubtype)
         assertEquals(100, parsedPacket.bootId)
-        assertEquals(null, parsedPacket.configId)
+        assertEquals(-1, parsedPacket.configId)
     }
 
     @Test

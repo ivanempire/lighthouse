@@ -49,6 +49,7 @@ data class AbridgedMediaDevice(
  */
 data class AdvertisedMediaDevice(
     val deviceType: String,
+    val bootId: Int,
     val deviceVersion: String,
     val domain: String? = null
 ) : MediaDevice() {

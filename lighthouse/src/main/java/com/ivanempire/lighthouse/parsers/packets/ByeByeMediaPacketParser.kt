@@ -1,5 +1,6 @@
 package com.ivanempire.lighthouse.parsers.packets
 
+import com.ivanempire.lighthouse.models.Constants.NOT_AVAILABLE_NUM
 import com.ivanempire.lighthouse.models.packets.ByeByeMediaPacket
 import com.ivanempire.lighthouse.models.packets.HeaderKeys
 import com.ivanempire.lighthouse.models.packets.MediaHost
@@ -23,9 +24,9 @@ class ByeByeMediaPacketParser(
         UniqueServiceName(headerSet[HeaderKeys.UNIQUE_SERVICE_NAME] ?: "")
     }
 
-    private val bootId = headerSet[HeaderKeys.BOOTID]?.toInt()
+    private val bootId = headerSet[HeaderKeys.BOOTID]?.toInt() ?: NOT_AVAILABLE_NUM
 
-    private val configId = headerSet[HeaderKeys.CONFIGID]?.toInt()
+    private val configId = headerSet[HeaderKeys.CONFIGID]?.toInt() ?: NOT_AVAILABLE_NUM
 
     override fun parseMediaPacket(): MediaPacket {
         return ByeByeMediaPacket(

@@ -88,9 +88,9 @@ class UpdateMediaPacketParserTest {
         assertEquals(NotificationSubtype.UPDATE, parsedPacket.notificationSubtype)
         assertEquals(1525511561, parsedPacket.bootId)
         assertEquals(1337, parsedPacket.configId)
-        assertEquals(null, parsedPacket.nextBootId)
+        assertEquals(-1, parsedPacket.nextBootId)
         assertEquals(null, parsedPacket.searchPort)
-        assertEquals(null, parsedPacket.secureLocation)
+        assertEquals(URL("http://127.0.0.1/"), parsedPacket.secureLocation)
     }
 
     @Test
@@ -116,11 +116,11 @@ class UpdateMediaPacketParserTest {
             ),
             parsedPacket.usn
         )
-        assertEquals(null, parsedPacket.bootId)
-        assertEquals(null, parsedPacket.configId)
-        assertEquals(null, parsedPacket.nextBootId)
+        assertEquals(-1, parsedPacket.bootId)
+        assertEquals(-1, parsedPacket.configId)
+        assertEquals(-1, parsedPacket.nextBootId)
         assertEquals(null, parsedPacket.searchPort)
-        assertEquals(null, parsedPacket.secureLocation)
+        assertEquals(URL("http://127.0.0.1/"), parsedPacket.secureLocation)
     }
 
     @Test

@@ -11,6 +11,8 @@ import com.ivanempire.lighthouse.models.packets.EmbeddedServiceInformation
 import com.ivanempire.lighthouse.models.packets.MediaPacket
 import com.ivanempire.lighthouse.models.packets.RootDeviceInformation
 import com.ivanempire.lighthouse.models.packets.UpdateMediaPacket
+import com.ivanempire.lighthouse.removeEmbeddedComponent
+import com.ivanempire.lighthouse.updateEmbeddedComponent
 
 // BOOTID.UPNP.ORG     ==> changes, means device will reboot; see how to handle this
 // CONFIGID.UPNP.ORG   ==> changes, pull new XML description
@@ -34,17 +36,38 @@ object LighthouseState {
     }
 
     private fun parseUpdateMediaPacket(latestPacket: UpdateMediaPacket): List<MediaDevice> {
-        var targetDevice = deviceList.firstOrNull { it.uuid == latestPacket.usn.uuid }
-        if (targetDevice != null) {
-            targetDevice = targetDevice.copy(
-                host = latestPacket.host,
-                location = latestPacket.location,
-                bootId = latestPacket.nextBootId
-            )
+        val targetDevice = deviceList.firstOrNull { it.uuid == latestPacket.usn.uuid }
+        val targetComponent = latestPacket.usn
+        if (targetDevice == null) {
+            // If new device, create a new device - components as well
+        } else {
+            // If existing device, overwrite components, uuuh check what happens to root
+            /**
+             *     override val host: MediaHost,
+             val location: URL?,
+             override val notificationType: NotificationType,
+             override val notificationSubtype: NotificationSubtype = NotificationSubtype.UPDATE,
+             override val usn: UniqueServiceName,
+             override val bootId: Int?,
+             override val configId: Int?,
+             val nextBootId: Int?,
+             val searchPort: Int?,
+             val secureLocation: URL?
+             */
+            when (targetComponent) {
+                is RootDeviceInformation -> {
+                }
+                else -> {
+                    targetDevice.updateEmbeddedComponent(latestPacket.bootId, targetComponent)
+                }
+            }
         }
-        return deviceList
+        return emptyList()
     }
 
+    /**
+     * I think this is done - check version increment in ALIVE packets (follow-up case)
+     */
     private fun parseAliveMediaPacket(latestPacket: AliveMediaPacket): List<MediaDevice> {
         val targetDevice = deviceList.firstOrNull { it.uuid == latestPacket.usn.uuid }
         val targetComponent = latestPacket.usn
@@ -67,7 +90,8 @@ object LighthouseState {
                         AdvertisedMediaDevice(
                             deviceType = targetComponent.deviceType,
                             deviceVersion = targetComponent.deviceType,
-                            domain = targetComponent.domain
+                            domain = targetComponent.domain,
+                            bootId = latestPacket.bootId
                         )
                     )
                 }
@@ -76,7 +100,8 @@ object LighthouseState {
                         AdvertisedMediaService(
                             serviceType = targetComponent.serviceType,
                             serviceVersion = targetComponent.serviceVersion,
-                            domain = targetComponent.domain
+                            domain = targetComponent.domain,
+                            bootId = latestPacket.bootId
                         )
                     )
                 }
@@ -92,7 +117,8 @@ object LighthouseState {
                             AdvertisedMediaDevice(
                                 deviceType = targetComponent.deviceType,
                                 deviceVersion = targetComponent.deviceVersion,
-                                domain = targetComponent.domain
+                                domain = targetComponent.domain,
+                                bootId = latestPacket.bootId
                             )
                         )
                     }
@@ -104,7 +130,8 @@ object LighthouseState {
                             AdvertisedMediaDevice(
                                 deviceType = targetComponent.serviceType,
                                 deviceVersion = targetComponent.serviceVersion,
-                                domain = targetComponent.domain
+                                domain = targetComponent.domain,
+                                bootId = latestPacket.bootId
                             )
                         )
                     }
@@ -114,24 +141,16 @@ object LighthouseState {
         return deviceList
     }
 
+    /**
+     * This is done
+     */
     private fun parseByeByeMediaPacket(latestPacket: ByeByeMediaPacket): List<MediaDevice> {
         val targetComponent = latestPacket.usn
         val targetDevice = deviceList.firstOrNull { it.uuid == targetComponent.uuid } ?: return deviceList
 
         when (targetComponent) {
             is RootDeviceInformation -> deviceList.remove(targetDevice)
-            is EmbeddedDeviceInformation -> {
-                val toRemove = targetDevice.deviceList.firstOrNull { it.deviceType == targetComponent.deviceType }
-                if (toRemove != null) {
-                    targetDevice.deviceList.remove(toRemove)
-                }
-            }
-            is EmbeddedServiceInformation -> {
-                val toRemove = targetDevice.serviceList.firstOrNull { it.serviceType == targetComponent.serviceType }
-                if (toRemove != null) {
-                    targetDevice.serviceList.remove(toRemove)
-                }
-            }
+            else -> targetDevice.removeEmbeddedComponent(targetComponent)
         }
 
         return deviceList

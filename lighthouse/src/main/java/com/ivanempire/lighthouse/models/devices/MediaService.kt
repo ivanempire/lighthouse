@@ -1,12 +1,15 @@
 package com.ivanempire.lighthouse.models.devices
 
+import java.util.*
+
 /**
  * Base class representing a service that a media device supports
  * @param serviceType The service type that is obtained from SSDP packets or from the XML endpoint
  */
 open class MediaService(
     open val serviceType: String,
-    open val bootId: Int
+    open val bootId: Int,
+    open val latestTimestamp: Long
 )
 
 /**
@@ -18,9 +21,10 @@ open class MediaService(
 data class AdvertisedMediaService(
     override val serviceType: String,
     override val bootId: Int,
+    override val latestTimestamp: Long,
     val serviceVersion: String,
     val domain: String? = null
-) : MediaService(serviceType, bootId)
+) : MediaService(serviceType, bootId, latestTimestamp)
 
 /**
  * A specific version of a [MediaService], populated exclusively from the XML description endpoint
@@ -33,8 +37,9 @@ data class AdvertisedMediaService(
 data class DetailedMediaService(
     override val serviceType: String,
     override val bootId: Int,
+    override val latestTimestamp: Long,
     val serviceId: String,
     val descriptionUrl: String,
     val controlUrl: String,
     val eventUrl: String
-) : MediaService(serviceType, bootId)
+) : MediaService(serviceType, bootId, latestTimestamp)

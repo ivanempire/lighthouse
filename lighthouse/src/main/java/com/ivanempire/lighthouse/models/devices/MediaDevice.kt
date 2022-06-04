@@ -30,7 +30,8 @@ data class AbridgedMediaDevice(
     val secureLocation: URL?,
     val server: MediaDeviceServer?,
     val serviceList: MutableList<AdvertisedMediaService> = mutableListOf(),
-    val deviceList: MutableList<AdvertisedMediaDevice> = mutableListOf()
+    val deviceList: MutableList<AdvertisedMediaDevice> = mutableListOf(),
+    val latestTimestamp: Long
 ) : MediaDevice() {
     // TODO: Implement XML call
     val description: RootMediaDevice?
@@ -51,7 +52,8 @@ data class AdvertisedMediaDevice(
     val deviceType: String,
     val bootId: Int,
     val deviceVersion: String,
-    val domain: String? = null
+    val domain: String? = null,
+    val latestTimestamp: Long
 ) : MediaDevice() {
 
     override fun equals(other: Any?) = (other is AdvertisedMediaDevice) &&

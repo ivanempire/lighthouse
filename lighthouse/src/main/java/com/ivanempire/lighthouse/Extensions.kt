@@ -7,12 +7,15 @@ import com.ivanempire.lighthouse.models.packets.EmbeddedDeviceInformation
 import com.ivanempire.lighthouse.models.packets.EmbeddedServiceInformation
 import com.ivanempire.lighthouse.models.packets.UniqueServiceName
 
-internal fun AbridgedMediaDevice.createEmbeddedComponent() {
-}
-
 /**
- * Creates or updates items in the [AbridgedMediaDevice.deviceList] or [AbridgedMediaDevice.serviceList]
- * in the case of ALIVE and UPDATE packets
+ * Handles the latest ALIVE or UPDATE media packet and replaces the relevant
+ * [EmbeddedDeviceInformation] or [EmbeddedServiceInformation]. An ALIVE packet should be the first
+ * one we receive for any embedded component. In the case of an UPDATE packet, the [latestBootId] is
+ * the only thing to really change. However, component versions may be updated as well, and so we
+ * also just replace the entire component.
+ *
+ * @param latestBootId The latest bootId integer to set - indicates if a component was rebooted
+ * @param latestComponent The latest packet's parsed [UniqueServiceName] field
  */
 internal fun AbridgedMediaDevice.updateEmbeddedComponent(
     latestBootId: Int,
@@ -27,7 +30,8 @@ internal fun AbridgedMediaDevice.updateEmbeddedComponent(
                 deviceType = latestComponent.deviceType,
                 bootId = latestBootId,
                 deviceVersion = latestComponent.deviceVersion,
-                domain = latestComponent.domain
+                domain = latestComponent.domain,
+                latestTimestamp = System.currentTimeMillis()
             )
         )
     } else if (latestComponent is EmbeddedServiceInformation) {
@@ -39,14 +43,18 @@ internal fun AbridgedMediaDevice.updateEmbeddedComponent(
                 serviceType = latestComponent.serviceType,
                 bootId = latestBootId,
                 serviceVersion = latestComponent.serviceVersion,
-                domain = latestComponent.domain
+                domain = latestComponent.domain,
+                latestTimestamp = System.currentTimeMillis()
             )
         )
     }
 }
 
 /**
- * This is done
+ * Handles the latest BYEBYE media packet which either targets an [EmbeddedDeviceInformation] or
+ * an [EmbeddedServiceInformation]. Removes said embedded information from the [AbridgedMediaDevice]
+ *
+ * @param latestComponent The latest packet's parsed [UniqueServiceName] field
  */
 internal fun AbridgedMediaDevice.removeEmbeddedComponent(latestComponent: UniqueServiceName) {
     if (latestComponent is EmbeddedDeviceInformation) {

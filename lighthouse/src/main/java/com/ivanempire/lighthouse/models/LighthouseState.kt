@@ -14,7 +14,9 @@ import com.ivanempire.lighthouse.updateEmbeddedComponent
 // BOOTID.UPNP.ORG     ==> changes, means device will reboot; see how to handle this
 // CONFIGID.UPNP.ORG   ==> changes, pull new XML description
 // NEXTBOOTID.UPNP.ORG ==> next bootId to use
-object LighthouseState {
+class LighthouseState(
+    private val cacheTime: Long
+) {
 
     private val deviceList = arrayListOf<AbridgedMediaDevice>()
 
@@ -49,7 +51,7 @@ object LighthouseState {
      * are ignored.
      *
      * @param latestPacket Latest instance of an [AliveMediaPacket]
-     * @return A modified snapshot of [deviceList] - original list left untouched
+     * @return A modified snapshot of [deviceList] with updated information from ALIVE packet
      */
     private fun parseAliveMediaPacket(latestPacket: AliveMediaPacket): List<MediaDevice> {
         val targetDevice = deviceList.firstOrNull { it.uuid == latestPacket.usn.uuid }
@@ -131,5 +133,28 @@ object LighthouseState {
         }
 
         return deviceList
+    }
+
+    /**
+     * Iterates over all current instances of [MediaDevice] and removes any that have not received
+     * advertising packets in the last [cacheTime] milliseconds. First the root device components are
+     * removed to save on further processing, then embedded devices and services are pruned
+     *
+     * @return A device list snapshot with stale root and embedded devices/services removed
+     */
+    fun parseStaleDevices(): List<MediaDevice> {
+        val snapshotList = deviceList.filter { !hasStaleTimestamp(it.latestTimestamp) }
+        snapshotList.forEach { currentDevice ->
+            currentDevice.deviceList.removeAll { !hasStaleTimestamp(it.latestTimestamp) }
+            currentDevice.serviceList.removeAll { !hasStaleTimestamp(it.latestTimestamp) }
+        }
+        return snapshotList
+    }
+
+    /**
+     *
+     */
+    private fun hasStaleTimestamp(timestamp: Long): Boolean {
+        return System.currentTimeMillis() - timestamp > cacheTime
     }
 }

@@ -10,9 +10,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.isActive
 
-class MulticastSocketListener(
+class RealSocketListener(
     private val wifiManager: WifiManager
-) {
+) : SocketListener {
 
     private val multicastLock: WifiManager.MulticastLock by lazy {
         wifiManager.createMulticastLock(MULTICAST_LOCK_TAG)
@@ -26,14 +26,14 @@ class MulticastSocketListener(
         MulticastSocket(MULTICAST_PORT)
     }
 
-    private fun setupSocket() {
+    override fun setupSocket() {
         // Check behavior with false
         multicastLock.setReferenceCounted(true)
         multicastLock.acquire()
         multicastSocket.joinGroup(multicastGroup)
     }
 
-    fun listenForPackets(): Flow<DatagramPacket> {
+    override fun listenForPackets(): Flow<DatagramPacket> {
         setupSocket()
         return flow {
             multicastSocket.use {
@@ -47,7 +47,7 @@ class MulticastSocketListener(
         }
     }
 
-    fun releaseResources() {
+    override fun teardownSocket() {
         Log.d("SocketListener", "Releasing resources")
         // Order of this needs to be checked
         multicastSocket.leaveGroup(multicastGroup)

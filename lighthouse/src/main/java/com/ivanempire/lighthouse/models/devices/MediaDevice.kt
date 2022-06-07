@@ -52,8 +52,7 @@ data class AdvertisedMediaDevice(
     val deviceType: String,
     val bootId: Int,
     val deviceVersion: String,
-    val domain: String? = null,
-    val latestTimestamp: Long
+    val domain: String? = null
 ) : MediaDevice() {
 
     override fun equals(other: Any?) = (other is AdvertisedMediaDevice) &&

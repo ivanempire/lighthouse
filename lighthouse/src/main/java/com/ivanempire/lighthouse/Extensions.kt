@@ -30,8 +30,7 @@ internal fun AbridgedMediaDevice.updateEmbeddedComponent(
                 deviceType = latestComponent.deviceType,
                 bootId = latestBootId,
                 deviceVersion = latestComponent.deviceVersion,
-                domain = latestComponent.domain,
-                latestTimestamp = System.currentTimeMillis()
+                domain = latestComponent.domain
             )
         )
     } else if (latestComponent is EmbeddedServiceInformation) {

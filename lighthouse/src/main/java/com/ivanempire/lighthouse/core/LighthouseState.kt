@@ -1,4 +1,4 @@
-package com.ivanempire.lighthouse.models
+package com.ivanempire.lighthouse.core
 
 import com.ivanempire.lighthouse.models.Constants.NOT_AVAILABLE_NUM
 import com.ivanempire.lighthouse.models.devices.AbridgedMediaDevice
@@ -14,9 +14,7 @@ import com.ivanempire.lighthouse.updateEmbeddedComponent
 // BOOTID.UPNP.ORG     ==> changes, means device will reboot; see how to handle this
 // CONFIGID.UPNP.ORG   ==> changes, pull new XML description
 // NEXTBOOTID.UPNP.ORG ==> next bootId to use
-class LighthouseState(
-    private val cacheTime: Long
-) {
+class LighthouseState {
 
     private val deviceList = arrayListOf<AbridgedMediaDevice>()
 
@@ -35,7 +33,7 @@ class LighthouseState(
      * @param latestPacket The latest parsed instance of a [MediaPacket]
      * @return A modified snapshot of [deviceList] - original list left untouched
      */
-    fun parseMediaPacket(latestPacket: MediaPacket): List<MediaDevice> {
+    fun parseMediaPacket(latestPacket: MediaPacket): List<AbridgedMediaDevice> {
         return when (latestPacket) {
             is AliveMediaPacket -> parseAliveMediaPacket(latestPacket)
             is UpdateMediaPacket -> parseUpdateMediaPacket(latestPacket)
@@ -53,7 +51,7 @@ class LighthouseState(
      * @param latestPacket Latest instance of an [AliveMediaPacket]
      * @return A modified snapshot of [deviceList] with updated information from ALIVE packet
      */
-    private fun parseAliveMediaPacket(latestPacket: AliveMediaPacket): List<MediaDevice> {
+    private fun parseAliveMediaPacket(latestPacket: AliveMediaPacket): List<AbridgedMediaDevice> {
         val targetDevice = deviceList.firstOrNull { it.uuid == latestPacket.usn.uuid }
         val targetComponent = latestPacket.usn
         if (targetDevice == null) {
@@ -77,7 +75,7 @@ class LighthouseState(
         return deviceList
     }
 
-    private fun parseUpdateMediaPacket(latestPacket: UpdateMediaPacket): List<MediaDevice> {
+    private fun parseUpdateMediaPacket(latestPacket: UpdateMediaPacket): List<AbridgedMediaDevice> {
         val targetDevice = deviceList.firstOrNull { it.uuid == latestPacket.usn.uuid }
         val targetComponent = latestPacket.usn
         if (targetDevice == null) {
@@ -123,7 +121,7 @@ class LighthouseState(
     /**
      * This is done
      */
-    private fun parseByeByeMediaPacket(latestPacket: ByeByeMediaPacket): List<MediaDevice> {
+    private fun parseByeByeMediaPacket(latestPacket: ByeByeMediaPacket): List<AbridgedMediaDevice> {
         val targetComponent = latestPacket.usn
         val targetDevice = deviceList.firstOrNull { it.uuid == targetComponent.uuid } ?: return deviceList
 
@@ -137,24 +135,15 @@ class LighthouseState(
 
     /**
      * Iterates over all current instances of [MediaDevice] and removes any that have not received
-     * advertising packets in the last [cacheTime] milliseconds. First the root device components are
-     * removed to save on further processing, then embedded devices and services are pruned
+     * advertising packets in the last [AbridgedMediaDevice.cache] milliseconds. First the root
+     * device components are removed to save on further processing, then embedded devices and
+     * services are pruned
      *
      * @return A device list snapshot with stale root and embedded devices/services removed
      */
-    fun parseStaleDevices(): List<MediaDevice> {
-        val snapshotList = deviceList.filter { !hasStaleTimestamp(it.latestTimestamp) }
-        snapshotList.forEach { currentDevice ->
-            currentDevice.deviceList.removeAll { !hasStaleTimestamp(it.latestTimestamp) }
-            currentDevice.serviceList.removeAll { !hasStaleTimestamp(it.latestTimestamp) }
+    fun parseStaleDevices(): List<AbridgedMediaDevice> {
+        return deviceList.filter {
+            System.currentTimeMillis() - it.latestTimestamp > it.cache
         }
-        return snapshotList
-    }
-
-    /**
-     *
-     */
-    private fun hasStaleTimestamp(timestamp: Long): Boolean {
-        return System.currentTimeMillis() - timestamp > cacheTime
     }
 }

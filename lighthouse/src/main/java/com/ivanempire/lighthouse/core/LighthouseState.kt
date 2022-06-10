@@ -66,10 +66,10 @@ class LighthouseState {
                 secureLocation = latestPacket.secureLocation,
                 latestTimestamp = System.currentTimeMillis()
             )
-            baseDevice.updateEmbeddedComponent(latestPacket.bootId, targetComponent)
+            baseDevice.updateEmbeddedComponent(targetComponent)
             deviceList.add(baseDevice)
         } else {
-            targetDevice.updateEmbeddedComponent(latestPacket.bootId, targetComponent)
+            targetDevice.updateEmbeddedComponent(targetComponent)
         }
         return deviceList
     }
@@ -94,7 +94,7 @@ class LighthouseState {
             )
             when (targetComponent) {
                 is RootDeviceInformation -> { /* No-op */ }
-                else -> baseDevice.updateEmbeddedComponent(latestPacket.bootId, targetComponent)
+                else -> baseDevice.updateEmbeddedComponent(targetComponent)
             }
         } else {
             when (targetComponent) {
@@ -111,7 +111,7 @@ class LighthouseState {
                     deviceList.remove(targetDevice)
                     deviceList.add(updatedDevice)
                 }
-                else -> targetDevice.updateEmbeddedComponent(latestPacket.bootId, targetComponent)
+                else -> targetDevice.updateEmbeddedComponent(targetComponent)
             }
         }
         return deviceList

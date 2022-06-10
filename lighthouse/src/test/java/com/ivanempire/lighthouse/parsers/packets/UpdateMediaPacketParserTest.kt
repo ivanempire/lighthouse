@@ -1,6 +1,6 @@
 package com.ivanempire.lighthouse.parsers.packets
 
-import com.ivanempire.lighthouse.models.packets.EmbeddedServiceInformation
+import com.ivanempire.lighthouse.models.packets.EmbeddedService
 import com.ivanempire.lighthouse.models.packets.HeaderKeys
 import com.ivanempire.lighthouse.models.packets.MediaHost
 import com.ivanempire.lighthouse.models.packets.NotificationSubtype
@@ -51,8 +51,9 @@ class UpdateMediaPacketParserTest {
             parsedPacket.notificationType
         )
         assertEquals(
-            EmbeddedServiceInformation(
+            EmbeddedService(
                 UUID.fromString("b9783ad2-d548-9793-0eb9-42db373ade07"),
+                100,
                 "SwitchPower",
                 "1"
             ),
@@ -78,8 +79,9 @@ class UpdateMediaPacketParserTest {
         )
         assertEquals(NotificationSubtype.UPDATE, parsedPacket.notificationSubtype)
         assertEquals(
-            EmbeddedServiceInformation(
+            EmbeddedService(
                 UUID.fromString("3ddcd1d3-2380-45f5-b069-2c4d54008cf2"),
+                1525511561,
                 "WANPPPConnection",
                 "1"
             ),
@@ -109,8 +111,9 @@ class UpdateMediaPacketParserTest {
             parsedPacket.notificationType
         )
         assertEquals(
-            EmbeddedServiceInformation(
+            EmbeddedService(
                 UUID.fromString("b9783ad2-d548-9793-0eb9-42db373ade07"),
+                -1,
                 "RenderingControl",
                 "1"
             ),
@@ -136,8 +139,9 @@ class UpdateMediaPacketParserTest {
             parsedPacket.notificationType
         )
         assertEquals(
-            EmbeddedServiceInformation(
+            EmbeddedService(
                 UUID.fromString("3f8744cd-30bf-4fc9-8a42-bad80ae660c1"),
+                50,
                 "Dimming",
                 "1"
             ),

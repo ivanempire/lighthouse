@@ -2,7 +2,7 @@ package com.ivanempire.lighthouse.parsers.packets
 
 import com.ivanempire.lighthouse.models.devices.MediaDeviceServer
 import com.ivanempire.lighthouse.models.packets.AliveMediaPacket
-import com.ivanempire.lighthouse.models.packets.EmbeddedServiceInformation
+import com.ivanempire.lighthouse.models.packets.EmbeddedService
 import com.ivanempire.lighthouse.models.packets.HeaderKeys
 import com.ivanempire.lighthouse.models.packets.MediaHost
 import com.ivanempire.lighthouse.models.packets.NotificationSubtype
@@ -54,7 +54,8 @@ class AliveMediaPacketParserTest {
         assertEquals(NotificationType("upnp:rootdevice"), parsedPacket.notificationType)
         assertEquals(
             RootDeviceInformation(
-                uuid = UUID.fromString("3f8744cd-30bf-4fc9-8a42-bad80ae660c1")
+                uuid = UUID.fromString("3f8744cd-30bf-4fc9-8a42-bad80ae660c1"),
+                bootId = -1
             ),
             parsedPacket.usn
         )
@@ -85,8 +86,9 @@ class AliveMediaPacketParserTest {
             parsedPacket.notificationType
         )
         assertEquals(
-            EmbeddedServiceInformation(
+            EmbeddedService(
                 uuid = UUID.fromString("b9783ad2-d548-9793-0eb9-42db373ade07"),
+                bootId = 11,
                 serviceType = "RenderingControl",
                 serviceVersion = "1"
             ),
@@ -119,8 +121,9 @@ class AliveMediaPacketParserTest {
             parsedPacket.notificationType
         )
         assertEquals(
-            EmbeddedServiceInformation(
+            EmbeddedService(
                 uuid = UUID.fromString("3f8744cd-30bf-4fc9-8a42-bad80ae660c1"),
+                bootId = 156,
                 serviceType = "SwitchPower",
                 serviceVersion = "1"
             ),
@@ -150,8 +153,9 @@ class AliveMediaPacketParserTest {
             parsedPacket.notificationType
         )
         assertEquals(
-            EmbeddedServiceInformation(
+            EmbeddedService(
                 uuid = UUID.fromString("3f8744cd-30bf-4fc9-8a42-bad80ae660c1"),
+                bootId = 5,
                 serviceType = "Dimming",
                 serviceVersion = "1"
             ),

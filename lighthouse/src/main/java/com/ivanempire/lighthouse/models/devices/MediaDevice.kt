@@ -1,5 +1,7 @@
 package com.ivanempire.lighthouse.models.devices
 
+import com.ivanempire.lighthouse.models.packets.EmbeddedDevice
+import com.ivanempire.lighthouse.models.packets.EmbeddedService
 import com.ivanempire.lighthouse.models.packets.MediaHost
 import java.net.URL
 import java.util.UUID
@@ -29,8 +31,8 @@ data class AbridgedMediaDevice(
     val location: URL?,
     val secureLocation: URL?,
     val server: MediaDeviceServer?,
-    val serviceList: MutableList<AdvertisedMediaService> = mutableListOf(),
-    val deviceList: MutableList<AdvertisedMediaDevice> = mutableListOf(),
+    val serviceList: MutableList<EmbeddedService> = mutableListOf(),
+    val deviceList: MutableList<EmbeddedDevice> = mutableListOf(),
     val latestTimestamp: Long
 ) : MediaDevice() {
     // TODO: Implement XML call
@@ -39,31 +41,6 @@ data class AbridgedMediaDevice(
         get() {
             return null
         }
-}
-
-/**
- * A specific version of a [MediaDevice] that is built from SSDP discovery information. Used inside
- * the [AbridgedMediaDevice] to present consumers with base information about a device, without
- * querying the XML description endpoint
- * @param deviceType The device type that is obtained from the USN or NT packet fields
- * @param deviceVersion The device version
- * @param domain The device domain
- */
-data class AdvertisedMediaDevice(
-    val deviceType: String,
-    val bootId: Int,
-    val deviceVersion: String,
-    val domain: String? = null
-) : MediaDevice() {
-
-    override fun equals(other: Any?) = (other is AdvertisedMediaDevice) &&
-        deviceType == other.deviceType && deviceVersion == other.deviceVersion
-
-    override fun hashCode(): Int {
-        var result = deviceType.hashCode()
-        result = 31 * result + deviceVersion.hashCode()
-        return result
-    }
 }
 
 /**
@@ -93,14 +70,14 @@ open class DetailedMediaDevice(
     open val modelUrl: URL,
     open val serialNumber: String,
     open val udn: UUID,
-    open val serviceList: List<DetailedMediaService>?
+    open val serviceList: List<DetailedEmbeddedMediaService>?
 ) : MediaDevice()
 
 /**
  * The root media device, populated when an [AbridgedMediaDevice] calls the XML description
  * endpoint to get complete information about itself. Contains all of the information obtained
  * from the XML information in a parsed format. All fields are identical to ones described in the
- * [DetailedMediaService], except for two.
+ * [DetailedEmbeddedMediaService], except for two.
  * @param deviceList The list of embedded devices found on this root device
  * @param presentationUrl The presentation URL of this root device
  */
@@ -115,8 +92,8 @@ data class RootMediaDevice(
     override val modelUrl: URL,
     override val serialNumber: String,
     override val udn: UUID,
-    override val serviceList: List<DetailedMediaService>?,
-    val deviceList: List<EmbeddedMediaDevice>?,
+    override val serviceList: List<DetailedEmbeddedMediaService>?,
+    val deviceList: List<DetailedEmbeddedMediaDevice>?,
     val presentationUrl: URL?
 ) : DetailedMediaDevice(
     deviceType, friendlyName, manufacturer, manufacturerURL, modelDescription, modelName, modelNumber, modelUrl, serialNumber, udn, serviceList
@@ -126,10 +103,10 @@ data class RootMediaDevice(
  * The embedded media device, populated when an [AbridgedMediaDevice] calls the XML description
  * endpoint to get complete information about itself. Contains all of the information obtained
  * from the XML information in a parsed format. All fields are identical to ones described in the
- * [DetailedMediaService], except for one.
+ * [DetailedEmbeddedMediaService], except for one.
  * @param upc TODO: Look up what this stands for
  */
-data class EmbeddedMediaDevice(
+data class DetailedEmbeddedMediaDevice(
     override val deviceType: String,
     override val friendlyName: String,
     override val manufacturer: String,
@@ -141,7 +118,7 @@ data class EmbeddedMediaDevice(
     override val serialNumber: String,
     override val udn: UUID,
     val upc: Int?,
-    override val serviceList: List<DetailedMediaService>?
+    override val serviceList: List<DetailedEmbeddedMediaService>?
 ) : DetailedMediaDevice(
     deviceType, friendlyName, manufacturer, manufacturerURL, modelDescription, modelName, modelNumber, modelUrl, serialNumber, udn, serviceList
 )

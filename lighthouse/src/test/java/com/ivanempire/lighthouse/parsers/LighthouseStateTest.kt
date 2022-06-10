@@ -1,8 +1,8 @@
 package com.ivanempire.lighthouse.parsers
 
 import com.ivanempire.lighthouse.core.LighthouseState
-import com.ivanempire.lighthouse.models.packets.EmbeddedDeviceInformation
-import com.ivanempire.lighthouse.models.packets.EmbeddedServiceInformation
+import com.ivanempire.lighthouse.models.packets.EmbeddedDevice
+import com.ivanempire.lighthouse.models.packets.EmbeddedService
 import com.ivanempire.lighthouse.models.packets.RootDeviceInformation
 import com.ivanempire.lighthouse.parsers.TestUtils.generateAdvertisedMediaDevice
 import com.ivanempire.lighthouse.parsers.TestUtils.generateAdvertisedMediaService
@@ -64,8 +64,8 @@ class LighthouseStateTest {
         MEDIA_DEVICE_3.deviceList.add(generateAdvertisedMediaDevice())
         MEDIA_DEVICE_3.serviceList.add(generateAdvertisedMediaService())
 
-        val BYEBYE_PACKET_1 = generateByeByePacket(RANDOM_UUID_1, generateUSN<EmbeddedDeviceInformation>(RANDOM_UUID_1))
-        val BYEBYE_PACKET_2 = generateByeByePacket(RANDOM_UUID_1, generateUSN<EmbeddedServiceInformation>(RANDOM_UUID_1))
+        val BYEBYE_PACKET_1 = generateByeByePacket(RANDOM_UUID_1, generateUSN<EmbeddedDevice>(RANDOM_UUID_1))
+        val BYEBYE_PACKET_2 = generateByeByePacket(RANDOM_UUID_1, generateUSN<EmbeddedService>(RANDOM_UUID_1))
         val BYEBYE_PACKET_3 = generateByeByePacket(RANDOM_UUID_3, generateUSN<RootDeviceInformation>(RANDOM_UUID_2))
 
         sut.setDeviceList(listOf(MEDIA_DEVICE_1, MEDIA_DEVICE_2, MEDIA_DEVICE_3))

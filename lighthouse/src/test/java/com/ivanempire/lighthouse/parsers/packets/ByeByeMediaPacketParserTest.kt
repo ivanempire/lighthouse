@@ -1,8 +1,8 @@
 package com.ivanempire.lighthouse.parsers.packets
 
 import com.ivanempire.lighthouse.models.packets.ByeByeMediaPacket
-import com.ivanempire.lighthouse.models.packets.EmbeddedDeviceInformation
-import com.ivanempire.lighthouse.models.packets.EmbeddedServiceInformation
+import com.ivanempire.lighthouse.models.packets.EmbeddedDevice
+import com.ivanempire.lighthouse.models.packets.EmbeddedService
 import com.ivanempire.lighthouse.models.packets.HeaderKeys
 import com.ivanempire.lighthouse.models.packets.MediaHost
 import com.ivanempire.lighthouse.models.packets.NotificationSubtype
@@ -47,7 +47,8 @@ class ByeByeMediaPacketParserTest {
         )
         assertEquals(
             RootDeviceInformation(
-                uuid = UUID.fromString("3f8744cd-30bf-4fc9-8a42-bad80ae660c1")
+                uuid = UUID.fromString("3f8744cd-30bf-4fc9-8a42-bad80ae660c1"),
+                bootId = 100,
             ),
             parsedPacket.usn
         )
@@ -67,8 +68,9 @@ class ByeByeMediaPacketParserTest {
             parsedPacket.notificationType
         )
         assertEquals(
-            EmbeddedDeviceInformation(
+            EmbeddedDevice(
                 uuid = UUID.fromString("00000000-0000-0000-0200-00125A8A0960"),
+                bootId = 200,
                 deviceType = "presence",
                 deviceVersion = "1",
                 domain = "schemas-microsoft-com"
@@ -91,8 +93,9 @@ class ByeByeMediaPacketParserTest {
             parsedPacket.notificationType
         )
         assertEquals(
-            EmbeddedServiceInformation(
+            EmbeddedService(
                 uuid = UUID.fromString("9ab0c000-f668-11de-9976-00a0ded0e859"),
+                bootId = 4,
                 serviceType = "RenderingControl",
                 serviceVersion = "1"
             ),
@@ -114,8 +117,9 @@ class ByeByeMediaPacketParserTest {
             parsedPacket.notificationType
         )
         assertEquals(
-            EmbeddedServiceInformation(
+            EmbeddedService(
                 uuid = UUID.fromString("00000000-0000-0000-0000-000000000000"),
+                bootId = 9,
                 serviceType = "SwitchPower",
                 serviceVersion = "1"
             ),

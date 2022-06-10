@@ -1,11 +1,10 @@
 package com.ivanempire.lighthouse.parsers
 
 import com.ivanempire.lighthouse.models.devices.AbridgedMediaDevice
-import com.ivanempire.lighthouse.models.devices.AdvertisedMediaDevice
-import com.ivanempire.lighthouse.models.devices.AdvertisedMediaService
 import com.ivanempire.lighthouse.models.devices.MediaDeviceServer
 import com.ivanempire.lighthouse.models.packets.ByeByeMediaPacket
-import com.ivanempire.lighthouse.models.packets.EmbeddedDeviceInformation
+import com.ivanempire.lighthouse.models.packets.EmbeddedDevice
+import com.ivanempire.lighthouse.models.packets.EmbeddedService
 import com.ivanempire.lighthouse.models.packets.MediaHost
 import com.ivanempire.lighthouse.models.packets.NotificationType
 import com.ivanempire.lighthouse.models.packets.RootDeviceInformation
@@ -18,8 +17,8 @@ object TestUtils {
 
     fun generateMediaDevice(
         deviceUUID: UUID? = null,
-        embeddedDeviceInformation: MutableList<AdvertisedMediaDevice>? = null,
-        embeddedServiceInformation: MutableList<AdvertisedMediaService>? = null,
+        embeddedDevices: MutableList<EmbeddedDevice>? = null,
+        embeddedServices: MutableList<EmbeddedService>? = null,
         cache: Int? = null,
         latestTimestamp: Long? = null
     ): AbridgedMediaDevice {
@@ -34,13 +33,14 @@ object TestUtils {
             secureLocation = URL("https://192.168.2.50:58121/"),
             server = SERVER_LIST.random(),
             latestTimestamp = latestTimestamp ?: System.currentTimeMillis(),
-            deviceList = embeddedDeviceInformation ?: mutableListOf(),
-            serviceList = embeddedServiceInformation ?: mutableListOf()
+            deviceList = embeddedDevices ?: mutableListOf(),
+            serviceList = embeddedServices ?: mutableListOf()
         )
     }
 
-    fun generateAdvertisedMediaDevice(): AdvertisedMediaDevice {
-        return AdvertisedMediaDevice(
+    fun generateAdvertisedMediaDevice(): EmbeddedDevice {
+        return EmbeddedDevice(
+            uuid = UUID.randomUUID(),
             deviceType = "presence",
             bootId = 11,
             deviceVersion = "1",
@@ -48,8 +48,9 @@ object TestUtils {
         )
     }
 
-    fun generateAdvertisedMediaService(): AdvertisedMediaService {
-        return AdvertisedMediaService(
+    fun generateAdvertisedMediaService(): EmbeddedService {
+        return EmbeddedService(
+            uuid = UUID.randomUUID(),
             serviceType = "RenderingControl",
             bootId = 11,
             serviceVersion = "1",
@@ -59,13 +60,14 @@ object TestUtils {
 
     fun generateByeByePacket(
         deviceUUID: UUID,
-        uniqueServiceName: UniqueServiceName? = null
+        uniqueServiceName: UniqueServiceName? = null,
+        bootId: Int = 100,
     ): ByeByeMediaPacket {
         return ByeByeMediaPacket(
             host = MediaHost(InetAddress.getByName("239.255.255.250"), 1900),
             notificationType = NotificationType("upnp:rootdevice"),
-            usn = uniqueServiceName ?: UniqueServiceName(deviceUUID.toString()),
-            bootId = 100,
+            usn = uniqueServiceName ?: UniqueServiceName(deviceUUID.toString(), bootId),
+            bootId = bootId,
             configId = 110
         )
     }
@@ -75,13 +77,13 @@ object TestUtils {
     ): UniqueServiceName {
         return when (T::class) {
             RootDeviceInformation::class -> {
-                UniqueServiceName(deviceUUID.toString())
+                UniqueServiceName(deviceUUID.toString(), -1)
             }
-            EmbeddedDeviceInformation::class -> {
-                UniqueServiceName("uuid:$deviceUUID::urn:schemas-microsoft-com:device:presence:1")
+            EmbeddedDevice::class -> {
+                UniqueServiceName("uuid:$deviceUUID::urn:schemas-microsoft-com:device:presence:1", -1)
             }
             else -> {
-                UniqueServiceName("uuid:$deviceUUID::urn:schemas-upnp-org:service:RenderingControl:1")
+                UniqueServiceName("uuid:$deviceUUID::urn:schemas-upnp-org:service:RenderingControl:1", -1)
             }
         }
     }

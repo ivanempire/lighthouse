@@ -42,8 +42,7 @@ internal fun AbridgedMediaDevice.updateEmbeddedComponent(
                 serviceType = latestComponent.serviceType,
                 bootId = latestBootId,
                 serviceVersion = latestComponent.serviceVersion,
-                domain = latestComponent.domain,
-                latestTimestamp = System.currentTimeMillis()
+                domain = latestComponent.domain
             )
         )
     }

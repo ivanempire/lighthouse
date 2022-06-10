@@ -21,7 +21,7 @@ class DatagramPacketTransformer {
                 return null
             }
 
-            // Start building the packet headers, starting with item 1 since item 0 was the StartLine
+            // Start building the packet headers, starting with item 1 since item 0 is the StartLine
             val packetHeaders = hashMapOf<String, String>()
             packetFields.subList(1, packetFields.size - 1).forEach {
                 val splitField = it.split(HEADER_FIELD_DELIMITER, ignoreCase = false, limit = 2)

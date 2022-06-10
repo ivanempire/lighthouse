@@ -12,7 +12,6 @@ import com.ivanempire.lighthouse.removeEmbeddedComponent
 import com.ivanempire.lighthouse.updateEmbeddedComponent
 
 // BOOTID.UPNP.ORG     ==> changes, means device will reboot; see how to handle this
-// CONFIGID.UPNP.ORG   ==> changes, pull new XML description
 // NEXTBOOTID.UPNP.ORG ==> next bootId to use
 class LighthouseState {
 
@@ -123,7 +122,7 @@ class LighthouseState {
      */
     private fun parseByeByeMediaPacket(latestPacket: ByeByeMediaPacket): List<AbridgedMediaDevice> {
         val targetComponent = latestPacket.usn
-        val targetDevice = deviceList.firstOrNull { it.uuid == targetComponent.uuid } ?: return deviceList
+        val targetDevice = deviceList.firstOrNull { it.uuid == targetComponent.uuid }?.copy() ?: return deviceList
 
         when (targetComponent) {
             is RootDeviceInformation -> deviceList.remove(targetDevice)

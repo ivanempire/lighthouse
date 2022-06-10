@@ -9,6 +9,9 @@ import com.ivanempire.lighthouse.models.devices.AbridgedMediaDevice
 import com.ivanempire.lighthouse.socket.RealSocketListener
 import kotlinx.coroutines.flow.Flow
 
+/**
+ *
+ */
 interface LighthouseClient {
 
     class Builder(context: Context) {
@@ -27,5 +30,8 @@ interface LighthouseClient {
         }
     }
 
+    /**
+     *
+     */
     fun discoverDevices(): Flow<List<AbridgedMediaDevice>>
 }

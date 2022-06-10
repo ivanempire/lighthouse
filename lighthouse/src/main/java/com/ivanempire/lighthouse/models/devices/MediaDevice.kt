@@ -34,6 +34,7 @@ data class AbridgedMediaDevice(
     val latestTimestamp: Long
 ) : MediaDevice() {
     // TODO: Implement XML call
+    //  CONFIGID.UPNP.ORG   ==> changes, pull new XML description
     val description: RootMediaDevice?
         get() {
             return null

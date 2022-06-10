@@ -19,19 +19,21 @@ object TestUtils {
     fun generateMediaDevice(
         deviceUUID: UUID? = null,
         embeddedDeviceInformation: MutableList<AdvertisedMediaDevice>? = null,
-        embeddedServiceInformation: MutableList<AdvertisedMediaService>? = null
+        embeddedServiceInformation: MutableList<AdvertisedMediaService>? = null,
+        cache: Int? = null,
+        latestTimestamp: Long? = null
     ): AbridgedMediaDevice {
         return AbridgedMediaDevice(
             uuid = deviceUUID ?: UUID.randomUUID(),
             host = MediaHost(InetAddress.getByName("239.255.255.250"), 1900),
-            cache = (Math.random() * 1000).toInt(),
+            cache = cache ?: 0,
             bootId = (Math.random() * 1000).toInt(),
             configId = (Math.random() * 1000).toInt(),
             searchPort = 1900,
             location = URL("http://192.168.2.50:58121/"),
             secureLocation = URL("https://192.168.2.50:58121/"),
             server = SERVER_LIST.random(),
-            latestTimestamp = System.currentTimeMillis(),
+            latestTimestamp = latestTimestamp ?: System.currentTimeMillis(),
             deviceList = embeddedDeviceInformation ?: mutableListOf(),
             serviceList = embeddedServiceInformation ?: mutableListOf()
         )

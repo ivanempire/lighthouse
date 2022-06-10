@@ -81,4 +81,32 @@ class LighthouseStateTest {
         assertTrue(finalList[1].deviceList.isNotEmpty())
         assertTrue(finalList[1].serviceList.isNotEmpty())
     }
+
+    @Test
+    fun `given no stale devices doesn't return anything`() {
+        val RANDOM_UUID_1 = UUID.randomUUID()
+        val RANDOM_UUID_2 = UUID.randomUUID()
+
+        val MEDIA_DEVICE_1 = generateMediaDevice(RANDOM_UUID_1, cache = 1900)
+        val MEDIA_DEVICE_2 = generateMediaDevice(RANDOM_UUID_2, cache = 1900)
+
+        sut.setDeviceList(listOf(MEDIA_DEVICE_1, MEDIA_DEVICE_2))
+
+        val finalList = sut.parseStaleDevices()
+        assertTrue(finalList.isEmpty())
+    }
+
+    @Test
+    fun `given stale devices returns them`() {
+        val RANDOM_UUID_1 = UUID.randomUUID()
+        val RANDOM_UUID_2 = UUID.randomUUID()
+
+        val MEDIA_DEVICE_1 = generateMediaDevice(RANDOM_UUID_1, cache = 3000, latestTimestamp = System.currentTimeMillis() - 5000)
+        val MEDIA_DEVICE_2 = generateMediaDevice(RANDOM_UUID_2, cache = 100, latestTimestamp = System.currentTimeMillis() - 300)
+
+        sut.setDeviceList(listOf(MEDIA_DEVICE_1, MEDIA_DEVICE_2))
+
+        val finalList = sut.parseStaleDevices()
+        assertTrue(finalList.isNotEmpty())
+    }
 }

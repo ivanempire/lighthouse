@@ -2,6 +2,7 @@ package com.ivanempire.lighthouse.parsers
 
 import com.ivanempire.lighthouse.models.devices.AbridgedMediaDevice
 import com.ivanempire.lighthouse.models.devices.MediaDeviceServer
+import com.ivanempire.lighthouse.models.packets.AliveMediaPacket
 import com.ivanempire.lighthouse.models.packets.ByeByeMediaPacket
 import com.ivanempire.lighthouse.models.packets.EmbeddedDevice
 import com.ivanempire.lighthouse.models.packets.EmbeddedService
@@ -41,7 +42,7 @@ object TestUtils {
     fun generateAdvertisedMediaDevice(): EmbeddedDevice {
         return EmbeddedDevice(
             uuid = UUID.randomUUID(),
-            deviceType = "presence",
+            deviceType = "RenderingControl",
             bootId = 11,
             deviceVersion = "1",
             domain = "http://www.website.com"
@@ -55,6 +56,24 @@ object TestUtils {
             bootId = 11,
             serviceVersion = "1",
             domain = "http://www.website.com"
+        )
+    }
+
+    fun generateAlivePacket(
+        deviceUUID: UUID,
+        uniqueServiceName: UniqueServiceName? = null
+    ): AliveMediaPacket {
+        return AliveMediaPacket(
+            host = MediaHost(InetAddress.getByName("239.255.255.250"), 1900),
+            cache = 1900,
+            location = URL("http://127.0.0.1:58122/"),
+            notificationType = NotificationType("upnp:rootdevice"),
+            server = SERVER_LIST.random(),
+            usn = uniqueServiceName ?: UniqueServiceName(deviceUUID.toString(), -1),
+            bootId = 100,
+            configId = 130,
+            searchPort = 1900,
+            secureLocation = URL("https://127.0.0.1:58122/")
         )
     }
 
@@ -73,17 +92,22 @@ object TestUtils {
     }
 
     inline fun <reified T : UniqueServiceName> generateUSN(
-        deviceUUID: UUID
+        deviceUUID: UUID,
+        identifier: String = "RenderingControl",
+        version: String = "1"
     ): UniqueServiceName {
         return when (T::class) {
             RootDeviceInformation::class -> {
                 UniqueServiceName(deviceUUID.toString(), -1)
             }
             EmbeddedDevice::class -> {
-                UniqueServiceName("uuid:$deviceUUID::urn:schemas-microsoft-com:device:presence:1", -1)
+                UniqueServiceName("uuid:$deviceUUID::urn:schemas-upnp-org:device:$identifier:$version", -1)
+            }
+            EmbeddedService::class -> {
+                UniqueServiceName("uuid:$deviceUUID::urn:schemas-upnp-org:service:$identifier:$version", -1)
             }
             else -> {
-                UniqueServiceName("uuid:$deviceUUID::urn:schemas-upnp-org:service:RenderingControl:1", -1)
+                UniqueServiceName("uuid:$deviceUUID::urn:schemas-upnp-org:service:$identifier:$version", -1)
             }
         }
     }

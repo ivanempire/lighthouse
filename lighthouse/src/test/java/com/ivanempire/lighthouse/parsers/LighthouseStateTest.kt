@@ -6,6 +6,7 @@ import com.ivanempire.lighthouse.models.packets.EmbeddedService
 import com.ivanempire.lighthouse.models.packets.RootDeviceInformation
 import com.ivanempire.lighthouse.parsers.TestUtils.generateAdvertisedMediaDevice
 import com.ivanempire.lighthouse.parsers.TestUtils.generateAdvertisedMediaService
+import com.ivanempire.lighthouse.parsers.TestUtils.generateAlivePacket
 import com.ivanempire.lighthouse.parsers.TestUtils.generateByeByePacket
 import com.ivanempire.lighthouse.parsers.TestUtils.generateMediaDevice
 import com.ivanempire.lighthouse.parsers.TestUtils.generateUSN
@@ -16,6 +17,7 @@ import org.junit.Before
 import org.junit.Test
 
 /** Tests [LighthouseState] */
+@Suppress("LocalVariableName")
 class LighthouseStateTest {
 
     private lateinit var sut: LighthouseState
@@ -23,6 +25,83 @@ class LighthouseStateTest {
     @Before
     fun setup() {
         sut = LighthouseState()
+    }
+
+    @Test
+    fun `given single ALIVE packet builds simple root device`() {
+        val RANDOM_UUID_1 = UUID.randomUUID()
+        val ALIVE_PACKET_1 = generateAlivePacket(RANDOM_UUID_1)
+
+        val finalList = sut.parseMediaPacket(ALIVE_PACKET_1)
+        assertTrue(finalList.isNotEmpty())
+        assertEquals(1, finalList.size)
+
+        val mediaDevice = finalList[0]
+        assertEquals(RANDOM_UUID_1, mediaDevice.uuid)
+        assertEquals(ALIVE_PACKET_1.host, mediaDevice.host)
+        assertEquals(ALIVE_PACKET_1.cache, mediaDevice.cache)
+        assertEquals(ALIVE_PACKET_1.bootId, mediaDevice.bootId)
+        assertEquals(ALIVE_PACKET_1.server, mediaDevice.server)
+        assertEquals(ALIVE_PACKET_1.configId, mediaDevice.configId)
+        assertEquals(ALIVE_PACKET_1.location, mediaDevice.location)
+        assertEquals(ALIVE_PACKET_1.searchPort, mediaDevice.searchPort)
+        assertEquals(ALIVE_PACKET_1.secureLocation, mediaDevice.secureLocation)
+        assertTrue(mediaDevice.deviceList.isEmpty())
+        assertTrue(mediaDevice.serviceList.isEmpty())
+    }
+
+    @Test
+    fun `given multiple ALIVE packets builds complex root device`() {
+        val RANDOM_UUID_1 = UUID.randomUUID()
+        val ALIVE_PACKET_1 = generateAlivePacket(RANDOM_UUID_1, generateUSN<EmbeddedDevice>(RANDOM_UUID_1))
+        val ALIVE_PACKET_2 = generateAlivePacket(RANDOM_UUID_1, generateUSN<EmbeddedService>(RANDOM_UUID_1))
+        val ALIVE_PACKET_3 = generateAlivePacket(RANDOM_UUID_1, generateUSN<RootDeviceInformation>(RANDOM_UUID_1))
+
+        sut.parseMediaPacket(ALIVE_PACKET_1)
+        sut.parseMediaPacket(ALIVE_PACKET_2)
+        val finalList = sut.parseMediaPacket(ALIVE_PACKET_3)
+
+        assertTrue(finalList.isNotEmpty())
+        assertEquals(1, finalList.size)
+
+        val mediaDevice = finalList[0]
+        assertEquals(RANDOM_UUID_1, mediaDevice.uuid)
+        assertEquals(ALIVE_PACKET_1.host, mediaDevice.host)
+        assertEquals(ALIVE_PACKET_1.cache, mediaDevice.cache)
+        assertEquals(ALIVE_PACKET_1.bootId, mediaDevice.bootId)
+        assertEquals(ALIVE_PACKET_1.server, mediaDevice.server)
+        assertEquals(ALIVE_PACKET_1.configId, mediaDevice.configId)
+        assertEquals(ALIVE_PACKET_1.location, mediaDevice.location)
+        assertEquals(ALIVE_PACKET_1.searchPort, mediaDevice.searchPort)
+        assertEquals(ALIVE_PACKET_1.secureLocation, mediaDevice.secureLocation)
+        assertTrue(mediaDevice.deviceList.isNotEmpty())
+        assertTrue(mediaDevice.serviceList.isNotEmpty())
+    }
+
+    @Test
+    fun `given multiple ALIVE packets handles embedded components properly`() {
+        val RANDOM_UUID_1 = UUID.randomUUID()
+        val ALIVE_PACKET_1 = generateAlivePacket(RANDOM_UUID_1, generateUSN<RootDeviceInformation>(RANDOM_UUID_1))
+        sut.parseMediaPacket(ALIVE_PACKET_1)
+
+        val ALIVE_PACKET_2 = generateAlivePacket(RANDOM_UUID_1, generateUSN<EmbeddedDevice>(RANDOM_UUID_1, "DimmingControl"))
+        sut.parseMediaPacket(ALIVE_PACKET_2)
+
+        val ALIVE_PACKET_3 = generateAlivePacket(RANDOM_UUID_1, generateUSN<EmbeddedDevice>(RANDOM_UUID_1, "DimmingControl", "2"))
+        val finalList = sut.parseMediaPacket(ALIVE_PACKET_3)
+
+        assertTrue(finalList.isNotEmpty())
+        assertEquals(1, finalList.size)
+        assertTrue(finalList[0].deviceList.isNotEmpty())
+        assertEquals(
+            EmbeddedDevice(
+                RANDOM_UUID_1,
+                -1,
+                "DimmingControl",
+                "2"
+            ),
+            finalList[0].deviceList[0]
+        )
     }
 
     @Test

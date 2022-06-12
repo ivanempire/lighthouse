@@ -1,6 +1,6 @@
 package com.ivanempire.lighthouse.core
 
-import com.ivanempire.lighthouse.models.Constants.NOT_AVAILABLE_NUM
+import com.ivanempire.lighthouse.models.Constants.NOT_AVAILABLE_CACHE
 import com.ivanempire.lighthouse.models.devices.AbridgedMediaDevice
 import com.ivanempire.lighthouse.models.devices.MediaDevice
 import com.ivanempire.lighthouse.models.packets.AliveMediaPacket
@@ -83,7 +83,7 @@ class LighthouseState {
             val baseDevice = AbridgedMediaDevice(
                 uuid = targetComponent.uuid,
                 host = latestPacket.host,
-                cache = NOT_AVAILABLE_NUM, // TODO: this can't be -1, some other default
+                cache = NOT_AVAILABLE_CACHE,
                 bootId = latestPacket.bootId,
                 server = null,
                 configId = latestPacket.configId,
@@ -96,6 +96,7 @@ class LighthouseState {
                 is RootDeviceInformation -> { /* No-op */ }
                 else -> baseDevice.updateEmbeddedComponent(targetComponent)
             }
+            deviceList.add(baseDevice)
         } else {
             when (targetComponent) {
                 // ALIVE came first, UPDATE for root should only update certain fields
@@ -122,7 +123,7 @@ class LighthouseState {
      */
     private fun parseByeByeMediaPacket(latestPacket: ByeByeMediaPacket): List<AbridgedMediaDevice> {
         val targetComponent = latestPacket.usn
-        val targetDevice = deviceList.firstOrNull { it.uuid == targetComponent.uuid }?.copy() ?: return deviceList
+        val targetDevice = deviceList.firstOrNull { it.uuid == targetComponent.uuid } ?: return deviceList
 
         when (targetComponent) {
             is RootDeviceInformation -> deviceList.remove(targetDevice)

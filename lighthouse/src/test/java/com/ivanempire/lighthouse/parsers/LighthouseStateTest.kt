@@ -4,12 +4,12 @@ import com.ivanempire.lighthouse.core.LighthouseState
 import com.ivanempire.lighthouse.models.packets.EmbeddedDevice
 import com.ivanempire.lighthouse.models.packets.EmbeddedService
 import com.ivanempire.lighthouse.models.packets.RootDeviceInformation
-import com.ivanempire.lighthouse.parsers.TestUtils.generateAdvertisedMediaDevice
-import com.ivanempire.lighthouse.parsers.TestUtils.generateAdvertisedMediaService
 import com.ivanempire.lighthouse.parsers.TestUtils.generateAlivePacket
 import com.ivanempire.lighthouse.parsers.TestUtils.generateByeByePacket
 import com.ivanempire.lighthouse.parsers.TestUtils.generateMediaDevice
 import com.ivanempire.lighthouse.parsers.TestUtils.generateUSN
+import com.ivanempire.lighthouse.parsers.TestUtils.generateUpdatePacket
+import java.net.URL
 import java.util.UUID
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -81,6 +81,7 @@ class LighthouseStateTest {
     @Test
     fun `given multiple ALIVE packets handles embedded components properly`() {
         val RANDOM_UUID_1 = UUID.randomUUID()
+
         val ALIVE_PACKET_1 = generateAlivePacket(RANDOM_UUID_1, generateUSN<RootDeviceInformation>(RANDOM_UUID_1))
         sut.parseMediaPacket(ALIVE_PACKET_1)
 
@@ -88,19 +89,43 @@ class LighthouseStateTest {
         sut.parseMediaPacket(ALIVE_PACKET_2)
 
         val ALIVE_PACKET_3 = generateAlivePacket(RANDOM_UUID_1, generateUSN<EmbeddedDevice>(RANDOM_UUID_1, "DimmingControl", "2"))
-        val finalList = sut.parseMediaPacket(ALIVE_PACKET_3)
+        val ALIVE_PACKET_4 = generateAlivePacket(RANDOM_UUID_1, generateUSN<EmbeddedService>(RANDOM_UUID_1, "WANControl", "4"))
+        val ALIVE_PACKET_5 = generateAlivePacket(RANDOM_UUID_1, generateUSN<EmbeddedService>(RANDOM_UUID_1, "APControl", "7"))
+
+        sut.parseMediaPacket(ALIVE_PACKET_3)
+        sut.parseMediaPacket(ALIVE_PACKET_4)
+        val finalList = sut.parseMediaPacket(ALIVE_PACKET_5)
 
         assertTrue(finalList.isNotEmpty())
         assertEquals(1, finalList.size)
         assertTrue(finalList[0].deviceList.isNotEmpty())
+        assertEquals(2, finalList[0].serviceList.size)
         assertEquals(
             EmbeddedDevice(
                 RANDOM_UUID_1,
-                -1,
+                600,
                 "DimmingControl",
                 "2"
             ),
             finalList[0].deviceList[0]
+        )
+        assertEquals(
+            EmbeddedService(
+                RANDOM_UUID_1,
+                600,
+                "WANControl",
+                "4"
+            ),
+            finalList[0].serviceList[0]
+        )
+        assertEquals(
+            EmbeddedService(
+                RANDOM_UUID_1,
+                600,
+                "APControl",
+                "7"
+            ),
+            finalList[0].serviceList[1]
         )
     }
 
@@ -123,6 +148,106 @@ class LighthouseStateTest {
 
         assertTrue(finalList.isNotEmpty())
         assertEquals(2, finalList.size)
+        assertEquals(MEDIA_DEVICE_2, finalList[0])
+        assertEquals(MEDIA_DEVICE_3, finalList[1])
+    }
+
+    @Test
+    fun `given UPDATE packet correctly updates root device`() {
+        val RANDOM_UUID_1 = UUID.randomUUID()
+        val MEDIA_DEVICE_1 = generateMediaDevice(RANDOM_UUID_1)
+        val UPDATE_PACKET_1 = generateUpdatePacket(RANDOM_UUID_1, location = URL("http://127.0.0.1:9999/"), bootId = 200, configId = 300, secureLocation = URL("https://127.0.0.1:9999/"))
+
+        sut.setDeviceList(listOf(MEDIA_DEVICE_1))
+        val finalList = sut.parseMediaPacket(UPDATE_PACKET_1)
+        assertTrue(finalList.isNotEmpty())
+        assertEquals(1, finalList.size)
+
+        val mediaDevice = finalList[0]
+        assertEquals(URL("http://127.0.0.1:9999/"), mediaDevice.location)
+        assertEquals(200, mediaDevice.bootId)
+        assertEquals(300, mediaDevice.configId)
+        assertEquals(URL("https://127.0.0.1:9999/"), mediaDevice.secureLocation)
+    }
+
+    @Test
+    fun `given UPDATE packet correctly updates embedded components`() {
+        val RANDOM_UUID_1 = UUID.randomUUID()
+        val RANDOM_UUID_2 = UUID.randomUUID()
+        val RANDOM_UUID_3 = UUID.randomUUID()
+        val MEDIA_DEVICE_1 = generateMediaDevice(RANDOM_UUID_1)
+        val MEDIA_DEVICE_2 = generateMediaDevice(
+            RANDOM_UUID_2,
+            embeddedServices = mutableListOf(
+                EmbeddedService(RANDOM_UUID_2, 400, "RenderingControl", "2.0")
+            )
+        )
+        val MEDIA_DEVICE_3 = generateMediaDevice(RANDOM_UUID_3)
+
+        val UPDATE_PACKET_2 = generateUpdatePacket(
+            RANDOM_UUID_2,
+            location = URL("http://127.0.0.1:9999/"),
+            uniqueServiceName = generateUSN<EmbeddedService>(RANDOM_UUID_1),
+            bootId = 600, configId = 300, secureLocation = URL("https://127.0.0.1:9999/")
+        )
+
+        val UPDATE_PACKET_3 = generateUpdatePacket(
+            RANDOM_UUID_3,
+            location = URL("http://127.0.0.1:9999/"),
+            uniqueServiceName = generateUSN<EmbeddedDevice>(RANDOM_UUID_3),
+            bootId = 600, configId = 300, secureLocation = URL("https://127.0.0.1:9999/")
+        )
+
+        sut.setDeviceList(listOf(MEDIA_DEVICE_1, MEDIA_DEVICE_2, MEDIA_DEVICE_3))
+        sut.parseMediaPacket(UPDATE_PACKET_3)
+
+        val finalList = sut.parseMediaPacket(UPDATE_PACKET_2)
+        assertTrue(finalList.isNotEmpty())
+        assertEquals(3, finalList.size)
+        assertTrue(finalList[0].deviceList.isEmpty())
+        assertTrue(finalList[1].serviceList.isNotEmpty())
+        assertEquals(
+            EmbeddedService(
+                RANDOM_UUID_1,
+                600,
+                "RenderingControl",
+                "3.0"
+            ),
+            finalList[0].serviceList[0]
+        )
+        assertEquals(
+            EmbeddedDevice(
+                RANDOM_UUID_3,
+                600,
+                "RenderingControl",
+                "3.0"
+            ),
+            finalList[2].deviceList[0]
+        )
+    }
+
+    @Test
+    fun `given UPDATE packet order correctly builds root device`() {
+        val RANDOM_UUID_1 = UUID.randomUUID()
+        val UPDATE_PACKET_1 = generateUpdatePacket(
+            deviceUUID = RANDOM_UUID_1,
+            uniqueServiceName = generateUSN<EmbeddedDevice>(RANDOM_UUID_1)
+        )
+
+        val finalList = sut.parseMediaPacket(UPDATE_PACKET_1)
+        assertTrue(finalList.isNotEmpty())
+        assertEquals(1, finalList.size)
+        assertTrue(finalList[0].deviceList.isNotEmpty())
+        assertEquals(1, finalList[0].deviceList.size)
+        assertEquals(
+            EmbeddedDevice(
+                RANDOM_UUID_1,
+                600,
+                "RenderingControl",
+                "3.0"
+            ),
+            finalList[0].deviceList[0]
+        )
     }
 
     @Test
@@ -132,16 +257,16 @@ class LighthouseStateTest {
         val RANDOM_UUID_3 = UUID.randomUUID()
 
         val MEDIA_DEVICE_1 = generateMediaDevice(RANDOM_UUID_1)
-        MEDIA_DEVICE_1.deviceList.add(generateAdvertisedMediaDevice())
-        MEDIA_DEVICE_1.serviceList.add(generateAdvertisedMediaService())
+        MEDIA_DEVICE_1.deviceList.add(generateUSN<EmbeddedDevice>(RANDOM_UUID_1) as EmbeddedDevice)
+        MEDIA_DEVICE_1.serviceList.add(generateUSN<EmbeddedService>(RANDOM_UUID_1) as EmbeddedService)
 
         val MEDIA_DEVICE_2 = generateMediaDevice(RANDOM_UUID_2)
-        MEDIA_DEVICE_2.deviceList.add(generateAdvertisedMediaDevice())
-        MEDIA_DEVICE_2.serviceList.add(generateAdvertisedMediaService())
+        MEDIA_DEVICE_2.deviceList.add(generateUSN<EmbeddedDevice>(RANDOM_UUID_1) as EmbeddedDevice)
+        MEDIA_DEVICE_2.serviceList.add(generateUSN<EmbeddedService>(RANDOM_UUID_1) as EmbeddedService)
 
         val MEDIA_DEVICE_3 = generateMediaDevice(RANDOM_UUID_3)
-        MEDIA_DEVICE_3.deviceList.add(generateAdvertisedMediaDevice())
-        MEDIA_DEVICE_3.serviceList.add(generateAdvertisedMediaService())
+        MEDIA_DEVICE_3.deviceList.add(generateUSN<EmbeddedDevice>(RANDOM_UUID_1) as EmbeddedDevice)
+        MEDIA_DEVICE_3.serviceList.add(generateUSN<EmbeddedService>(RANDOM_UUID_1) as EmbeddedService)
 
         val BYEBYE_PACKET_1 = generateByeByePacket(RANDOM_UUID_1, generateUSN<EmbeddedDevice>(RANDOM_UUID_1))
         val BYEBYE_PACKET_2 = generateByeByePacket(RANDOM_UUID_1, generateUSN<EmbeddedService>(RANDOM_UUID_1))

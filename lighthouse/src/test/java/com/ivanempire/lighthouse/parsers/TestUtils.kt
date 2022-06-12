@@ -10,14 +10,30 @@ import com.ivanempire.lighthouse.models.packets.MediaHost
 import com.ivanempire.lighthouse.models.packets.NotificationType
 import com.ivanempire.lighthouse.models.packets.RootDeviceInformation
 import com.ivanempire.lighthouse.models.packets.UniqueServiceName
+import com.ivanempire.lighthouse.models.packets.UpdateMediaPacket
 import java.net.InetAddress
 import java.net.URL
 import java.util.UUID
 
+/** Functions to generate fake data to use in unit testing */
 object TestUtils {
 
+    /**
+     * Generates an instance of [AbridgedMediaDevice] to use during unit testing. Defaults to a
+     * simple root device if embedded components are not specified.
+     *
+     * @param deviceUUID The device [UUID] to use during creation
+     * @param mediaHost The [MediaHost] to use during device creation
+     * @param embeddedDevices List of [EmbeddedDevice] instances to add to the media device
+     * @param embeddedServices List of [EmbeddedService] instances to add to the media device
+     * @param cache TTL in seconds of the media device
+     * @param latestTimestamp Timestamp of the latest received media packet targeting this device
+     *
+     * @return An instance of [AbridgedMediaDevice] to use during unit testing
+     */
     fun generateMediaDevice(
         deviceUUID: UUID? = null,
+        mediaHost: MediaHost? = null,
         embeddedDevices: MutableList<EmbeddedDevice>? = null,
         embeddedServices: MutableList<EmbeddedService>? = null,
         cache: Int? = null,
@@ -25,7 +41,7 @@ object TestUtils {
     ): AbridgedMediaDevice {
         return AbridgedMediaDevice(
             uuid = deviceUUID ?: UUID.randomUUID(),
-            host = MediaHost(InetAddress.getByName("239.255.255.250"), 1900),
+            host = mediaHost ?: MediaHost(InetAddress.getByName("239.255.255.250"), 1900),
             cache = cache ?: 0,
             bootId = (Math.random() * 1000).toInt(),
             configId = (Math.random() * 1000).toInt(),
@@ -39,26 +55,9 @@ object TestUtils {
         )
     }
 
-    fun generateAdvertisedMediaDevice(): EmbeddedDevice {
-        return EmbeddedDevice(
-            uuid = UUID.randomUUID(),
-            deviceType = "RenderingControl",
-            bootId = 11,
-            deviceVersion = "1",
-            domain = "http://www.website.com"
-        )
-    }
-
-    fun generateAdvertisedMediaService(): EmbeddedService {
-        return EmbeddedService(
-            uuid = UUID.randomUUID(),
-            serviceType = "RenderingControl",
-            bootId = 11,
-            serviceVersion = "1",
-            domain = "http://www.website.com"
-        )
-    }
-
+    /**
+     * Generates an instance of [AliveMediaPacket]
+     */
     fun generateAlivePacket(
         deviceUUID: UUID,
         uniqueServiceName: UniqueServiceName? = null
@@ -77,6 +76,30 @@ object TestUtils {
         )
     }
 
+    /**
+     *
+     */
+    fun generateUpdatePacket(
+        deviceUUID: UUID,
+        location: URL = URL("http://192.168.2.50:58121/"),
+        uniqueServiceName: UniqueServiceName? = null,
+        bootId: Int = 100,
+        configId: Int = 110,
+        secureLocation: URL = URL("https://192.168.2.50:58121/"),
+    ): UpdateMediaPacket {
+        return UpdateMediaPacket(
+            host = MediaHost(InetAddress.getByName("239.255.255.250"), 1900),
+            location = location,
+            notificationType = NotificationType("upnp:rootdevice"),
+            usn = uniqueServiceName ?: UniqueServiceName(deviceUUID.toString(), bootId),
+            bootId = bootId,
+            configId = configId,
+            nextBootId = bootId + 1,
+            searchPort = 1900,
+            secureLocation = secureLocation
+        )
+    }
+
     fun generateByeByePacket(
         deviceUUID: UUID,
         uniqueServiceName: UniqueServiceName? = null,
@@ -91,23 +114,34 @@ object TestUtils {
         )
     }
 
+    /**
+     * Generates an instance of [UniqueServiceName] targeting either a root device, or an embedded
+     * component - device or service.
+     *
+     * @param deviceUUID The device [UUID] to target
+     * @param identifier The name of the component to create
+     * @param version The version string of the component to create
+     *
+     * @return An instance of [UniqueServiceName] to use in unit testing
+     */
     inline fun <reified T : UniqueServiceName> generateUSN(
         deviceUUID: UUID,
         identifier: String = "RenderingControl",
-        version: String = "1"
+        version: String = "3.0",
+        bootId: Int = 600
     ): UniqueServiceName {
         return when (T::class) {
             RootDeviceInformation::class -> {
                 UniqueServiceName(deviceUUID.toString(), -1)
             }
             EmbeddedDevice::class -> {
-                UniqueServiceName("uuid:$deviceUUID::urn:schemas-upnp-org:device:$identifier:$version", -1)
+                UniqueServiceName("uuid:$deviceUUID::urn:schemas-upnp-org:device:$identifier:$version", bootId)
             }
             EmbeddedService::class -> {
-                UniqueServiceName("uuid:$deviceUUID::urn:schemas-upnp-org:service:$identifier:$version", -1)
+                UniqueServiceName("uuid:$deviceUUID::urn:schemas-upnp-org:service:$identifier:$version", bootId)
             }
             else -> {
-                UniqueServiceName("uuid:$deviceUUID::urn:schemas-upnp-org:service:$identifier:$version", -1)
+                UniqueServiceName("uuid:$deviceUUID::urn:schemas-upnp-org:service:$identifier:$version", bootId)
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.ivanempire.lighthouse.core
 
+import com.ivanempire.lighthouse.models.SearchRequest
 import com.ivanempire.lighthouse.models.devices.AbridgedMediaDevice
 import com.ivanempire.lighthouse.parsers.DatagramPacketTransformer
 import com.ivanempire.lighthouse.parsers.packets.MediaPacketParser
@@ -17,20 +18,20 @@ class RealDiscoveryManager(
     private val multicastSocketListener: RealSocketListener
 ) : DiscoveryManager {
 
-    override fun createNewDeviceFlow(): Flow<List<AbridgedMediaDevice>> {
-        return multicastSocketListener.listenForPackets()
+    override fun createNewDeviceFlow(searchRequest: SearchRequest): Flow<List<AbridgedMediaDevice>> {
+        return multicastSocketListener.listenForPackets(searchRequest)
             .map { DatagramPacketTransformer(it) }
             .filterNotNull()
             .map { MediaPacketParser(it) }
+            .filterNotNull()
             .map { lighthouseState.parseMediaPacket(it) }
     }
 
     override fun createStaleDeviceFlow(): Flow<List<AbridgedMediaDevice>> {
         return flow {
             while (currentCoroutineContext().isActive) {
-                lighthouseState.parseStaleDevices()
-                // TODO: Check order, after or before
                 delay(1000)
+                lighthouseState.parseStaleDevices()
             }
         }
     }

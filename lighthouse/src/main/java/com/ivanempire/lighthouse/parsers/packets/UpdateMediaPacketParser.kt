@@ -1,6 +1,5 @@
 package com.ivanempire.lighthouse.parsers.packets
 
-import com.ivanempire.lighthouse.models.Constants.NOT_AVAILABLE
 import com.ivanempire.lighthouse.models.Constants.NOT_AVAILABLE_NUM
 import com.ivanempire.lighthouse.models.packets.HeaderKeys
 import com.ivanempire.lighthouse.models.packets.MediaHost
@@ -19,7 +18,7 @@ class UpdateMediaPacketParser(
     }
 
     private val location: URL by lazy {
-        parseUrl(headerSet[HeaderKeys.LOCATION] ?: NOT_AVAILABLE)
+        parseUrl(headerSet[HeaderKeys.LOCATION])
     }
 
     private val notificationType: NotificationType by lazy {
@@ -30,16 +29,16 @@ class UpdateMediaPacketParser(
         UniqueServiceName(headerSet[HeaderKeys.UNIQUE_SERVICE_NAME] ?: "", bootId)
     }
 
-    private val bootId = headerSet[HeaderKeys.BOOTID]?.toInt() ?: NOT_AVAILABLE_NUM
+    private val bootId = headerSet[HeaderKeys.BOOT_ID]?.toInt() ?: NOT_AVAILABLE_NUM
 
-    private val configId = headerSet[HeaderKeys.CONFIGID]?.toInt() ?: NOT_AVAILABLE_NUM
+    private val configId = headerSet[HeaderKeys.CONFIG_ID]?.toInt() ?: NOT_AVAILABLE_NUM
 
-    private val nextBootId = headerSet[HeaderKeys.NEXTBOOTID]?.toInt() ?: NOT_AVAILABLE_NUM
+    private val nextBootId = headerSet[HeaderKeys.NEXT_BOOT_ID]?.toInt() ?: NOT_AVAILABLE_NUM
 
-    private val searchPort = headerSet[HeaderKeys.SEARCHPORT]?.toInt()
+    private val searchPort = headerSet[HeaderKeys.SEARCH_PORT]?.toInt()
 
     private val secureLocation: URL by lazy {
-        parseUrl(headerSet[HeaderKeys.SECURE_LOCATION] ?: NOT_AVAILABLE)
+        parseUrl(headerSet[HeaderKeys.SECURE_LOCATION])
     }
 
     override fun parseMediaPacket(): MediaPacket {

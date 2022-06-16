@@ -5,6 +5,8 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.ivanempire.lighthouse.LighthouseClient
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MainActivity: AppCompatActivity() {
@@ -14,10 +16,17 @@ class MainActivity: AppCompatActivity() {
 
         val myClient = LighthouseClient.Builder(this).build()
 
-        lifecycleScope.launch {
+        val discoveryJob = lifecycleScope.launch {
+            delay(5000)
             myClient.discoverDevices().collect {
                 Log.d("MAIN-ACTIVITY", "Emitted device list: $it")
             }
+        }
+
+        lifecycleScope.launch {
+            delay(35000)
+            Log.d("MAIN-ACTIVITY", "Stopping discovery job")
+            discoveryJob.cancelAndJoin()
         }
     }
 }

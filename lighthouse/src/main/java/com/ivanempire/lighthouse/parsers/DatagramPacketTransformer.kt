@@ -1,5 +1,6 @@
 package com.ivanempire.lighthouse.parsers
 
+import android.util.Log
 import com.ivanempire.lighthouse.models.packets.StartLine
 import java.net.DatagramPacket
 import java.nio.charset.Charset
@@ -14,6 +15,7 @@ class DatagramPacketTransformer {
     companion object {
         operator fun invoke(datagramPacket: DatagramPacket): HashMap<String, String>? {
             val cleanedDatagram = datagramPacket.cleanPacket()
+            Log.d("DATAGRAM-TRANSFORMER", "Cleaned datagram: $cleanedDatagram")
             val packetFields = cleanedDatagram.split(KEY_VALUE_PAIR_DELIMITER)
 
             // If the StartLine is invalid, ignore this datagram
@@ -23,11 +25,13 @@ class DatagramPacketTransformer {
 
             // Start building the packet headers, starting with item 1 since item 0 is the StartLine
             val packetHeaders = hashMapOf<String, String>()
-            packetFields.subList(1, packetFields.size - 1).forEach {
+            packetFields.subList(1, packetFields.size).forEach {
+                Log.d("PARSING", "Trying to parse: $it")
                 val splitField = it.split(HEADER_FIELD_DELIMITER, ignoreCase = false, limit = 2)
                 packetHeaders[splitField[0].trim().uppercase()] = splitField[1].trim()
             }
 
+            Log.d("DATAGRAM-TRANSFORMER", "Parsed header set: $packetHeaders")
             return packetHeaders
         }
 
@@ -44,5 +48,5 @@ class DatagramPacketTransformer {
  */
 internal fun DatagramPacket.cleanPacket(): String {
     val cleanedData = this.data.filter { it != 0.toByte() }.toByteArray()
-    return String(cleanedData, Charset.defaultCharset())
+    return String(cleanedData, Charset.defaultCharset()).trim()
 }

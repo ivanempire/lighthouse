@@ -313,4 +313,10 @@ class LighthouseStateTest {
         val finalList = sut.parseStaleDevices()
         assertTrue(finalList.isNotEmpty())
     }
+
+    @Test
+    fun debug() {
+        val packetString = "HTTP/1.1 200 OK\r\nCACHE-CONTROL: max-age=1900\r\nST: upnp:rootdevice\r\nUSN: uuid:73796E6F-6473-6D00-0000-00113296d0d7::upnp:rootdevice\r\nEXT:\r\nSERVER: Synology/DSM/192.168.2.41\r\nLOCATION: http://192.168.2.41:5000/ssdp/desc-DSM-eth0.xml\r\nOPT: \"http://schemas.upnp.org/upnp/1/0/\"; ns=01\r\n01-NLS: 1\r\nBOOTID.UPNP.ORG: 1\r\nCONFIGID.UPNP.ORG: 1337\r\n".toByteArray()
+        print(packetString.size)
+    }
 }

@@ -2,12 +2,14 @@ package com.ivanempire.lighthouse.socket
 
 import android.net.wifi.WifiManager
 import android.util.Log
+import com.ivanempire.lighthouse.models.SearchRequest
 import java.net.DatagramPacket
 import java.net.InetAddress
 import java.net.MulticastSocket
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.isActive
 
 class RealSocketListener(
@@ -27,16 +29,20 @@ class RealSocketListener(
     }
 
     override fun setupSocket() {
-        // Check behavior with false
         multicastLock.setReferenceCounted(true)
         multicastLock.acquire()
+        multicastSocket.reuseAddress = true
+        multicastSocket.loopbackMode = true
         multicastSocket.joinGroup(multicastGroup)
     }
 
-    override fun listenForPackets(): Flow<DatagramPacket> {
+    override fun listenForPackets(searchRequest: SearchRequest): Flow<DatagramPacket> {
         setupSocket()
         return flow {
             multicastSocket.use {
+                Log.d("#listenForPackets", "Closed: ${multicastSocket.isClosed}")
+                Log.d("#listenForPackets", "Bound: ${multicastSocket.isBound}")
+                it.send(searchRequest.toDatagramPacket(multicastGroup))
                 while (currentCoroutineContext().isActive) {
                     val discoveryBuffer = ByteArray(MULTICAST_DATAGRAM_SIZE)
                     val discoveryDatagram = DatagramPacket(discoveryBuffer, discoveryBuffer.size)
@@ -44,24 +50,35 @@ class RealSocketListener(
                     emit(discoveryDatagram)
                 }
             }
-        }
+        }.onCompletion { teardownSocket() }
     }
 
     override fun teardownSocket() {
+        Log.d("#teardownSocket", "Closed: ${multicastSocket.isClosed}")
+        Log.d("#teardownSocket", "Bound: ${multicastSocket.isBound}")
         Log.d("SocketListener", "Releasing resources")
-        // Order of this needs to be checked
-        multicastSocket.leaveGroup(multicastGroup)
-        multicastSocket.close()
+
+        if (multicastSocket.isBound) {
+            Log.d("#teardownSocket", "Leaving group")
+            // multicastSocket.leaveGroup(multicastGroup)
+        }
+
         if (multicastLock.isHeld) {
+            Log.d("#teardownSocket", "Releasing lock")
             multicastLock.release()
         }
+
+        // multicastSocket.close()
+
+        Log.d("#teardownSocket", "Closed: ${multicastSocket.isClosed}")
+        Log.d("#teardownSocket", "Bound: ${multicastSocket.isBound}")
     }
 
     private companion object {
         const val MULTICAST_LOCK_TAG = "LighthouseLock"
         const val MULTICAST_ADDRESS = "239.255.255.250"
 
-        // Try 1028 too, 512
+        // TODO: Try 1028 too, 512
         const val MULTICAST_DATAGRAM_SIZE = 512
         const val MULTICAST_PORT = 1900
     }

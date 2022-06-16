@@ -1,6 +1,5 @@
 package com.ivanempire.lighthouse.models.packets
 
-import java.lang.IllegalStateException
 import java.util.UUID
 
 private val DEVICE_MARKER = ":device:"
@@ -48,7 +47,8 @@ abstract class UniqueServiceName(
                 )
             }
 
-            throw IllegalStateException("Awh hell naw")
+            return RootDeviceInformation(UUID.randomUUID(), -1)
+            // throw IllegalStateException("Awh hell naw")
         }
     }
 }

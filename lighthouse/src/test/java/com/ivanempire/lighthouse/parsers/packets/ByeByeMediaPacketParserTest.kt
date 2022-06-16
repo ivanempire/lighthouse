@@ -12,7 +12,6 @@ import com.ivanempire.lighthouse.parsers.packets.ByeByeMediaPacketParserTest.Fix
 import com.ivanempire.lighthouse.parsers.packets.ByeByeMediaPacketParserTest.Fixtures.VALID_BYEBYE_PACKET_HEADER_SET_1
 import com.ivanempire.lighthouse.parsers.packets.ByeByeMediaPacketParserTest.Fixtures.VALID_BYEBYE_PACKET_HEADER_SET_2
 import com.ivanempire.lighthouse.parsers.packets.ByeByeMediaPacketParserTest.Fixtures.VALID_BYEBYE_PACKET_HEADER_SET_3
-import java.lang.IllegalStateException
 import java.net.InetAddress
 import java.util.UUID
 import org.junit.Assert.assertEquals
@@ -23,16 +22,16 @@ class ByeByeMediaPacketParserTest {
 
     private lateinit var sut: ByeByeMediaPacketParser
 
-    @Test(expected = IllegalStateException::class)
+    @Test
     fun `given empty header set correctly builds packet`() {
         sut = ByeByeMediaPacketParser(hashMapOf())
         val parsedPacket = sut.parseMediaPacket() as ByeByeMediaPacket
 
         assertEquals(MediaHost(InetAddress.getByName("0.0.0.0"), -1), parsedPacket.host)
-        assertEquals(NotificationType(""), parsedPacket.notificationType)
+        assertEquals(NotificationType(null), parsedPacket.notificationType)
         assertEquals(NotificationSubtype.BYEBYE, parsedPacket.notificationSubtype)
-        assertEquals(null, parsedPacket.bootId)
-        assertEquals(null, parsedPacket.configId)
+        assertEquals(-1, parsedPacket.bootId)
+        assertEquals(-1, parsedPacket.configId)
     }
 
     @Test
@@ -135,7 +134,7 @@ class ByeByeMediaPacketParserTest {
             HeaderKeys.NOTIFICATION_TYPE to "urn:schemas-upnp-org:service:RenderingControl:1",
             HeaderKeys.UNIQUE_SERVICE_NAME to "uuid:3f8744cd-30bf-4fc9-8a42-bad80ae660c1::upnp:rootdevice",
             HeaderKeys.NOTIFICATION_SUBTYPE to "ssdp:byebye",
-            HeaderKeys.BOOTID to "100"
+            HeaderKeys.BOOT_ID to "100"
         )
 
         val VALID_BYEBYE_PACKET_HEADER_SET_1 = hashMapOf(
@@ -143,8 +142,8 @@ class ByeByeMediaPacketParserTest {
             HeaderKeys.NOTIFICATION_TYPE to "urn:schemas-microsoft-com:nhed:presence:1",
             HeaderKeys.NOTIFICATION_SUBTYPE to "ssdp:byebye",
             HeaderKeys.UNIQUE_SERVICE_NAME to "uuid:00000000-0000-0000-0200-00125A8A0960::urn:schemas-microsoft-com:device:presence:1",
-            HeaderKeys.BOOTID to "200",
-            HeaderKeys.CONFIGID to "50"
+            HeaderKeys.BOOT_ID to "200",
+            HeaderKeys.CONFIG_ID to "50"
         )
 
         val VALID_BYEBYE_PACKET_HEADER_SET_2 = hashMapOf(
@@ -152,8 +151,8 @@ class ByeByeMediaPacketParserTest {
             HeaderKeys.NOTIFICATION_TYPE to "urn:schemas-upnp-org:service:RenderingControl:1",
             HeaderKeys.NOTIFICATION_SUBTYPE to "ssdp:byebye",
             HeaderKeys.UNIQUE_SERVICE_NAME to "uuid:9ab0c000-f668-11de-9976-00a0ded0e859::urn:schemas-upnp-org:service:RenderingControl:1",
-            HeaderKeys.BOOTID to "4",
-            HeaderKeys.CONFIGID to "45"
+            HeaderKeys.BOOT_ID to "4",
+            HeaderKeys.CONFIG_ID to "45"
         )
 
         val VALID_BYEBYE_PACKET_HEADER_SET_3 = hashMapOf(
@@ -161,8 +160,8 @@ class ByeByeMediaPacketParserTest {
             HeaderKeys.NOTIFICATION_TYPE to "urn:schemas-upnp-org:service:SwitchPower:1",
             HeaderKeys.NOTIFICATION_SUBTYPE to "ssdp:byebye",
             HeaderKeys.UNIQUE_SERVICE_NAME to "urn:upnp-org:serviceId:SwitchPower.0001::urn:schemas-upnp-org:service:SwitchPower:1",
-            HeaderKeys.BOOTID to "9",
-            HeaderKeys.CONFIGID to "55"
+            HeaderKeys.BOOT_ID to "9",
+            HeaderKeys.CONFIG_ID to "55"
         )
     }
 }

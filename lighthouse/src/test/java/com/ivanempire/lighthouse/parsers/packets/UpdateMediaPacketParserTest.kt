@@ -10,7 +10,6 @@ import com.ivanempire.lighthouse.parsers.packets.UpdateMediaPacketParserTest.Fix
 import com.ivanempire.lighthouse.parsers.packets.UpdateMediaPacketParserTest.Fixtures.VALID_UPDATE_PACKET_HEADER_SET_1
 import com.ivanempire.lighthouse.parsers.packets.UpdateMediaPacketParserTest.Fixtures.VALID_UPDATE_PACKET_HEADER_SET_2
 import com.ivanempire.lighthouse.parsers.packets.UpdateMediaPacketParserTest.Fixtures.VALID_UPDATE_PACKET_HEADER_SET_3
-import java.lang.IllegalStateException
 import java.net.InetAddress
 import java.net.URL
 import java.util.UUID
@@ -22,20 +21,20 @@ class UpdateMediaPacketParserTest {
 
     private lateinit var sut: UpdateMediaPacketParser
 
-    @Test(expected = IllegalStateException::class)
+    @Test
     fun `given empty header set correctly builds packet`() {
         sut = UpdateMediaPacketParser(hashMapOf())
         val parsedPacket = sut.parseMediaPacket() as UpdateMediaPacket
 
         assertEquals(MediaHost(InetAddress.getByName("0.0.0.0"), -1), parsedPacket.host)
-        assertEquals(URL("http://0.0.0.0"), parsedPacket.location)
+        assertEquals(URL("http://127.0.0.1/"), parsedPacket.location)
         assertEquals(NotificationSubtype.UPDATE, parsedPacket.notificationSubtype)
-        assertEquals(NotificationType(""), parsedPacket.notificationType)
-        assertEquals(null, parsedPacket.bootId)
-        assertEquals(null, parsedPacket.configId)
-        assertEquals(null, parsedPacket.nextBootId)
+        assertEquals(NotificationType(null), parsedPacket.notificationType)
+        assertEquals(-1, parsedPacket.bootId)
+        assertEquals(-1, parsedPacket.configId)
+        assertEquals(-1, parsedPacket.nextBootId)
         assertEquals(null, parsedPacket.searchPort)
-        assertEquals(URL("http://0.0.0.0"), parsedPacket.secureLocation)
+        assertEquals(URL("http://127.0.0.1/"), parsedPacket.secureLocation)
     }
 
     @Test
@@ -161,10 +160,10 @@ class UpdateMediaPacketParserTest {
             HeaderKeys.NOTIFICATION_TYPE to "urn:schemas-upnp-org:service:SwitchPower:1",
             HeaderKeys.NOTIFICATION_SUBTYPE to "ssdp:update",
             HeaderKeys.UNIQUE_SERVICE_NAME to "uuid:b9783ad2-d548-9793-0eb9-42db373ade07::urn:schemas-upnp-org:service:SwitchPower:1",
-            HeaderKeys.BOOTID to "100",
-            HeaderKeys.CONFIGID to "30",
-            HeaderKeys.NEXTBOOTID to "101",
-            HeaderKeys.SEARCHPORT to "1900",
+            HeaderKeys.BOOT_ID to "100",
+            HeaderKeys.CONFIG_ID to "30",
+            HeaderKeys.NEXT_BOOT_ID to "101",
+            HeaderKeys.SEARCH_PORT to "1900",
             HeaderKeys.SECURE_LOCATION to "https://127.0.0.1:58122/"
         )
 
@@ -174,8 +173,8 @@ class UpdateMediaPacketParserTest {
             HeaderKeys.NOTIFICATION_TYPE to "urn:schemas-upnp-org:service:WANPPPConnection:1",
             HeaderKeys.UNIQUE_SERVICE_NAME to "uuid:3ddcd1d3-2380-45f5-b069-2c4d54008cf2::urn:schemas-upnp-org:service:WANPPPConnection:1",
             HeaderKeys.NOTIFICATION_SUBTYPE to "ssdp:update",
-            HeaderKeys.BOOTID to "1525511561",
-            HeaderKeys.CONFIGID to "1337"
+            HeaderKeys.BOOT_ID to "1525511561",
+            HeaderKeys.CONFIG_ID to "1337"
         )
 
         val VALID_UPDATE_PACKET_HEADER_SET_2 = hashMapOf(
@@ -192,10 +191,10 @@ class UpdateMediaPacketParserTest {
             HeaderKeys.NOTIFICATION_TYPE to "urn:schemas-upnp-org:service:Dimming:1",
             HeaderKeys.NOTIFICATION_SUBTYPE to "ssdp:update",
             HeaderKeys.UNIQUE_SERVICE_NAME to "uuid:3f8744cd-30bf-4fc9-8a42-bad80ae660c1::urn:schemas-upnp-org:service:Dimming:1",
-            HeaderKeys.BOOTID to "50",
-            HeaderKeys.CONFIGID to "454",
-            HeaderKeys.NEXTBOOTID to "51",
-            HeaderKeys.SEARCHPORT to "1900",
+            HeaderKeys.BOOT_ID to "50",
+            HeaderKeys.CONFIG_ID to "454",
+            HeaderKeys.NEXT_BOOT_ID to "51",
+            HeaderKeys.SEARCH_PORT to "1900",
             HeaderKeys.SECURE_LOCATION to "https://192.168.2.50:58121/"
         )
     }

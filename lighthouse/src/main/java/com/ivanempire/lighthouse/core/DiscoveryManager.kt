@@ -1,5 +1,6 @@
 package com.ivanempire.lighthouse.core
 
+import com.ivanempire.lighthouse.models.SearchRequest
 import com.ivanempire.lighthouse.models.devices.AbridgedMediaDevice
 import kotlinx.coroutines.flow.Flow
 
@@ -10,8 +11,9 @@ interface DiscoveryManager {
 
     /**
      * Creates a
+     * @param searchRequest The [SearchRequest] to send at the start of device discovery
      */
-    fun createNewDeviceFlow(): Flow<List<AbridgedMediaDevice>>
+    fun createNewDeviceFlow(searchRequest: SearchRequest): Flow<List<AbridgedMediaDevice>>
 
     /**
      * Creates a [Flow] of a list of [AbridgedMediaDevice] that have not received any SSDP packets

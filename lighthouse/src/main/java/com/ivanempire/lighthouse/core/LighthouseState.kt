@@ -1,5 +1,6 @@
 package com.ivanempire.lighthouse.core
 
+import android.util.Log
 import com.ivanempire.lighthouse.models.Constants.NOT_AVAILABLE_CACHE
 import com.ivanempire.lighthouse.models.devices.AbridgedMediaDevice
 import com.ivanempire.lighthouse.models.devices.MediaDevice
@@ -7,6 +8,7 @@ import com.ivanempire.lighthouse.models.packets.AliveMediaPacket
 import com.ivanempire.lighthouse.models.packets.ByeByeMediaPacket
 import com.ivanempire.lighthouse.models.packets.MediaPacket
 import com.ivanempire.lighthouse.models.packets.RootDeviceInformation
+import com.ivanempire.lighthouse.models.packets.SearchResponseMediaPacket
 import com.ivanempire.lighthouse.models.packets.UpdateMediaPacket
 import com.ivanempire.lighthouse.removeEmbeddedComponent
 import com.ivanempire.lighthouse.updateEmbeddedComponent
@@ -30,13 +32,16 @@ class LighthouseState {
      * Delegates all the latest incoming [MediaPacket] instances to the relevant parsing methods
      *
      * @param latestPacket The latest parsed instance of a [MediaPacket]
+     *
      * @return A modified snapshot of [deviceList] - original list left untouched
      */
     fun parseMediaPacket(latestPacket: MediaPacket): List<AbridgedMediaDevice> {
+        Log.d("LIGHTHOUSE-STATE", "Received a packet: $latestPacket")
         return when (latestPacket) {
             is AliveMediaPacket -> parseAliveMediaPacket(latestPacket)
             is UpdateMediaPacket -> parseUpdateMediaPacket(latestPacket)
             is ByeByeMediaPacket -> parseByeByeMediaPacket(latestPacket)
+            is SearchResponseMediaPacket -> parseAliveMediaPacket(latestPacket.toAlivePacket())
         }
     }
 
@@ -48,6 +53,7 @@ class LighthouseState {
      * are ignored.
      *
      * @param latestPacket Latest instance of an [AliveMediaPacket]
+     *
      * @return A modified snapshot of [deviceList] with updated information from ALIVE packet
      */
     private fun parseAliveMediaPacket(latestPacket: AliveMediaPacket): List<AbridgedMediaDevice> {
@@ -146,4 +152,20 @@ class LighthouseState {
             System.currentTimeMillis() - it.latestTimestamp > it.cache
         }
     }
+}
+
+// Awh hell ye, it's all coming together now ಠ_ಠ
+private fun SearchResponseMediaPacket.toAlivePacket(): AliveMediaPacket {
+    return AliveMediaPacket(
+        host = host,
+        cache = cache,
+        location = location,
+        notificationType = notificationType,
+        server = server,
+        usn = usn,
+        bootId = bootId,
+        configId = configId,
+        searchPort = searchPort,
+        secureLocation = secureLocation
+    )
 }

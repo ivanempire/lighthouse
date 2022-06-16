@@ -12,7 +12,6 @@ import com.ivanempire.lighthouse.models.packets.UniqueServiceName
  * the only thing to really change. However, component versions may be updated as well, and so we
  * also just replace the entire component.
  *
- * @param latestBootId The latest bootId integer to set - indicates if a component was rebooted
  * @param latestComponent The latest packet's parsed [UniqueServiceName] field
  */
 internal fun AbridgedMediaDevice.updateEmbeddedComponent(latestComponent: UniqueServiceName) {

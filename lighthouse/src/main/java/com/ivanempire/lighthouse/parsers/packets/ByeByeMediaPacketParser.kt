@@ -24,9 +24,9 @@ class ByeByeMediaPacketParser(
         UniqueServiceName(headerSet[HeaderKeys.UNIQUE_SERVICE_NAME] ?: "", bootId)
     }
 
-    private val bootId = headerSet[HeaderKeys.BOOTID]?.toInt() ?: NOT_AVAILABLE_NUM
+    private val bootId = headerSet[HeaderKeys.BOOT_ID]?.toInt() ?: NOT_AVAILABLE_NUM
 
-    private val configId = headerSet[HeaderKeys.CONFIGID]?.toInt() ?: NOT_AVAILABLE_NUM
+    private val configId = headerSet[HeaderKeys.CONFIG_ID]?.toInt() ?: NOT_AVAILABLE_NUM
 
     override fun parseMediaPacket(): MediaPacket {
         return ByeByeMediaPacket(

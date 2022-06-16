@@ -7,7 +7,7 @@ data class MediaHost(
     val port: Int
 ) {
     companion object {
-        fun parseFromString(rawValue: String?): MediaHost {
+        internal fun parseFromString(rawValue: String?): MediaHost {
             return if (rawValue == null) {
                 MediaHost(InetAddress.getByName("0.0.0.0"), -1)
             } else {
@@ -18,5 +18,9 @@ data class MediaHost(
                 )
             }
         }
+    }
+
+    override fun toString(): String {
+        return "${address.hostAddress}:$port"
     }
 }

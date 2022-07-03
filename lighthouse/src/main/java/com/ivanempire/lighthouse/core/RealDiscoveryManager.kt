@@ -31,7 +31,7 @@ class RealDiscoveryManager(
         return flow {
             while (currentCoroutineContext().isActive) {
                 delay(1000)
-                lighthouseState.parseStaleDevices()
+                emit(lighthouseState.parseStaleDevices())
             }
         }
     }

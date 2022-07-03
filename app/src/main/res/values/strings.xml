@@ -1,5 +1,0 @@
-<resources>
-    <string name="app_name">Lighthouse</string>
-    <string name="start_scan">Start scan</string>
-    <string name="stop_scan">Stop scan</string>
-</resources>

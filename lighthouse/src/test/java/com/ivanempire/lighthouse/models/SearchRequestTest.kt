@@ -1,5 +1,6 @@
 package com.ivanempire.lighthouse.models
 
+import com.ivanempire.lighthouse.models.Constants.DEFAULT_SEARCH_REQUEST
 import com.ivanempire.lighthouse.models.packets.MediaHost
 import java.net.InetAddress
 import java.util.UUID
@@ -59,7 +60,7 @@ class SearchRequestTest {
             friendlyName = "LighthouseClient",
             uuid = UUID.nameUUIDFromBytes("LighthouseClient".toByteArray())
         )
-        val baseResultString = "HOST: 239.255.255.250:1900\nMAN: \"ssdp:discover\"\nMX: 5\nST: ssdp:all\nCPFN.UPNP.ORG: LighthouseClient\nCPUUID.UPNP.ORG: 747f550a-8dec-33a1-8470-e314bf440695\n"
+        val baseResultString = "HOST: 239.255.255.250:1900\\r\\nMAN: \"ssdp:discover\"\\r\\nMX: 5\\r\\nST: ssdp:all\\r\\nCPFN.UPNP.ORG: LighthouseClient\\r\\nCPUUID.UPNP.ORG: 747f550a-8dec-33a1-8470-e314bf440695\\r\\n"
 
         assertEquals(baseResultString, baseSearchRequest.toString())
 
@@ -72,8 +73,14 @@ class SearchRequestTest {
             friendlyName = "LighthouseClient",
             uuid = UUID.nameUUIDFromBytes("LighthouseClient".toByteArray())
         )
-        val completeResultString = "HOST: 239.255.255.250:1900\nMAN: \"ssdp:discover\"\nMX: 5\nST: ssdp:all\nUSER-AGENT: Windows/NT5.0 UPnP/2.0 GUPnP/1.0.5\nCPFN.UPNP.ORG: LighthouseClient\nCPUUID.UPNP.ORG: 747f550a-8dec-33a1-8470-e314bf440695\n"
+        val completeResultString = "HOST: 239.255.255.250:1900\\r\\nMAN: \"ssdp:discover\"\\r\\nMX: 5\\r\\nST: ssdp:all\\r\\nUSER-AGENT: Windows/NT5.0 UPnP/2.0 GUPnP/1.0.5\\r\\nCPFN.UPNP.ORG: LighthouseClient\\r\\nCPUUID.UPNP.ORG: 747f550a-8dec-33a1-8470-e314bf440695\\r\\n"
 
         assertEquals(completeResultString, completeSearchRequest.toString())
+    }
+
+    @Test
+    fun `debug`() {
+        println(DEFAULT_SEARCH_REQUEST.toString().length)
+        print(DEFAULT_SEARCH_REQUEST.toString())
     }
 }

@@ -39,3 +39,7 @@ internal fun AbridgedMediaDevice.removeEmbeddedComponent(latestComponent: Unique
         this.serviceList.removeAll { it.serviceType == latestComponent.serviceType }
     }
 }
+
+internal fun HashMap<String, String>.getAndRemove(targetKey: String): String? {
+    return this[targetKey]
+}

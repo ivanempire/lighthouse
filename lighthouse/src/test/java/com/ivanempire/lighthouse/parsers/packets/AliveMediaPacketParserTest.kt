@@ -29,7 +29,7 @@ class AliveMediaPacketParserTest {
         val parsedPacket = sut.parseMediaPacket() as AliveMediaPacket
 
         assertEquals(MediaHost(InetAddress.getByName("0.0.0.0"), -1), parsedPacket.host)
-        assertEquals(-1, parsedPacket.cache)
+        assertEquals(1800, parsedPacket.cache)
         assertEquals(URL("http://127.0.0.1/"), parsedPacket.location)
         assertEquals(MediaDeviceServer("N/A", "N/A", "N/A"), parsedPacket.server)
         assertEquals(NotificationSubtype.ALIVE, parsedPacket.notificationSubtype)

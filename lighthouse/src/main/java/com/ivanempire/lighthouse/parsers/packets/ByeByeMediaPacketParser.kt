@@ -1,5 +1,6 @@
 package com.ivanempire.lighthouse.parsers.packets
 
+import com.ivanempire.lighthouse.getAndRemove
 import com.ivanempire.lighthouse.models.Constants.NOT_AVAILABLE_NUM
 import com.ivanempire.lighthouse.models.packets.ByeByeMediaPacket
 import com.ivanempire.lighthouse.models.packets.HeaderKeys
@@ -13,20 +14,20 @@ class ByeByeMediaPacketParser(
 ) : MediaPacketParser() {
 
     private val host: MediaHost by lazy {
-        MediaHost.parseFromString(headerSet[HeaderKeys.HOST])
+        MediaHost.parseFromString(headerSet.getAndRemove(HeaderKeys.HOST))
     }
 
     private val notificationType: NotificationType by lazy {
-        NotificationType(headerSet[HeaderKeys.NOTIFICATION_TYPE])
+        NotificationType(headerSet.getAndRemove(HeaderKeys.NOTIFICATION_TYPE))
     }
 
     private val uniqueServiceName: UniqueServiceName by lazy {
-        UniqueServiceName(headerSet[HeaderKeys.UNIQUE_SERVICE_NAME] ?: "", bootId)
+        UniqueServiceName(headerSet.getAndRemove(HeaderKeys.UNIQUE_SERVICE_NAME) ?: "", bootId)
     }
 
-    private val bootId = headerSet[HeaderKeys.BOOT_ID]?.toInt() ?: NOT_AVAILABLE_NUM
+    private val bootId = headerSet.getAndRemove(HeaderKeys.BOOT_ID)?.toInt() ?: NOT_AVAILABLE_NUM
 
-    private val configId = headerSet[HeaderKeys.CONFIG_ID]?.toInt() ?: NOT_AVAILABLE_NUM
+    private val configId = headerSet.getAndRemove(HeaderKeys.CONFIG_ID)?.toInt() ?: NOT_AVAILABLE_NUM
 
     override fun parseMediaPacket(): MediaPacket {
         return ByeByeMediaPacket(

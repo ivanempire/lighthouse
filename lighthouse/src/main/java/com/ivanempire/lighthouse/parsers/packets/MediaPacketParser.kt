@@ -13,7 +13,7 @@ abstract class MediaPacketParser {
     abstract fun parseMediaPacket(): MediaPacket
 
     internal fun parseCacheControl(rawValue: String?): Int {
-        return rawValue?.substringAfter("=", "-1")?.toInt() ?: Constants.NOT_AVAILABLE_NUM
+        return rawValue?.substringAfter("=", "-1")?.trim()?.toInt() ?: Constants.NOT_AVAILABLE_CACHE
     }
 
     /**

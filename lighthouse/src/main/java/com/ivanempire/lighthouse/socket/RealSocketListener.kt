@@ -40,9 +40,12 @@ class RealSocketListener(
         setupSocket()
         return flow {
             multicastSocket.use {
+                val debugBytes = debugRequest.toByteArray()
+                val searchDatagram = DatagramPacket(debugBytes, debugBytes.size, multicastGroup, 1900)
+
                 Log.d("#listenForPackets", "Closed: ${multicastSocket.isClosed}")
                 Log.d("#listenForPackets", "Bound: ${multicastSocket.isBound}")
-                it.send(searchRequest.toDatagramPacket(multicastGroup))
+                it.send(searchDatagram)
                 while (currentCoroutineContext().isActive) {
                     val discoveryBuffer = ByteArray(MULTICAST_DATAGRAM_SIZE)
                     val discoveryDatagram = DatagramPacket(discoveryBuffer, discoveryBuffer.size)
@@ -60,15 +63,14 @@ class RealSocketListener(
 
         if (multicastSocket.isBound) {
             Log.d("#teardownSocket", "Leaving group")
-            // multicastSocket.leaveGroup(multicastGroup)
+            multicastSocket.leaveGroup(multicastGroup)
+            multicastSocket.close()
         }
 
         if (multicastLock.isHeld) {
             Log.d("#teardownSocket", "Releasing lock")
             multicastLock.release()
         }
-
-        // multicastSocket.close()
 
         Log.d("#teardownSocket", "Closed: ${multicastSocket.isClosed}")
         Log.d("#teardownSocket", "Bound: ${multicastSocket.isBound}")
@@ -78,8 +80,9 @@ class RealSocketListener(
         const val MULTICAST_LOCK_TAG = "LighthouseLock"
         const val MULTICAST_ADDRESS = "239.255.255.250"
 
-        // TODO: Try 1028 too, 512
-        const val MULTICAST_DATAGRAM_SIZE = 512
+        const val MULTICAST_DATAGRAM_SIZE = 2048
         const val MULTICAST_PORT = 1900
+
+        val debugRequest = "M-SEARCH * HTTP/1.1\\r\\nHost: 239.255.255.250:1900\\r\\nMan: \"ssdp:discover\"\\r\\nMX: 60\\r\\nST: upnp:rootdevice\\r\\n\\r\\n"
     }
 }

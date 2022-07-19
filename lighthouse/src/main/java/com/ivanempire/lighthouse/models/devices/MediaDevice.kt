@@ -35,12 +35,10 @@ data class AbridgedMediaDevice(
     val deviceList: MutableList<EmbeddedDevice> = mutableListOf(),
     val latestTimestamp: Long
 ) : MediaDevice() {
-    // TODO: Implement XML call
-    //  CONFIGID.UPNP.ORG   ==> changes, pull new XML description
-    val description: RootMediaDevice?
-        get() {
-            return null
-        }
+//    val description: RootMediaDevice?
+//        get() {
+//            return null
+//        }
 }
 
 /**
@@ -56,7 +54,7 @@ data class AbridgedMediaDevice(
  * @param modelNumber The model number of the specific device
  * @param modelUrl The model URL of the specific device
  * @param serialNumber The serial number of the specific device
- * @param udn TODO: Look up what this stands for
+ * @param udn The unique device name ==> UUID or string
  * @param serviceList The list of services supported by the root OR embedded device
  */
 open class DetailedMediaDevice(
@@ -104,7 +102,7 @@ data class RootMediaDevice(
  * endpoint to get complete information about itself. Contains all of the information obtained
  * from the XML information in a parsed format. All fields are identical to ones described in the
  * [DetailedEmbeddedMediaService], except for one.
- * @param upc TODO: Look up what this stands for
+ * @param upc Universal product code
  */
 data class DetailedEmbeddedMediaDevice(
     override val deviceType: String,

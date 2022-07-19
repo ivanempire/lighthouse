@@ -36,13 +36,15 @@ class LighthouseState {
      * @return A modified snapshot of [deviceList] - original list left untouched
      */
     fun parseMediaPacket(latestPacket: MediaPacket): List<AbridgedMediaDevice> {
-        Log.d("LIGHTHOUSE-STATE", "Received a packet: $latestPacket")
-        return when (latestPacket) {
+        Log.d("#parseMediaPacket", "Received a packet: $latestPacket")
+        val newList = when (latestPacket) {
             is AliveMediaPacket -> parseAliveMediaPacket(latestPacket)
             is UpdateMediaPacket -> parseUpdateMediaPacket(latestPacket)
             is ByeByeMediaPacket -> parseByeByeMediaPacket(latestPacket)
             is SearchResponseMediaPacket -> parseAliveMediaPacket(latestPacket.toAlivePacket())
         }
+        Log.d("#parseMediaPacket", "New list after packet: $newList")
+        return newList
     }
 
     /**
@@ -57,7 +59,8 @@ class LighthouseState {
      * @return A modified snapshot of [deviceList] with updated information from ALIVE packet
      */
     private fun parseAliveMediaPacket(latestPacket: AliveMediaPacket): List<AbridgedMediaDevice> {
-        val targetDevice = deviceList.firstOrNull { it.uuid == latestPacket.usn.uuid }
+        Log.d("#parseAliveMediaPacket", "Parsing packet: $latestPacket")
+        var targetDevice = deviceList.firstOrNull { it.uuid == latestPacket.usn.uuid }
         val targetComponent = latestPacket.usn
         if (targetDevice == null) {
             val baseDevice = AbridgedMediaDevice(
@@ -75,13 +78,15 @@ class LighthouseState {
             baseDevice.updateEmbeddedComponent(targetComponent)
             deviceList.add(baseDevice)
         } else {
+            targetDevice = targetDevice.copy(latestTimestamp = System.currentTimeMillis())
             targetDevice.updateEmbeddedComponent(targetComponent)
         }
+        Log.d("#parseAliveMediaPacket", "Final list: $deviceList")
         return deviceList
     }
 
     private fun parseUpdateMediaPacket(latestPacket: UpdateMediaPacket): List<AbridgedMediaDevice> {
-        val targetDevice = deviceList.firstOrNull { it.uuid == latestPacket.usn.uuid }
+        var targetDevice = deviceList.firstOrNull { it.uuid == latestPacket.usn.uuid }
         val targetComponent = latestPacket.usn
         if (targetDevice == null) {
             // Edge-case 1, where UPDATE came before ALIVE - build full device, but specify
@@ -104,6 +109,7 @@ class LighthouseState {
             }
             deviceList.add(baseDevice)
         } else {
+            targetDevice = targetDevice.copy(latestTimestamp = System.currentTimeMillis())
             when (targetComponent) {
                 // ALIVE came first, UPDATE for root should only update certain fields
                 // cache and server are not affected
@@ -149,7 +155,8 @@ class LighthouseState {
      */
     fun parseStaleDevices(): List<AbridgedMediaDevice> {
         return deviceList.filter {
-            System.currentTimeMillis() - it.latestTimestamp > it.cache
+            Log.d("#parseStaleDevices", "Current devices cache: ${it.cache}")
+            System.currentTimeMillis() - it.latestTimestamp > it.cache * 1000
         }
     }
 }

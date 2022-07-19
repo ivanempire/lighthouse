@@ -7,6 +7,8 @@ import com.ivanempire.lighthouse.models.packets.UpdateMediaPacket
 import com.ivanempire.lighthouse.parsers.packets.MediaPacketParserTest.Fixtures.ALIVE_PACKET_NTS_HEADER
 import com.ivanempire.lighthouse.parsers.packets.MediaPacketParserTest.Fixtures.BYEBYE_PACKET_NTS_HEADER
 import com.ivanempire.lighthouse.parsers.packets.MediaPacketParserTest.Fixtures.UPDATE_PACKET_NTS_HEADER
+import com.ivanempire.lighthouse.parsers.packets.MediaPacketParserTest.Fixtures.VALID_ALIVE_PACKET_HEADER_SET
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -18,6 +20,16 @@ class MediaPacketParserTest {
         val parsedPacket = MediaPacketParser(ALIVE_PACKET_NTS_HEADER)
 
         assertTrue(parsedPacket is AliveMediaPacket)
+        assertTrue(parsedPacket!!.extraHeaders.isEmpty())
+    }
+
+    @Test
+    fun `given ALIVE header set returns ALIVE packet with correct extra headers`() {
+        val parsedPacket = MediaPacketParser(VALID_ALIVE_PACKET_HEADER_SET)
+
+        assertTrue(parsedPacket is AliveMediaPacket)
+        assertEquals(1, parsedPacket!!.extraHeaders.size)
+        assertEquals(parsedPacket.extraHeaders["Ecosystem.bose.com"], "ECO2")
     }
 
     @Test
@@ -25,6 +37,7 @@ class MediaPacketParserTest {
         val parsedPacket = MediaPacketParser(UPDATE_PACKET_NTS_HEADER)
 
         assertTrue(parsedPacket is UpdateMediaPacket)
+        assertTrue(parsedPacket!!.extraHeaders.isEmpty())
     }
 
     @Test
@@ -32,6 +45,7 @@ class MediaPacketParserTest {
         val parsedPacket = MediaPacketParser(BYEBYE_PACKET_NTS_HEADER)
 
         assertTrue(parsedPacket is ByeByeMediaPacket)
+        assertTrue(parsedPacket!!.extraHeaders.isEmpty())
     }
 
 //    @Test(expected = IllegalStateException::class)
@@ -60,6 +74,21 @@ class MediaPacketParserTest {
         val INVALID_PACKET_NTS_HEADER = hashMapOf(
             HeaderKeys.NOTIFICATION_SUBTYPE to "ssdp:invalid",
             HeaderKeys.UNIQUE_SERVICE_NAME to "uuid:3f8744cd-30bf-4fc9-8a42-bad80ae660c1::upnp:rootdevice"
+        )
+
+        val VALID_ALIVE_PACKET_HEADER_SET = hashMapOf(
+            HeaderKeys.HOST to "239.255.255.250:1900",
+            HeaderKeys.CACHE_CONTROL to "max-age=450",
+            HeaderKeys.LOCATION to "http://192.168.2.50:58121/",
+            HeaderKeys.SERVER to "Windows/NT/5.0 UPnP/1.0",
+            HeaderKeys.NOTIFICATION_SUBTYPE to "ssdp:alive",
+            HeaderKeys.NOTIFICATION_TYPE to "urn:schemas-upnp-org:service:Dimming:1",
+            HeaderKeys.UNIQUE_SERVICE_NAME to "uuid:3f8744cd-30bf-4fc9-8a42-bad80ae660c1::urn:schemas-upnp-org:service:Dimming:1",
+            HeaderKeys.BOOT_ID to "5",
+            HeaderKeys.CONFIG_ID to "200",
+            HeaderKeys.SEARCH_PORT to "2100",
+            HeaderKeys.SECURE_LOCATION to "https://192.168.2.50:58121/",
+            "Ecosystem.bose.com" to "ECO2"
         )
     }
 }

@@ -1,6 +1,7 @@
 package com.ivanempire.lighthouse.parsers.packets
 
 import android.util.Log
+import com.ivanempire.lighthouse.getAndRemove
 import com.ivanempire.lighthouse.models.Constants
 import com.ivanempire.lighthouse.models.packets.HeaderKeys
 import com.ivanempire.lighthouse.models.packets.MediaPacket
@@ -32,26 +33,29 @@ abstract class MediaPacketParser {
 
     companion object {
         operator fun invoke(packetHeaders: HashMap<String, String>): MediaPacket? {
-            val isSearchPacket = packetHeaders[HeaderKeys.SEARCH_TARGET] != null
+            val isSearchPacket = packetHeaders.getAndRemove(HeaderKeys.SEARCH_TARGET) != null
             if (isSearchPacket) {
                 return SearchPacketParser(packetHeaders).parseMediaPacket()
             } else {
                 val notificationSubtype = NotificationSubtype.getByRawValue(
-                    packetHeaders[HeaderKeys.NOTIFICATION_SUBTYPE]
+                    packetHeaders.getAndRemove(HeaderKeys.NOTIFICATION_SUBTYPE)
                 )
                 val latestPacket = when (notificationSubtype) {
                     NotificationSubtype.ALIVE -> AliveMediaPacketParser(packetHeaders)
                     NotificationSubtype.UPDATE -> UpdateMediaPacketParser(packetHeaders)
                     NotificationSubtype.BYEBYE -> ByeByeMediaPacketParser(packetHeaders)
                     else -> {
-                        Log.e("PARSER", "Somehow we got an invalid NotificationSubtype: $notificationSubtype")
+                        Log.e("MediaPacketParser", "Somehow we got an invalid NotificationSubtype: $notificationSubtype")
                         null
                     }
-//                else -> throw IllegalStateException(
-//                    "Somehow we got an invalid NotificationSubtype: $notificationSubtype"
-//                )
                 }
-                return latestPacket?.parseMediaPacket()
+                val parsedPacket = latestPacket?.parseMediaPacket()
+                return if (parsedPacket != null) {
+                    parsedPacket.extraHeaders.putAll(packetHeaders)
+                    parsedPacket
+                } else {
+                    null
+                }
             }
         }
     }

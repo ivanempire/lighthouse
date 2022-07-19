@@ -41,5 +41,7 @@ internal fun AbridgedMediaDevice.removeEmbeddedComponent(latestComponent: Unique
 }
 
 internal fun HashMap<String, String>.getAndRemove(targetKey: String): String? {
-    return this[targetKey]
+    val targetValue = this[targetKey]
+    this.remove(targetKey)
+    return targetValue
 }

@@ -157,7 +157,6 @@ class LighthouseState {
      */
     fun parseStaleDevices(): List<AbridgedMediaDevice> {
         return deviceList.filter {
-            Log.d("#parseStaleDevices", "Current devices cache: ${it.cache}")
             System.currentTimeMillis() - it.latestTimestamp > it.cache * 1000
         }
     }

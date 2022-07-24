@@ -305,8 +305,8 @@ class LighthouseStateTest {
         val RANDOM_UUID_1 = UUID.randomUUID()
         val RANDOM_UUID_2 = UUID.randomUUID()
 
-        val MEDIA_DEVICE_1 = generateMediaDevice(RANDOM_UUID_1, cache = 3000, latestTimestamp = System.currentTimeMillis() - 5000)
-        val MEDIA_DEVICE_2 = generateMediaDevice(RANDOM_UUID_2, cache = 100, latestTimestamp = System.currentTimeMillis() - 300)
+        val MEDIA_DEVICE_1 = generateMediaDevice(RANDOM_UUID_1, cache = 30, latestTimestamp = System.currentTimeMillis() - 35 * 1000)
+        val MEDIA_DEVICE_2 = generateMediaDevice(RANDOM_UUID_2, cache = 10, latestTimestamp = System.currentTimeMillis() - 25 * 1000)
 
         sut.setDeviceList(listOf(MEDIA_DEVICE_1, MEDIA_DEVICE_2))
 

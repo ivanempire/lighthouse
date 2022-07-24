@@ -7,8 +7,10 @@ import com.ivanempire.lighthouse.models.packets.UpdateMediaPacket
 import com.ivanempire.lighthouse.parsers.packets.MediaPacketParserTest.Fixtures.ALIVE_PACKET_NTS_HEADER
 import com.ivanempire.lighthouse.parsers.packets.MediaPacketParserTest.Fixtures.BYEBYE_PACKET_NTS_HEADER
 import com.ivanempire.lighthouse.parsers.packets.MediaPacketParserTest.Fixtures.UPDATE_PACKET_NTS_HEADER
+import com.ivanempire.lighthouse.parsers.packets.MediaPacketParserTest.Fixtures.VALID_ALIVE_PACKET_EXTRA_HEADER_SET
 import com.ivanempire.lighthouse.parsers.packets.MediaPacketParserTest.Fixtures.VALID_ALIVE_PACKET_HEADER_SET
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -46,6 +48,19 @@ class MediaPacketParserTest {
 
         assertTrue(parsedPacket is ByeByeMediaPacket)
         assertTrue(parsedPacket!!.extraHeaders.isEmpty())
+    }
+
+    @Test
+    fun `given valid header set parses custom headers correctly`() {
+        val parsedPacket = MediaPacketParser(VALID_ALIVE_PACKET_EXTRA_HEADER_SET)
+
+        assertTrue(parsedPacket is AliveMediaPacket)
+        assertFalse(parsedPacket!!.extraHeaders.isEmpty())
+        assertEquals(4, parsedPacket.extraHeaders.size)
+        assertEquals("ECO2", parsedPacket.extraHeaders["Ecosystem.bose.com"])
+        assertEquals("whatever", parsedPacket.extraHeaders["custom.header.com"])
+        assertEquals("someValue", parsedPacket.extraHeaders["microsoft.com"])
+        assertEquals("-1", parsedPacket.extraHeaders["apple.com"])
     }
 
 //    @Test(expected = IllegalStateException::class)
@@ -89,6 +104,15 @@ class MediaPacketParserTest {
             HeaderKeys.SEARCH_PORT to "2100",
             HeaderKeys.SECURE_LOCATION to "https://192.168.2.50:58121/",
             "Ecosystem.bose.com" to "ECO2"
+        )
+
+        val VALID_ALIVE_PACKET_EXTRA_HEADER_SET = hashMapOf(
+            HeaderKeys.NOTIFICATION_SUBTYPE to "ssdp:alive",
+            HeaderKeys.UNIQUE_SERVICE_NAME to "uuid:3f8744cd-30bf-4fc9-8a42-bad80ae660c1::upnp:rootdevice",
+            "Ecosystem.bose.com" to "ECO2",
+            "custom.header.com" to "whatever",
+            "microsoft.com" to "someValue",
+            "apple.com" to "-1"
         )
     }
 }

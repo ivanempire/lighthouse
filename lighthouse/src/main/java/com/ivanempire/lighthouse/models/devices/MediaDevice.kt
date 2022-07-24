@@ -33,7 +33,8 @@ data class AbridgedMediaDevice(
     val server: MediaDeviceServer?,
     val serviceList: MutableList<EmbeddedService> = mutableListOf(),
     val deviceList: MutableList<EmbeddedDevice> = mutableListOf(),
-    val latestTimestamp: Long
+    val latestTimestamp: Long,
+    val extraHeaders: HashMap<String, String> = hashMapOf()
 ) : MediaDevice() {
 //    val description: RootMediaDevice?
 //        get() {

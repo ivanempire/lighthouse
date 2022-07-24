@@ -22,7 +22,7 @@ interface SearchRequest {
      *
      * @return The [DatagramPacket] representing this search request, [StartLine] included
      */
-    fun toDatagramPacket(multicastGroup: InetAddress, startLine: StartLine = StartLine.SEARCH): DatagramPacket
+    fun toDatagramPacket(multicastGroup: InetAddress): DatagramPacket
 }
 
 /**
@@ -40,22 +40,22 @@ data class MulticastSearchRequest(
     val searchTarget: String,
     val osVersion: String?,
     val productVersion: String?,
-    val friendlyName: String?,
-    val uuid: UUID?
+    val friendlyName: String = "LighthouseClient",
+    val uuid: UUID = UUID.nameUUIDFromBytes("LighthouseClient".toByteArray())
 ) : SearchRequest {
 
     val NEWLINE_SEPARATOR = "\r\n"
 
     init {
         require(mx in 1..5) {
-            "MX should be between 1 and 5, inclusive"
+            "MX should be between 1 and 5 inclusive"
         }
         require(searchTarget.isNotEmpty()) {
-            "Search target (ST) should not be empty"
+            "Search target (ST) should not be an empty string"
         }
-//        require(friendlyName.isNotEmpty()) {
-//            "Friendly name (CPFN.UPNP.ORG) should not be empty"
-//        }
+        require(friendlyName.isNotEmpty()) {
+            "Friendly name (CPFN.UPNP.ORG) should not be an empty string"
+        }
     }
 
     override fun toString(): String {
@@ -70,17 +70,14 @@ data class MulticastSearchRequest(
             builder.append(HeaderKeys.USER_AGENT).append(FIELD_SEPARATOR).append("$osVersion UPnP/2.0 $productVersion").append(NEWLINE_SEPARATOR)
         }
 
-        // builder.append(HeaderKeys.FRIENDLY_NAME).append(FIELD_SEPARATOR).append(friendlyName).append(NEWLINE_SEPARATOR)
+        builder.append(HeaderKeys.FRIENDLY_NAME).append(FIELD_SEPARATOR).append(friendlyName).append(NEWLINE_SEPARATOR)
+        builder.append(HeaderKeys.CONTROL_POINT_UUID).append(FIELD_SEPARATOR).append(uuid).append(NEWLINE_SEPARATOR)
 
-        if (uuid != null) {
-            builder.append(HeaderKeys.CONTROL_POINT_UUID).append(FIELD_SEPARATOR).append(uuid).append(NEWLINE_SEPARATOR)
-        }
-
-        return builder.append(NEWLINE_SEPARATOR).toString()
+        return builder.toString()
     }
 
-    override fun toDatagramPacket(multicastGroup: InetAddress, startLine: StartLine): DatagramPacket {
-        val searchByteArray = "$startLine\n${toString()}".toByteArray()
+    override fun toDatagramPacket(multicastGroup: InetAddress): DatagramPacket {
+        val searchByteArray = "${StartLine.SEARCH}\n${toString()}".toByteArray()
         return DatagramPacket(searchByteArray, searchByteArray.size, multicastGroup, 1900)
     }
 }

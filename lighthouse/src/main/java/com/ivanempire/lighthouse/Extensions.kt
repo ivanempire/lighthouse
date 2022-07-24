@@ -40,6 +40,9 @@ internal fun AbridgedMediaDevice.removeEmbeddedComponent(latestComponent: Unique
     }
 }
 
+/**
+ * Gets and removes an entry for a HashMap. This is used to process incoming SSDP
+ */
 internal fun HashMap<String, String>.getAndRemove(targetKey: String): String? {
     val targetValue = this[targetKey]
     this.remove(targetKey)

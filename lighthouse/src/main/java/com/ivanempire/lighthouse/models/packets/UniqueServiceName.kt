@@ -5,11 +5,6 @@ import java.util.UUID
 private val DEVICE_MARKER = ":device:"
 private val SERVICE_MARKER = ":service:"
 private val URN_MARKER = "urn:"
-
-val REGEX_UUID = Regex(
-    "([a-f0-9]{8}(-[a-f0-9]{4}){4}[a-f0-9]{8})",
-    RegexOption.IGNORE_CASE
-)
 val UPNP_SCHEMA_MARKER = ":schemas-upnp-org:"
 
 abstract class UniqueServiceName(
@@ -74,9 +69,15 @@ data class EmbeddedService(
     val domain: String? = null
 ) : UniqueServiceName(uuid, bootId)
 
+val REGEX_UUID = Regex(
+    "([a-f0-9]{8}(-[a-f0-9]{4}){4}[a-f0-9]{8})",
+    RegexOption.IGNORE_CASE
+)
 /**
- * Attempts to parse the UUID from a USN string, returns a
- * zeroed-out identifier otherwise
+ * Attempts to match a UUID and return it via the standard library object. If no UUID is found,
+ * a zeroed-out identifier is returned
+ *
+ * @return Parsed UUID from USN string, zeroed-out default otherwise
  */
 private fun String.parseUuid(): UUID {
     val uuidMatch = REGEX_UUID.find(this)
@@ -88,7 +89,9 @@ private fun String.parseUuid(): UUID {
 }
 
 /**
- * Creates a string pair of device or service information <type, version>
+ * Creates a string pair of device or service information from the USN substring
+ *
+ * @return Pair of string values that correspond to device or service name to its version
  */
 private fun String.createPair(markerTag: String): Pair<String, String> {
     val splitInfo = this.split(markerTag)[1].split(":")
@@ -99,7 +102,9 @@ private fun String.createPair(markerTag: String): Pair<String, String> {
 }
 
 /**
- * Attempts to extract the domain from a USN string, null otherwise
+ * Extracts the domain from the USN substring
+ *
+ * @return USN domain as a string, null otherwise
  */
 private fun String.parseDomain(): String? {
     val domainMarkerIndex = this.indexOf(UPNP_SCHEMA_MARKER)

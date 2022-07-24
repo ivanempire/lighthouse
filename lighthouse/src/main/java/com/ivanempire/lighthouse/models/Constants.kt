@@ -15,10 +15,16 @@ object Constants {
         mx = 1,
         searchTarget = "upnp:rootdevice", // ssdp:all
         osVersion = null,
-        productVersion = null,
-        friendlyName = null,
-        uuid = null
-        // friendlyName = "LighthouseClient",
-        // uuid = UUID.nameUUIDFromBytes("LighthouseClient".toByteArray())
+        productVersion = null
     )
+
+    /**
+     *     val hostname: MediaHost,
+     val mx: Int,
+     val searchTarget: String,
+     val osVersion: String?,
+     val productVersion: String?,
+     val friendlyName: String = "LighthouseClient",
+     val uuid: UUID = UUID.nameUUIDFromBytes("LighthouseClient".toByteArray())
+     */
 }

@@ -44,6 +44,7 @@ abstract class MediaPacketParser {
                     NotificationSubtype.ALIVE -> AliveMediaPacketParser(packetHeaders)
                     NotificationSubtype.UPDATE -> UpdateMediaPacketParser(packetHeaders)
                     NotificationSubtype.BYEBYE -> ByeByeMediaPacketParser(packetHeaders)
+                    // TODO: Exception or not, see how to catch this
                     else -> {
                         Log.e("MediaPacketParser", "Somehow we got an invalid NotificationSubtype: $notificationSubtype")
                         null

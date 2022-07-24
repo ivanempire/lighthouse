@@ -81,6 +81,7 @@ class LighthouseState {
             targetDevice = targetDevice.copy(latestTimestamp = System.currentTimeMillis())
             targetDevice.updateEmbeddedComponent(targetComponent)
         }
+        targetDevice?.extraHeaders?.putAll(latestPacket.extraHeaders)
         Log.d("#parseAliveMediaPacket", "Final list: $deviceList")
         return deviceList
     }
@@ -127,6 +128,7 @@ class LighthouseState {
                 else -> targetDevice.updateEmbeddedComponent(targetComponent)
             }
         }
+        targetDevice?.extraHeaders?.putAll(latestPacket.extraHeaders)
         return deviceList
     }
 

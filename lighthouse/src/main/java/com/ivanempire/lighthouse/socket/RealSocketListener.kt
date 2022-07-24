@@ -2,7 +2,7 @@ package com.ivanempire.lighthouse.socket
 
 import android.net.wifi.WifiManager
 import android.util.Log
-import com.ivanempire.lighthouse.models.SearchRequest
+import com.ivanempire.lighthouse.models.search.SearchRequest
 import java.net.DatagramPacket
 import java.net.InetAddress
 import java.net.MulticastSocket
@@ -40,6 +40,9 @@ class RealSocketListener(
         setupSocket()
         return flow {
             multicastSocket.use {
+
+                searchRequest.toDatagramPacket(multicastGroup)
+
                 val debugBytes = debugRequest.toByteArray()
                 val searchDatagram = DatagramPacket(debugBytes, debugBytes.size, multicastGroup, 1900)
 

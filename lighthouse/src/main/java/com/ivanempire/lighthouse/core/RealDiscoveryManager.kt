@@ -1,7 +1,7 @@
 package com.ivanempire.lighthouse.core
 
-import com.ivanempire.lighthouse.models.SearchRequest
 import com.ivanempire.lighthouse.models.devices.AbridgedMediaDevice
+import com.ivanempire.lighthouse.models.search.SearchRequest
 import com.ivanempire.lighthouse.parsers.DatagramPacketTransformer
 import com.ivanempire.lighthouse.parsers.packets.MediaPacketParser
 import com.ivanempire.lighthouse.socket.RealSocketListener

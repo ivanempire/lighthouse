@@ -1,6 +1,6 @@
 package com.ivanempire.lighthouse.socket
 
-import com.ivanempire.lighthouse.models.SearchRequest
+import com.ivanempire.lighthouse.models.search.SearchRequest
 import java.net.DatagramPacket
 import kotlinx.coroutines.flow.Flow
 

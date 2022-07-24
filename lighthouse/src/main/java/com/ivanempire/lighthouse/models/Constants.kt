@@ -1,9 +1,11 @@
 package com.ivanempire.lighthouse.models
 
 import com.ivanempire.lighthouse.models.packets.MediaHost
+import com.ivanempire.lighthouse.models.search.MulticastSearchRequest
 import java.net.InetAddress
 
 object Constants {
+    const val NEWLINE_SEPARATOR = "\r\n"
     const val DEFAULT_SEARCH_MAN = "\"ssdp:discover\""
     const val FIELD_SEPARATOR = ": "
     const val NOT_AVAILABLE = "N/A"

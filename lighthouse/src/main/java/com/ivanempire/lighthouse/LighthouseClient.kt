@@ -6,8 +6,8 @@ import com.ivanempire.lighthouse.core.LighthouseState
 import com.ivanempire.lighthouse.core.RealDiscoveryManager
 import com.ivanempire.lighthouse.core.RealLighthouseClient
 import com.ivanempire.lighthouse.models.Constants.DEFAULT_SEARCH_REQUEST
-import com.ivanempire.lighthouse.models.SearchRequest
 import com.ivanempire.lighthouse.models.devices.AbridgedMediaDevice
+import com.ivanempire.lighthouse.models.search.SearchRequest
 import com.ivanempire.lighthouse.socket.RealSocketListener
 import kotlinx.coroutines.flow.Flow
 

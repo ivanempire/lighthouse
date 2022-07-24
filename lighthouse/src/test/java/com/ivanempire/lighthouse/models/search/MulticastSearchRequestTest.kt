@@ -1,4 +1,4 @@
-package com.ivanempire.lighthouse.models
+package com.ivanempire.lighthouse.models.search
 
 import com.ivanempire.lighthouse.models.packets.MediaHost
 import com.ivanempire.lighthouse.models.packets.StartLine
@@ -7,8 +7,8 @@ import java.util.UUID
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-/** Tests [SearchRequest] creation and conversion */
-class SearchRequestTest {
+/** Tests [MulticastSearchRequest] creation and conversion */
+class MulticastSearchRequestTest {
 
     @Test(expected = IllegalArgumentException::class)
     fun `given out of range values throws IllegalArgumentException`() {

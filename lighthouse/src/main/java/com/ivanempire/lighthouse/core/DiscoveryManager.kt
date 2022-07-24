@@ -1,7 +1,7 @@
 package com.ivanempire.lighthouse.core
 
-import com.ivanempire.lighthouse.models.SearchRequest
 import com.ivanempire.lighthouse.models.devices.AbridgedMediaDevice
+import com.ivanempire.lighthouse.models.search.SearchRequest
 import kotlinx.coroutines.flow.Flow
 
 /**

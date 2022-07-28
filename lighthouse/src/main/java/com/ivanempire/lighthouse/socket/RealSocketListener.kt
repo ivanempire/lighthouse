@@ -24,30 +24,26 @@ class RealSocketListener(
         InetAddress.getByName(MULTICAST_ADDRESS)
     }
 
-    private val multicastSocket: MulticastSocket by lazy {
-        MulticastSocket(MULTICAST_PORT)
-    }
+    override fun setupSocket(): MulticastSocket {
+        val multicastSocket = MulticastSocket(MULTICAST_PORT)
 
-    override fun setupSocket() {
         multicastLock.setReferenceCounted(true)
         multicastLock.acquire()
+
         multicastSocket.reuseAddress = true
-        multicastSocket.loopbackMode = true
+        multicastSocket.loopbackMode = false
         multicastSocket.joinGroup(multicastGroup)
+
+        return multicastSocket
     }
 
     override fun listenForPackets(searchRequest: SearchRequest): Flow<DatagramPacket> {
-        setupSocket()
+        val multicastSocket = setupSocket()
         return flow {
             multicastSocket.use {
 
-                searchRequest.toDatagramPacket(multicastGroup)
+                val searchDatagram = searchRequest.toDatagramPacket(multicastGroup)
 
-                val debugBytes = debugRequest.toByteArray()
-                val searchDatagram = DatagramPacket(debugBytes, debugBytes.size, multicastGroup, 1900)
-
-                Log.d("#listenForPackets", "Closed: ${multicastSocket.isClosed}")
-                Log.d("#listenForPackets", "Bound: ${multicastSocket.isBound}")
                 it.send(searchDatagram)
                 while (currentCoroutineContext().isActive) {
                     val discoveryBuffer = ByteArray(MULTICAST_DATAGRAM_SIZE)
@@ -56,27 +52,22 @@ class RealSocketListener(
                     emit(discoveryDatagram)
                 }
             }
-        }.onCompletion { teardownSocket() }
+        }.onCompletion { teardownSocket(multicastSocket) }
     }
 
-    override fun teardownSocket() {
-        Log.d("#teardownSocket", "Closed: ${multicastSocket.isClosed}")
-        Log.d("#teardownSocket", "Bound: ${multicastSocket.isBound}")
+    override fun teardownSocket(multicastSocket: MulticastSocket) {
         Log.d("SocketListener", "Releasing resources")
-
-        if (multicastSocket.isBound) {
-            Log.d("#teardownSocket", "Leaving group")
-            multicastSocket.leaveGroup(multicastGroup)
-            multicastSocket.close()
-        }
 
         if (multicastLock.isHeld) {
             Log.d("#teardownSocket", "Releasing lock")
             multicastLock.release()
         }
 
-        Log.d("#teardownSocket", "Closed: ${multicastSocket.isClosed}")
-        Log.d("#teardownSocket", "Bound: ${multicastSocket.isBound}")
+        if (!multicastSocket.isClosed) {
+            Log.d("#teardownSocket", "Closing socket")
+            multicastSocket.leaveGroup(multicastGroup)
+            multicastSocket.close()
+        }
     }
 
     private companion object {
@@ -85,7 +76,5 @@ class RealSocketListener(
 
         const val MULTICAST_DATAGRAM_SIZE = 2048
         const val MULTICAST_PORT = 1900
-
-        val debugRequest = "M-SEARCH * HTTP/1.1\\r\\nHost: 239.255.255.250:1900\\r\\nMan: \"ssdp:discover\"\\r\\nMX: 60\\r\\nST: upnp:rootdevice\\r\\n\\r\\n"
     }
 }

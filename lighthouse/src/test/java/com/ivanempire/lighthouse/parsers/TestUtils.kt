@@ -48,7 +48,7 @@ object TestUtils {
             searchPort = 1900,
             location = URL("http://192.168.2.50:58121/"),
             secureLocation = URL("https://192.168.2.50:58121/"),
-            server = SERVER_LIST.random(),
+            mediaDeviceServer = SERVER_LIST.random(),
             latestTimestamp = latestTimestamp ?: System.currentTimeMillis(),
             deviceList = embeddedDevices ?: mutableListOf(),
             serviceList = embeddedServices ?: mutableListOf()

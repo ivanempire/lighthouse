@@ -1,6 +1,7 @@
 package com.ivanempire.lighthouse.parsers
 
 import android.util.Log
+import com.ivanempire.lighthouse.models.packets.HeaderKeys
 import com.ivanempire.lighthouse.models.packets.StartLine
 import java.net.DatagramPacket
 import java.nio.charset.Charset
@@ -26,9 +27,14 @@ class DatagramPacketTransformer {
             // Start building the packet headers, starting with item 1 since item 0 is the StartLine
             val packetHeaders = hashMapOf<String, String>()
             packetFields.subList(1, packetFields.size).forEach {
-                Log.d("PARSING", "Trying to parse: $it")
                 val splitField = it.split(HEADER_FIELD_DELIMITER, ignoreCase = false, limit = 2)
                 packetHeaders[splitField[0].trim().uppercase()] = splitField[1].trim()
+            }
+
+            // If the location field is invalid, ignore this datagram
+            // TODO: May be a hack, but packets from 127.0.0.1 keep coming in
+            if (packetHeaders[HeaderKeys.LOCATION] == null) {
+                return null
             }
 
             Log.d("DATAGRAM-TRANSFORMER", "Parsed header set: $packetHeaders")

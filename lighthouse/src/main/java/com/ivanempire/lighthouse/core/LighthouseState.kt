@@ -36,7 +36,6 @@ class LighthouseState {
      * @return A modified snapshot of [deviceList] - original list left untouched
      */
     fun parseMediaPacket(latestPacket: MediaPacket): List<AbridgedMediaDevice> {
-        Log.d("#parseMediaPacket", "Received a packet: $latestPacket")
         val newList = when (latestPacket) {
             is AliveMediaPacket -> parseAliveMediaPacket(latestPacket)
             is UpdateMediaPacket -> parseUpdateMediaPacket(latestPacket)
@@ -68,7 +67,7 @@ class LighthouseState {
                 host = latestPacket.host,
                 cache = latestPacket.cache,
                 bootId = latestPacket.bootId,
-                server = latestPacket.server,
+                mediaDeviceServer = latestPacket.server,
                 configId = latestPacket.configId,
                 location = latestPacket.location,
                 searchPort = latestPacket.searchPort,
@@ -97,7 +96,7 @@ class LighthouseState {
                 host = latestPacket.host,
                 cache = NOT_AVAILABLE_CACHE,
                 bootId = latestPacket.bootId,
-                server = null,
+                mediaDeviceServer = null,
                 configId = latestPacket.configId,
                 location = latestPacket.location,
                 searchPort = latestPacket.searchPort,
@@ -157,6 +156,7 @@ class LighthouseState {
      */
     fun parseStaleDevices(): List<AbridgedMediaDevice> {
         return deviceList.filter {
+            // TODO: Document cache units somewhere
             System.currentTimeMillis() - it.latestTimestamp > it.cache * 1000
         }
     }

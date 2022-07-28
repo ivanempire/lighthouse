@@ -17,7 +17,7 @@ abstract class MediaDevice
  * what the consumers of the SDK receive after discovery has found results on the network
  * @param uuid The unique identifier of this device
  * @param location The URL which can be called to get the complete XML description of this device
- * @param server The server information of the root device
+ * @param mediaDeviceServer The server information of the root device
  * @param serviceList The list of services that are present on the root and embedded devices
  * @param deviceList The list of devices (embedded AND root) present on this device
  */
@@ -30,7 +30,7 @@ data class AbridgedMediaDevice(
     val searchPort: Int?,
     val location: URL?,
     val secureLocation: URL?,
-    val server: MediaDeviceServer?,
+    val mediaDeviceServer: MediaDeviceServer?,
     val serviceList: MutableList<EmbeddedService> = mutableListOf(),
     val deviceList: MutableList<EmbeddedDevice> = mutableListOf(),
     val latestTimestamp: Long,

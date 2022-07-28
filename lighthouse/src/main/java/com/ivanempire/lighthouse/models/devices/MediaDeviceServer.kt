@@ -31,4 +31,8 @@ data class MediaDeviceServer(
             }
         }
     }
+
+    override fun toString(): String {
+        return "$osVersion $upnpVersion $productVersion"
+    }
 }

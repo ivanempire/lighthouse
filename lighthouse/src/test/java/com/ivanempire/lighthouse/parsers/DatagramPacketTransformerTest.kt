@@ -1,6 +1,7 @@
 package com.ivanempire.lighthouse.parsers
 
 import com.ivanempire.lighthouse.parsers.DatagramPacketTransformerTest.Fixtures.EMPTY_DATAGRAM
+import com.ivanempire.lighthouse.parsers.DatagramPacketTransformerTest.Fixtures.INVALID_NO_LOCATION
 import com.ivanempire.lighthouse.parsers.DatagramPacketTransformerTest.Fixtures.INVALID_START_LINE
 import com.ivanempire.lighthouse.parsers.DatagramPacketTransformerTest.Fixtures.VALID_ALIVE_PACKET
 import com.ivanempire.lighthouse.parsers.DatagramPacketTransformerTest.Fixtures.VALID_BYEBYE_PACKET
@@ -29,6 +30,12 @@ class DatagramPacketTransformerTest {
     }
 
     @Test
+    fun `given no location field returns null`() {
+         val headerSet = DatagramPacketTransformer(INVALID_NO_LOCATION)
+         assertNull(headerSet)
+    }
+
+    @Test
     fun `given valid StartLine returns correct headers 1`() {
         val headerSet = DatagramPacketTransformer(VALID_ALIVE_PACKET)
         assertNotNull(headerSet)
@@ -47,7 +54,7 @@ class DatagramPacketTransformerTest {
     fun `given valid StartLine returns correct headers 3`() {
         val headerSet = DatagramPacketTransformer(VALID_BYEBYE_PACKET)
         assertNotNull(headerSet)
-        assertEquals(4, headerSet?.size)
+        assertEquals(5, headerSet?.size)
     }
 
     object Fixtures {
@@ -62,12 +69,12 @@ class DatagramPacketTransformerTest {
             406
         )
         val VALID_BYEBYE_PACKET = DatagramPacket(
-            "NOTIFY * HTTP/1.1\r\nHost: 239.255.255.250:1900\r\nNTS: ssdp:byebye\r\nNT: urn:schemas-upnp-org:service:RenderingControl:1\r\nUSN: uuid:b9783ad2-d548-9793-0eb9-42db373ade07::urn:schemas-upnp-org:service:RenderingControl:1".toByteArray(),
+            "NOTIFY * HTTP/1.1\r\nHost: 239.255.255.250:1900\r\nLOCATION: http://192.168.1.160:8060/dial/dd.xml\r\nNTS: ssdp:byebye\r\nNT: urn:schemas-upnp-org:service:RenderingControl:1\r\nUSN: uuid:b9783ad2-d548-9793-0eb9-42db373ade07::urn:schemas-upnp-org:service:RenderingControl:1".toByteArray(),
             213
         )
-        val INVALID_ = DatagramPacket(
-            "HTTP/1.1 200 OK\r\nCACHE-CONTROL: max-age=1900\r\nST: upnp:rootdevice\r\nUSN: uuid:73796E6F-6473-6D00-0000-00113296d0d7::upnp:rootdevice\r\nEXT:\r\nSERVER: Synology/DSM/192.168.2.41\r\nLOCATION: http://192.168.2.41:5000/ssdp/desc-DSM-eth0.xml\r\nOPT: \"http://schemas.upnp.org/upnp/1/0/\"; ns=01\r\n01-NLS: 1\r\nBOOTID.UPNP.ORG: 1\r\nCONFIGID.UPNP.ORG: 1337\r\n".toByteArray(),
-            337
+        val INVALID_NO_LOCATION = DatagramPacket(
+            "HTTP/1.1 200 OK\r\nCACHE-CONTROL: max-age=1900\r\nST: upnp:rootdevice\r\nUSN: uuid:73796E6F-6473-6D00-0000-00113296d0d7::upnp:rootdevice\r\nEXT:\r\nSERVER: Synology/DSM/192.168.2.41\r\nOPT: \"http://schemas.upnp.org/upnp/1/0/\"; ns=01\r\n01-NLS: 1\r\nBOOTID.UPNP.ORG: 1\r\nCONFIGID.UPNP.ORG: 1337\r\n".toByteArray(),
+            278
         )
     }
 }

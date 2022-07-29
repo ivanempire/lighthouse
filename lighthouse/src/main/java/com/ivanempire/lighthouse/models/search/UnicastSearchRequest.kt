@@ -8,14 +8,6 @@ import com.ivanempire.lighthouse.models.packets.StartLine
 import java.lang.StringBuilder
 
 /**
- * M-SEARCH * HTTP/1.1
-HOST: hostname:portNumber
-MAN: "ssdp:discover"
-ST: search target
-USER-AGENT: OS/version UPnP/2.0 product/version
- */
-
-/**
  * @param hostname Required - [MediaHost]
  * @param searchTarget Required - search target to use for the search request
  * @param osVersion Allowed - OS version for the user agent field

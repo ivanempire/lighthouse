@@ -5,19 +5,19 @@ import java.net.DatagramPacket
 import java.net.InetAddress
 
 /**
- * All SSDP search requests conform to this interface in order to be passed around in the library
+ * All SSDP search requests conform to this interface for Lighthouse to use
  */
 interface SearchRequest {
 
     /**
-     * Converts a specific implementation to a [DatagramPacket] in order to be sent along the wire
+     * Converts a search packet into a [DatagramPacket] to send to the multicast group. Unless
+     * something special is required, the only required parameter is the multicast group address.
      *
-     * @param startLine The packet [StartLine], defaults to [StartLine.SEARCH]
-     *
-     * @return The [DatagramPacket] representing this search request, [StartLine] included
+     * @param multicastAddress The [InetAddress] of the multicast group
+     * @return The search request in [DatagramPacket] form
      */
-    fun toDatagramPacket(multicastGroup: InetAddress): DatagramPacket {
+    fun toDatagramPacket(multicastAddress: InetAddress): DatagramPacket {
         val searchByteArray = "${StartLine.SEARCH}\n${toString()}".toByteArray()
-        return DatagramPacket(searchByteArray, searchByteArray.size, multicastGroup, 1900)
+        return DatagramPacket(searchByteArray, searchByteArray.size, multicastAddress, 1900)
     }
 }

@@ -41,7 +41,12 @@ internal fun AbridgedMediaDevice.removeEmbeddedComponent(latestComponent: Unique
 }
 
 /**
- * Gets and removes an entry for a HashMap. This is used to process incoming SSDP
+ * Returns and removes an entry from the receiving [HashMap]. This is used to remove all standard
+ * fields from an SSDP packet, so that the only ones left at the end of parsing would be the extra
+ * headers specified by the manufacturer.
+ *
+ * @param targetKey The key of the target value to look up, remove, and return from the [HashMap]
+ * @return The lookup value from [targetKey], null otherwise
  */
 internal fun HashMap<String, String>.getAndRemove(targetKey: String): String? {
     val targetValue = this[targetKey]

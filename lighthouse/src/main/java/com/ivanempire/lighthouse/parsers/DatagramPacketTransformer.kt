@@ -1,13 +1,12 @@
 package com.ivanempire.lighthouse.parsers
 
-import android.util.Log
 import com.ivanempire.lighthouse.models.packets.HeaderKeys
 import com.ivanempire.lighthouse.models.packets.StartLine
 import java.net.DatagramPacket
 import java.nio.charset.Charset
 
 /**
- * Parses each instance of a [DatagramPacket] from the socket and transforms that into a HashMap
+ * Parses each instance of a [DatagramPacket] from the socket and transforms that into a [HashMap]
  * representing each SSDP packet's header-value pairs. If the incoming [StartLine] is invalid,
  * null is returned to ignore datagram
  */
@@ -16,7 +15,6 @@ class DatagramPacketTransformer {
     companion object {
         operator fun invoke(datagramPacket: DatagramPacket): HashMap<String, String>? {
             val cleanedDatagram = datagramPacket.cleanPacket()
-            Log.d("DATAGRAM-TRANSFORMER", "Cleaned datagram: $cleanedDatagram")
             val packetFields = cleanedDatagram.split(KEY_VALUE_PAIR_DELIMITER)
 
             // If the StartLine is invalid, ignore this datagram
@@ -37,7 +35,6 @@ class DatagramPacketTransformer {
                 return null
             }
 
-            Log.d("DATAGRAM-TRANSFORMER", "Parsed header set: $packetHeaders")
             return packetHeaders
         }
 
@@ -47,7 +44,7 @@ class DatagramPacketTransformer {
 }
 
 /**
- * Trims all of the null fields from the data behind a [DatagramPacket] and combines remaining
+ * Trims all of the null fields from the data inside a [DatagramPacket] and combines remaining
  * items into a string for further processing
  *
  * @return String representation of the given [DatagramPacket]

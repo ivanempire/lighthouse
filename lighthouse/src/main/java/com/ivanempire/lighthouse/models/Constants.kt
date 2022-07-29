@@ -19,14 +19,4 @@ object Constants {
         osVersion = null,
         productVersion = null
     )
-
-    /**
-     *     val hostname: MediaHost,
-     val mx: Int,
-     val searchTarget: String,
-     val osVersion: String?,
-     val productVersion: String?,
-     val friendlyName: String = "LighthouseClient",
-     val uuid: UUID = UUID.nameUUIDFromBytes("LighthouseClient".toByteArray())
-     */
 }

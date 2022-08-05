@@ -50,7 +50,6 @@ class AliveMediaPacketParser(
     }
 
     override fun parseMediaPacket(): MediaPacket {
-
         return AliveMediaPacket(
             host = host,
             cache = cacheControl,

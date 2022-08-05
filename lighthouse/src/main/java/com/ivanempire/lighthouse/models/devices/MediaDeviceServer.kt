@@ -23,8 +23,8 @@ data class MediaDeviceServer(
                     )
                 } catch (ex: IllegalArgumentException) {
                     Log.e(
-                        "MediaDeviceServer",
-                        "SERVER field not properly advertised as 'OS/version UPnP/2.0 product/version'"
+                        "#parseFromString",
+                        "SERVER field not properly advertised as 'OS/version UPnP/2.0 product/version', was $rawValue"
                     )
                     return MediaDeviceServer("N/A", "N/A", "N/A")
                 }

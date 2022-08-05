@@ -5,6 +5,7 @@ import android.util.Log
 import com.ivanempire.lighthouse.models.search.SearchRequest
 import java.net.DatagramPacket
 import java.net.InetAddress
+import java.net.InetSocketAddress
 import java.net.MulticastSocket
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.Flow
@@ -25,26 +26,32 @@ class RealSocketListener(
     }
 
     override fun setupSocket(): MulticastSocket {
-        val multicastSocket = MulticastSocket(MULTICAST_PORT)
-
         multicastLock.setReferenceCounted(true)
         multicastLock.acquire()
 
+        val multicastSocket = MulticastSocket(null)
         multicastSocket.reuseAddress = true
+        multicastSocket.broadcast = true
         multicastSocket.loopbackMode = false
-        multicastSocket.joinGroup(multicastGroup)
+
+        try {
+            multicastSocket.joinGroup(multicastGroup)
+            multicastSocket.bind(InetSocketAddress(MULTICAST_PORT))
+        } catch (ex: Exception) {
+            Log.e("#setupSocket", "Could finish setting up the multicast socket and group", ex)
+        }
 
         return multicastSocket
     }
 
     override fun listenForPackets(searchRequest: SearchRequest): Flow<DatagramPacket> {
         val multicastSocket = setupSocket()
+
         return flow {
             multicastSocket.use {
+                val datagramPacketRequest = searchRequest.toDatagramPacket(multicastGroup)
 
-                val searchDatagram = searchRequest.toDatagramPacket(multicastGroup)
-
-                it.send(searchDatagram)
+                it.send(datagramPacketRequest)
                 while (currentCoroutineContext().isActive) {
                     val discoveryBuffer = ByteArray(MULTICAST_DATAGRAM_SIZE)
                     val discoveryDatagram = DatagramPacket(discoveryBuffer, discoveryBuffer.size)
@@ -56,7 +63,7 @@ class RealSocketListener(
     }
 
     override fun teardownSocket(multicastSocket: MulticastSocket) {
-        Log.d("SocketListener", "Releasing resources")
+        Log.d("#teardownSocket", "Releasing resources")
 
         if (multicastLock.isHeld) {
             Log.d("#teardownSocket", "Releasing lock")
@@ -64,7 +71,7 @@ class RealSocketListener(
         }
 
         if (!multicastSocket.isClosed) {
-            Log.d("#teardownSocket", "Closing socket")
+            Log.d("#teardownSocket", "Leaving multicast group and closing socket")
             multicastSocket.leaveGroup(multicastGroup)
             multicastSocket.close()
         }

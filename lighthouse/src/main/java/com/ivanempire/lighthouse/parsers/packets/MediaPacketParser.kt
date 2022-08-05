@@ -40,7 +40,14 @@ abstract class MediaPacketParser {
      * @return An integer representing the device cache in seconds; defaults to 1800 (30 minutes)
      */
     internal fun parseCacheControl(rawValue: String?): Int {
-        return rawValue?.substringAfter("=", "-1")?.trim()?.toInt() ?: Constants.NOT_AVAILABLE_CACHE
+        // Cache-Control: no-cache="Ext", max-age = 60 for Nanoleaf
+        // Cache-Control: max-age=1800
+        val maxAgeIndex = rawValue?.indexOf("max-age=")
+        return if (maxAgeIndex != -1) {
+            rawValue?.substringAfter("max-age=", "-1")?.trim()?.toInt() ?: Constants.NOT_AVAILABLE_CACHE
+        } else {
+            Constants.NOT_AVAILABLE_CACHE
+        }
     }
 
     companion object {

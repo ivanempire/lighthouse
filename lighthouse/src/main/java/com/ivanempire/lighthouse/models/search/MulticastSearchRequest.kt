@@ -54,6 +54,7 @@ data class MulticastSearchRequest(
         builder.append(HeaderKeys.FRIENDLY_NAME).append(Constants.FIELD_SEPARATOR).append(friendlyName).append(NEWLINE_SEPARATOR)
         builder.append(HeaderKeys.CONTROL_POINT_UUID).append(Constants.FIELD_SEPARATOR).append(uuid).append(NEWLINE_SEPARATOR)
 
+        builder.append(NEWLINE_SEPARATOR)
         return builder.toString()
     }
 }

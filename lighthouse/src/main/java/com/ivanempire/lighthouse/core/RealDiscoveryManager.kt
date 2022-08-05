@@ -36,7 +36,6 @@ class RealDiscoveryManager(
     override fun createStaleDeviceFlow(): Flow<List<AbridgedMediaDevice>> {
         return flow {
             while (currentCoroutineContext().isActive) {
-                // See if any devices have become stale in the last second
                 delay(1000)
                 emit(lighthouseState.parseStaleDevices())
             }

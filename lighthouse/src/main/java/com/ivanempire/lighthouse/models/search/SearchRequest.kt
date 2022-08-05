@@ -1,6 +1,5 @@
 package com.ivanempire.lighthouse.models.search
 
-import com.ivanempire.lighthouse.models.packets.StartLine
 import java.net.DatagramPacket
 import java.net.InetAddress
 
@@ -17,7 +16,7 @@ interface SearchRequest {
      * @return The search request in [DatagramPacket] form
      */
     fun toDatagramPacket(multicastAddress: InetAddress): DatagramPacket {
-        val searchByteArray = "${StartLine.SEARCH}\n${toString()}".toByteArray()
+        val searchByteArray = this.toString().toByteArray()
         return DatagramPacket(searchByteArray, searchByteArray.size, multicastAddress, 1900)
     }
 }

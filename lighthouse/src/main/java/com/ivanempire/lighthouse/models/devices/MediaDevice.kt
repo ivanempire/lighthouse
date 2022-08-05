@@ -35,12 +35,7 @@ data class AbridgedMediaDevice(
     val deviceList: MutableList<EmbeddedDevice> = mutableListOf(),
     val latestTimestamp: Long,
     val extraHeaders: HashMap<String, String> = hashMapOf()
-) : MediaDevice() {
-//    val description: RootMediaDevice?
-//        get() {
-//            return null
-//        }
-}
+) : MediaDevice()
 
 /**
  * A more refined, but not concrete, version of a [MediaDevice]. This class represents common

@@ -1,15 +1,18 @@
+[![Maven Central][mavenbadge-svg]][mavencentral]
+![Build status](https://github.com/ivanempire/lighthouse/blob/main/.github/workflows/continuous-integration.yml/badge.svg)
+[![License](https://img.shields.io/github/license/ivanempire/lighthouse)](https://github.com/facebook/fresco/blob/main/LICENSE)
 ![Lighthouse banner](banner.png)
 
 ## Download
 Lighthouse is published to `mavenCentral()`, so you can add it to your Android project like so:
 
-```groovy
+```kotlin
 repositories {
 	mavenCentral()
 }
 
 dependencies {
-	implementation("com.ivanempire.lighthouse:1.0.0")
+	implementation("com.ivanempire:lighthouse:1.0.0")
 }
 ```
 

@@ -1,5 +1,5 @@
-[![Maven Central][mavenbadge-svg]][mavencentral]
-![Build status](https://github.com/ivanempire/lighthouse/blob/main/.github/workflows/continuous-integration.yml/badge.svg)
+[![Maven Central][https://img.shields.io/maven-central/v/com.ivanempire/lighthouse]][https://search.maven.org/artifact/com.ivanempire/lighthouse]
+[![Build status][https://github.com/ivanempire/lighthouse/blob/main/.github/workflows/continuous-integration.yml/badge.svg]][https://github.com/ivanempire/lighthouse/actions/workflows/continuous-integration.yml]
 [![License](https://img.shields.io/github/license/ivanempire/lighthouse)](https://github.com/facebook/fresco/blob/main/LICENSE)
 ![Lighthouse banner](banner.png)
 

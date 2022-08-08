@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.isActive
 
+/** Specific implementation of [SocketListener] */
 class RealSocketListener(
     private val wifiManager: WifiManager
 ) : SocketListener {
@@ -37,6 +38,7 @@ class RealSocketListener(
         try {
             multicastSocket.joinGroup(multicastGroup)
             multicastSocket.bind(InetSocketAddress(MULTICAST_PORT))
+            Log.d("#setupSocket", "MulticastSocket has been setup")
         } catch (ex: Exception) {
             Log.e("#setupSocket", "Could finish setting up the multicast socket and group", ex)
         }
@@ -45,6 +47,7 @@ class RealSocketListener(
     }
 
     override fun listenForPackets(searchRequest: SearchRequest): Flow<DatagramPacket> {
+        Log.d("#listenForPackets", "Setting up datagram packet flow")
         val multicastSocket = setupSocket()
 
         return flow {
@@ -66,12 +69,10 @@ class RealSocketListener(
         Log.d("#teardownSocket", "Releasing resources")
 
         if (multicastLock.isHeld) {
-            Log.d("#teardownSocket", "Releasing lock")
             multicastLock.release()
         }
 
         if (!multicastSocket.isClosed) {
-            Log.d("#teardownSocket", "Leaving multicast group and closing socket")
             multicastSocket.leaveGroup(multicastGroup)
             multicastSocket.close()
         }

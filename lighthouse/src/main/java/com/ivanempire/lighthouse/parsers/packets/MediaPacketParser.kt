@@ -30,6 +30,7 @@ abstract class MediaPacketParser {
         return try {
             URL(rawValue)
         } catch (ex: MalformedURLException) {
+            Log.w("MediaPacketParser", "Could not parse location URL: $rawValue")
             NOT_AVAILABLE_LOCATION
         }
     }
@@ -45,6 +46,7 @@ abstract class MediaPacketParser {
         return if (maxAgeIndex != -1) {
             rawValue?.substringAfter("max-age=", "-1")?.trim()?.toInt() ?: NOT_AVAILABLE_CACHE
         } else {
+            Log.w("MediaPacketParser", "Could not find max-age marker in cache string: $rawValue")
             NOT_AVAILABLE_CACHE
         }
     }
@@ -60,7 +62,7 @@ abstract class MediaPacketParser {
                 val notificationSubtype = NotificationSubtype.getByRawValue(
                     packetHeaders.getAndRemove(HeaderKeys.NOTIFICATION_SUBTYPE)
                 )
-                val latestPacket = when (notificationSubtype) {
+                val packetParser = when (notificationSubtype) {
                     NotificationSubtype.ALIVE -> AliveMediaPacketParser(packetHeaders)
                     NotificationSubtype.UPDATE -> UpdateMediaPacketParser(packetHeaders)
                     NotificationSubtype.BYEBYE -> ByeByeMediaPacketParser(packetHeaders)
@@ -70,11 +72,12 @@ abstract class MediaPacketParser {
                     }
                 }
 
-                val parsedPacket = latestPacket?.parseMediaPacket()
+                val parsedPacket = packetParser?.parseMediaPacket()
                 return if (parsedPacket != null) {
                     parsedPacket.extraHeaders.putAll(packetHeaders)
                     parsedPacket
                 } else {
+                    Log.e("MediaPacketParser", "No appropriate packet parser found, returning")
                     null
                 }
             }

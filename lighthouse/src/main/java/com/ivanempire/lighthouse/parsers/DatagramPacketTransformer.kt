@@ -1,5 +1,6 @@
 package com.ivanempire.lighthouse.parsers
 
+import android.util.Log
 import com.ivanempire.lighthouse.models.Constants.FIELD_SEPARATOR
 import com.ivanempire.lighthouse.models.Constants.NEWLINE_SEPARATOR
 import com.ivanempire.lighthouse.models.packets.HeaderKeys
@@ -20,6 +21,7 @@ class DatagramPacketTransformer {
             val packetFields = cleanedDatagram.split(NEWLINE_SEPARATOR)
 
             if (StartLine.getByRawValue(packetFields[0]) == null) {
+                Log.w("DatagramTransformer", "Invalid start line, ignoring packet: $packetFields")
                 return null
             }
 
@@ -32,6 +34,7 @@ class DatagramPacketTransformer {
             }
 
             if (packetHeaders[HeaderKeys.LOCATION] == null) {
+                Log.w("DatagramTransformer", "Location was null, ignoring header set: $packetHeaders")
                 return null
             }
 

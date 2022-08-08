@@ -116,6 +116,7 @@ class LighthouseState {
             baseDevice.updateEmbeddedComponent(targetComponent)
             deviceList.add(baseDevice)
         } else {
+            deviceList.remove(targetDevice)
             targetDevice = targetDevice.copy(latestTimestamp = System.currentTimeMillis())
             when (targetComponent) {
                 // ALIVE came first, UPDATE for root should only update certain fields
@@ -128,7 +129,6 @@ class LighthouseState {
                         location = latestPacket.location,
                         secureLocation = latestPacket.secureLocation,
                     )
-                    deviceList.remove(targetDevice)
                     deviceList.add(updatedDevice)
                 }
                 else -> targetDevice.updateEmbeddedComponent(targetComponent)

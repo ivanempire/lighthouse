@@ -7,14 +7,15 @@ import java.net.URL
 import java.util.UUID
 
 /**
- * Base type for a media device that will be built by this SDK from discovery information - over
- * the multicast socket, or XML
+ * Base class for a media device that will be built by Lighthouse from discovery information: either
+ * from SSDP packets, or from XML description
  */
 abstract class MediaDevice
 
 /**
  * A specific version of a [MediaDevice] that is built from SSDP discovery information. This is
- * what the consumers of the SDK receive after discovery has found results on the network
+ * what Lighthouse will send to users after it has discovered devices
+ *
  * @param uuid The unique identifier of this device
  * @param location The URL which can be called to get the complete XML description of this device
  * @param mediaDeviceServer The server information of the root device
@@ -41,6 +42,7 @@ data class AbridgedMediaDevice(
  * A more refined, but not concrete, version of a [MediaDevice]. This class represents common
  * properties across the root and embedded media devices, whose fields are populated when the XML
  * description endpoint is queried
+ *
  * @param deviceType The device type
  * @param friendlyName The friendly name of the specific device
  * @param manufacturer The manufacturer of the specific device

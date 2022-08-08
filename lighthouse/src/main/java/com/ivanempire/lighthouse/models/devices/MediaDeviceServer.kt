@@ -3,6 +3,13 @@ package com.ivanempire.lighthouse.models.devices
 import android.util.Log
 import java.lang.IllegalArgumentException
 
+/**
+ * Data model that represents a UPnP vendor advertised by a device
+ *
+ * @param osVersion The version of the operating system on the device
+ * @param upnpVersion The UPnP version running on the device
+ * @param productVersion The product itself
+ */
 data class MediaDeviceServer(
     val osVersion: String,
     val upnpVersion: String,
@@ -22,7 +29,7 @@ data class MediaDeviceServer(
                         productVersion = serverInfo[2]
                     )
                 } catch (ex: IllegalArgumentException) {
-                    Log.e(
+                    Log.w(
                         "#parseFromString",
                         "SERVER field not properly advertised as 'OS/version UPnP/2.0 product/version', was $rawValue"
                     )

@@ -1,5 +1,7 @@
 package com.ivanempire.lighthouse.parsers
 
+import com.ivanempire.lighthouse.models.Constants.FIELD_SEPARATOR
+import com.ivanempire.lighthouse.models.Constants.NEWLINE_SEPARATOR
 import com.ivanempire.lighthouse.models.packets.HeaderKeys
 import com.ivanempire.lighthouse.models.packets.StartLine
 import java.net.DatagramPacket
@@ -15,7 +17,7 @@ class DatagramPacketTransformer {
     companion object {
         operator fun invoke(datagramPacket: DatagramPacket): HashMap<String, String>? {
             val cleanedDatagram = datagramPacket.cleanPacket()
-            val packetFields = cleanedDatagram.split(KEY_VALUE_PAIR_DELIMITER)
+            val packetFields = cleanedDatagram.split(NEWLINE_SEPARATOR)
 
             if (StartLine.getByRawValue(packetFields[0]) == null) {
                 return null
@@ -24,7 +26,8 @@ class DatagramPacketTransformer {
             // Start building the packet headers, starting with item 1 since item 0 is the StartLine
             val packetHeaders = hashMapOf<String, String>()
             packetFields.subList(1, packetFields.size).forEach {
-                val splitField = it.split(HEADER_FIELD_DELIMITER, ignoreCase = false, limit = 2)
+                // Split line into 2 - tokenize by 1st colon, group the rest of them into the value
+                val splitField = it.split(FIELD_SEPARATOR, ignoreCase = false, limit = 2)
                 packetHeaders[splitField[0].trim().uppercase()] = splitField[1].trim()
             }
 
@@ -34,15 +37,11 @@ class DatagramPacketTransformer {
 
             return packetHeaders
         }
-
-        private const val KEY_VALUE_PAIR_DELIMITER = "\r\n"
-        private const val HEADER_FIELD_DELIMITER = ":"
     }
 }
 
 /**
- * Transforms a [DatagramPacket] into a string for further processing - removes all null bytes from
- * the data array as well
+ * Removes all 0s from the [DatagramPacket] byte array and transforms the result into a string
  *
  * @return String representation of the given [DatagramPacket]
  */

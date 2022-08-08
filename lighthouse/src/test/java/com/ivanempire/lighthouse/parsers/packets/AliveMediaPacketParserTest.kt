@@ -48,7 +48,7 @@ class AliveMediaPacketParserTest {
         assertEquals(MediaHost(InetAddress.getByName("239.255.255.250"), 1900), parsedPacket.host)
         assertEquals(900, parsedPacket.cache)
         assertEquals(URL("http://192.168.2.50:58121/"), parsedPacket.location)
-        assertEquals(MediaDeviceServer("Windows", "NT/5.0,", "UPnP/1.0"), parsedPacket.server)
+        assertEquals(MediaDeviceServer("Windows",  "UPnP/1.0", "NT/5.0,"), parsedPacket.server)
         assertEquals(NotificationSubtype.ALIVE, parsedPacket.notificationSubtype)
         assertEquals(NotificationType("upnp:rootdevice"), parsedPacket.notificationType)
         assertEquals(

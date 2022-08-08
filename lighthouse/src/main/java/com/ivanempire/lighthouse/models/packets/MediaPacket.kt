@@ -1,11 +1,20 @@
 package com.ivanempire.lighthouse.models.packets
 
+import com.ivanempire.lighthouse.models.Constants.DEFAULT_MEDIA_HOST
 import com.ivanempire.lighthouse.models.devices.MediaDeviceServer
-import java.net.InetAddress
 import java.net.URL
-import java.util.Date
 import kotlin.collections.HashMap
 
+/**
+ * Base class for all SSDP media packets that have come through the multicast socket
+ *
+ * @param host Required - IANA reserved multicast address:port - typically 239.255.255.250:1900
+ * @param notificationType The SSDP packet's [NotificationType] parsed field value
+ * @param usn The SSDP packet's  [UniqueServiceName] parsed field value
+ * @param configId The SSDP packet's configuration ID of the specific device
+ * @param bootId The SSDP packet's boot ID of the specific device
+ * @param extraHeaders Manufacturer-added headers that were parsed in the SSDP packet
+ */
 sealed class MediaPacket(
     open val host: MediaHost,
     open val notificationType: NotificationType,
@@ -16,7 +25,14 @@ sealed class MediaPacket(
 )
 
 /**
- * CHECKED
+ * The model class representing a parsed ssdp:alive packet
+ *
+ * @param cache TTL of the current SSDP packet, in seconds
+ * @param location XML endpoint parsed from the SSDP packet
+ * @param notificationSubtype The SSDP packet's [NotificationSubtype] - in this case, ALIVE
+ * @param server The UPnP vendor that the device advertised
+ * @param searchPort The port number to use when sending unicast messages to this device
+ * @param secureLocation Secure XML endpoint parsed from the SSDP packet
  */
 data class AliveMediaPacket(
     override val host: MediaHost,
@@ -39,7 +55,13 @@ data class AliveMediaPacket(
 )
 
 /**
- * CHECKED
+ * The model class representing a parsed ssdp:update packet
+ *
+ * @param location XML endpoint parsed from the SSDP packet
+ * @param notificationSubtype The SSDP packet's [NotificationSubtype] - in this case, UPDATE
+ * @param nextBootId The boot ID that this packet's device will use after the next reboot
+ * @param searchPort The port number to use when sending unicast messages to this device
+ * @param secureLocation Secure XML endpoint parsed from the SSDP packet
  */
 data class UpdateMediaPacket(
     override val host: MediaHost,
@@ -61,7 +83,9 @@ data class UpdateMediaPacket(
 )
 
 /**
- * CHECKED
+ * The model class representing a parsed ssdp:byebye packet
+ *
+ * @param notificationSubtype The SSDP packet's [NotificationSubtype] - in this case, BYEBYE
  */
 data class ByeByeMediaPacket(
     override val host: MediaHost,
@@ -78,9 +102,20 @@ data class ByeByeMediaPacket(
     configId
 )
 
+/**
+ * The model class representing a parsed M-SEARCH response packet
+ *
+ * @param cache TTL of the current SSDP packet, in seconds
+ * @param date String representation of the date when this packet was built by the device
+ * @param ext Empty header for backwards compatibility - look UPnP told me to have this here
+ * @param location XML endpoint parsed from the SSDP packet
+ * @param server The UPnP vendor that the device advertised
+ * @param searchPort The port number to use when sending unicast messages to this device
+ * @param secureLocation Secure XML endpoint parsed from the SSDP packet
+ */
 data class SearchResponseMediaPacket(
     val cache: Int,
-    val date: Date,
+    val date: String,
     val ext: String = "",
     val location: URL,
     val server: MediaDeviceServer,
@@ -90,8 +125,7 @@ data class SearchResponseMediaPacket(
     override val configId: Int,
     val searchPort: Int,
     val secureLocation: URL,
-    // TODO: Document defaults
-    override val host: MediaHost = MediaHost(InetAddress.getByName("239.255.255.250"), 1900)
+    override val host: MediaHost = DEFAULT_MEDIA_HOST
 ) : MediaPacket(
     host,
     notificationType,

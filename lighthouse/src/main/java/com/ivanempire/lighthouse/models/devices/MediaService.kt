@@ -1,8 +1,10 @@
 package com.ivanempire.lighthouse.models.devices
 
 /**
- * Base class representing a service that a media device supports
+ * Represents a service that a media device supports
+ *
  * @param serviceType The service type that is obtained from SSDP packets or from the XML endpoint
+ * @param bootId
  */
 open class MediaService(
     open val serviceType: String,
@@ -11,6 +13,7 @@ open class MediaService(
 
 /**
  * A specific version of a [MediaService], populated exclusively from the XML description endpoint
+ *
  * @param serviceType The service type that is obtained from the XML field
  * @param serviceId The service identifier
  * @param descriptionUrl The partial endpoint to call for the service description

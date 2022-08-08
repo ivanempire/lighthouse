@@ -2,6 +2,10 @@ package com.ivanempire.lighthouse.models.packets
 
 import java.util.Locale
 
+/**
+ * Each SSDP packet has an NTS field which identifies its type. One exception is an M-SEARCH
+ * response packet, which uses an ST field
+ */
 enum class NotificationSubtype(val rawString: String) {
 
     ALIVE("SSDP:ALIVE"),

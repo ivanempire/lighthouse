@@ -9,6 +9,16 @@ buildscript {
     }
 }
 
+ext {
+
+    minSdk = 21
+    targetSdk = 31
+
+    groupId = "com.ivanempire"
+    artifactId = "lighthouse"
+    version = "0.9.1"
+}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }

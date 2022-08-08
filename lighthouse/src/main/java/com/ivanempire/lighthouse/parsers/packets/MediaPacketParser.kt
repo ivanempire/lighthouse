@@ -2,7 +2,7 @@ package com.ivanempire.lighthouse.parsers.packets
 
 import android.util.Log
 import com.ivanempire.lighthouse.getAndRemove
-import com.ivanempire.lighthouse.models.Constants
+import com.ivanempire.lighthouse.models.Constants.NOT_AVAILABLE_CACHE
 import com.ivanempire.lighthouse.models.packets.HeaderKeys
 import com.ivanempire.lighthouse.models.packets.MediaPacket
 import com.ivanempire.lighthouse.models.packets.NotificationSubtype
@@ -40,13 +40,11 @@ abstract class MediaPacketParser {
      * @return An integer representing the device cache in seconds; defaults to 1800 (30 minutes)
      */
     internal fun parseCacheControl(rawValue: String?): Int {
-        // Cache-Control: no-cache="Ext", max-age = 60 for Nanoleaf
-        // Cache-Control: max-age=1800
         val maxAgeIndex = rawValue?.indexOf("max-age=")
         return if (maxAgeIndex != -1) {
-            rawValue?.substringAfter("max-age=", "-1")?.trim()?.toInt() ?: Constants.NOT_AVAILABLE_CACHE
+            rawValue?.substringAfter("max-age=", "-1")?.trim()?.toInt() ?: NOT_AVAILABLE_CACHE
         } else {
-            Constants.NOT_AVAILABLE_CACHE
+            NOT_AVAILABLE_CACHE
         }
     }
 

@@ -1,7 +1,8 @@
 package com.ivanempire.lighthouse.parsers.packets
 
 import com.ivanempire.lighthouse.getAndRemove
-import com.ivanempire.lighthouse.models.Constants
+import com.ivanempire.lighthouse.models.Constants.NOT_AVAILABLE
+import com.ivanempire.lighthouse.models.Constants.NOT_AVAILABLE_NUM
 import com.ivanempire.lighthouse.models.devices.MediaDeviceServer
 import com.ivanempire.lighthouse.models.packets.HeaderKeys
 import com.ivanempire.lighthouse.models.packets.MediaPacket
@@ -27,7 +28,7 @@ class SearchPacketParser(
         // TODO: Use proper date format
         val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
         try {
-            dateFormat.parse(headerSet.getAndRemove(HeaderKeys.DATE) ?: Constants.NOT_AVAILABLE)
+            dateFormat.parse(headerSet.getAndRemove(HeaderKeys.DATE) ?: NOT_AVAILABLE)
         } catch (ex: ParseException) {
             Date()
         }
@@ -49,11 +50,11 @@ class SearchPacketParser(
         UniqueServiceName(headerSet.getAndRemove(HeaderKeys.UNIQUE_SERVICE_NAME) ?: "", bootId)
     }
 
-    private val bootId = headerSet.getAndRemove(HeaderKeys.BOOT_ID)?.toInt() ?: Constants.NOT_AVAILABLE_NUM
+    private val bootId = headerSet.getAndRemove(HeaderKeys.BOOT_ID)?.toInt() ?: NOT_AVAILABLE_NUM
 
-    private val configId = headerSet.getAndRemove(HeaderKeys.CONFIG_ID)?.toInt() ?: Constants.NOT_AVAILABLE_NUM
+    private val configId = headerSet.getAndRemove(HeaderKeys.CONFIG_ID)?.toInt() ?: NOT_AVAILABLE_NUM
 
-    private val searchPort = headerSet.getAndRemove(HeaderKeys.SEARCH_PORT)?.toInt() ?: Constants.NOT_AVAILABLE_NUM
+    private val searchPort = headerSet.getAndRemove(HeaderKeys.SEARCH_PORT)?.toInt() ?: NOT_AVAILABLE_NUM
 
     private val secureLocation: URL by lazy {
         parseUrl(headerSet.getAndRemove(HeaderKeys.SECURE_LOCATION))

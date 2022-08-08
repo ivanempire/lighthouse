@@ -12,11 +12,6 @@ object Constants {
     const val NOT_AVAILABLE_NUM = -1
     const val NOT_AVAILABLE_CACHE = 1800
 
-    /**
-     *
-     * content.append("MX: 60").append(NEWLINE);
-     */
-
     val DEFAULT_SEARCH_REQUEST = MulticastSearchRequest(
         hostname = MediaHost(InetAddress.getByName("239.255.255.250"), 1900),
         mx = 1,

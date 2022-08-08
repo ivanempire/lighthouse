@@ -10,12 +10,9 @@ import com.ivanempire.lighthouse.models.packets.NotificationType
 import com.ivanempire.lighthouse.models.packets.SearchResponseMediaPacket
 import com.ivanempire.lighthouse.models.packets.UniqueServiceName
 import java.net.URL
-import java.text.ParseException
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 import kotlin.collections.HashMap
 
+/** Parses incoming M-SEARCH response media packets */
 class SearchPacketParser(
     private val headerSet: HashMap<String, String>
 ) : MediaPacketParser() {
@@ -24,15 +21,8 @@ class SearchPacketParser(
         parseCacheControl(headerSet.getAndRemove(HeaderKeys.CACHE_CONTROL))
     }
 
-    private val date: Date by lazy {
-        // TODO: Use proper date format
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
-        try {
-            dateFormat.parse(headerSet.getAndRemove(HeaderKeys.DATE) ?: NOT_AVAILABLE)
-        } catch (ex: ParseException) {
-            Date()
-        }
-    }
+    // TODO: For a later version, parse date into a Date object
+    private val date = headerSet.getAndRemove(HeaderKeys.DATE) ?: NOT_AVAILABLE
 
     private val location: URL by lazy {
         parseUrl(headerSet.getAndRemove(HeaderKeys.LOCATION))

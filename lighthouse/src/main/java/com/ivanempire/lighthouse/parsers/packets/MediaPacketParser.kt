@@ -3,6 +3,7 @@ package com.ivanempire.lighthouse.parsers.packets
 import android.util.Log
 import com.ivanempire.lighthouse.getAndRemove
 import com.ivanempire.lighthouse.models.Constants.NOT_AVAILABLE_CACHE
+import com.ivanempire.lighthouse.models.Constants.NOT_AVAILABLE_LOCATION
 import com.ivanempire.lighthouse.models.packets.HeaderKeys
 import com.ivanempire.lighthouse.models.packets.MediaPacket
 import com.ivanempire.lighthouse.models.packets.NotificationSubtype
@@ -11,7 +12,7 @@ import java.net.URL
 
 /**
  * Each SSDP packet parser needs to implement this class. There are some common functions, like
- * [parseCacheControl] and [parseUrl] which help extract common information. This class takes in
+ * [parseCacheControl] and [parseUrl] which help extract shared information. This class takes in
  * the valid header set and figures out which parser to invoke in accordance to the [NotificationSubtype]
  * field.
  */
@@ -29,7 +30,7 @@ abstract class MediaPacketParser {
         return try {
             URL(rawValue)
         } catch (ex: MalformedURLException) {
-            URL("http://127.0.0.1/")
+            NOT_AVAILABLE_LOCATION
         }
     }
 
@@ -37,7 +38,7 @@ abstract class MediaPacketParser {
      * Parses the cache value of a device from the [HeaderKeys.CACHE_CONTROL] packet field
      *
      * @param rawValue The raw string value of the cache-control field
-     * @return An integer representing the device cache in seconds; defaults to 1800 (30 minutes)
+     * @return An integer representing the device cache in seconds
      */
     internal fun parseCacheControl(rawValue: String?): Int {
         val maxAgeIndex = rawValue?.indexOf("max-age=")
@@ -63,17 +64,13 @@ abstract class MediaPacketParser {
                     NotificationSubtype.ALIVE -> AliveMediaPacketParser(packetHeaders)
                     NotificationSubtype.UPDATE -> UpdateMediaPacketParser(packetHeaders)
                     NotificationSubtype.BYEBYE -> ByeByeMediaPacketParser(packetHeaders)
-                    // TODO: Exception or not, see how to catch this
                     else -> {
-                        Log.e("MediaPacketParser", "Somehow we got an invalid NotificationSubtype: $notificationSubtype")
+                        Log.e("MediaPacketParser", "Received an invalid NotificationSubtype: $notificationSubtype")
                         null
                     }
                 }
 
-                // Invoke the necessary parser and parse the media packet
                 val parsedPacket = latestPacket?.parseMediaPacket()
-
-                // Return the created packet, but also add all remaining headers as extras
                 return if (parsedPacket != null) {
                     parsedPacket.extraHeaders.putAll(packetHeaders)
                     parsedPacket

@@ -160,7 +160,7 @@ class LighthouseState {
     /**
      * Iterates over the entire device list and filters out any stale devices. A stale device is
      * defined as one that has not seen a media packet in the last [AbridgedMediaDevice.cache]
-     * milliseconds
+     * seconds
      *
      * @return A device list with stale root devices removed
      */

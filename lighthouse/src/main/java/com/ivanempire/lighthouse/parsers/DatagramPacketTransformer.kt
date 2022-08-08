@@ -7,8 +7,8 @@ import java.nio.charset.Charset
 
 /**
  * Parses each instance of a [DatagramPacket] from the socket and transforms that into a [HashMap]
- * representing each SSDP packet's header-value pairs. If the incoming [StartLine] is invalid,
- * null is returned to ignore datagram
+ * representing each SSDP packet's header-value pairs. If the incoming [StartLine] is invalid, or
+ * the [HeaderKeys.LOCATION] is null, then this datagram is not processed further
  */
 class DatagramPacketTransformer {
 
@@ -17,7 +17,6 @@ class DatagramPacketTransformer {
             val cleanedDatagram = datagramPacket.cleanPacket()
             val packetFields = cleanedDatagram.split(KEY_VALUE_PAIR_DELIMITER)
 
-            // If the StartLine is invalid, ignore this datagram
             if (StartLine.getByRawValue(packetFields[0]) == null) {
                 return null
             }
@@ -29,8 +28,6 @@ class DatagramPacketTransformer {
                 packetHeaders[splitField[0].trim().uppercase()] = splitField[1].trim()
             }
 
-            // If the location field is invalid, ignore this datagram
-            // TODO: May be a hack, but packets from 127.0.0.1 keep coming in
             if (packetHeaders[HeaderKeys.LOCATION] == null) {
                 return null
             }
@@ -44,8 +41,8 @@ class DatagramPacketTransformer {
 }
 
 /**
- * Trims all of the null fields from the data inside a [DatagramPacket] and combines remaining
- * items into a string for further processing
+ * Transforms a [DatagramPacket] into a string for further processing - removes all null bytes from
+ * the data array as well
  *
  * @return String representation of the given [DatagramPacket]
  */

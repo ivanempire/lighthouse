@@ -1,5 +1,6 @@
 package com.ivanempire.lighthouse.parsers.packets
 
+import com.ivanempire.lighthouse.models.Constants.DEFAULT_MEDIA_HOST
 import com.ivanempire.lighthouse.models.packets.EmbeddedService
 import com.ivanempire.lighthouse.models.packets.HeaderKeys
 import com.ivanempire.lighthouse.models.packets.MediaHost
@@ -26,7 +27,7 @@ class UpdateMediaPacketParserTest {
         sut = UpdateMediaPacketParser(hashMapOf())
         val parsedPacket = sut.parseMediaPacket() as UpdateMediaPacket
 
-        assertEquals(MediaHost(InetAddress.getByName("0.0.0.0"), -1), parsedPacket.host)
+        assertEquals(DEFAULT_MEDIA_HOST, parsedPacket.host)
         assertEquals(URL("http://127.0.0.1/"), parsedPacket.location)
         assertEquals(NotificationSubtype.UPDATE, parsedPacket.notificationSubtype)
         assertEquals(NotificationType(null), parsedPacket.notificationType)

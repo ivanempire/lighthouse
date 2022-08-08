@@ -62,7 +62,7 @@ class LighthouseState {
         var targetDevice = deviceList.firstOrNull { it.uuid == latestPacket.usn.uuid }
         val targetComponent = latestPacket.usn
 
-        //Create a new device since we haven't seen it yet
+        // Create a new device since we haven't seen it yet
         if (targetDevice == null) {
             val baseDevice = AbridgedMediaDevice(
                 uuid = targetComponent.uuid,

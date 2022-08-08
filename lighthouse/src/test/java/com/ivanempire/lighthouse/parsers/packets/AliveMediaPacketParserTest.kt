@@ -1,5 +1,6 @@
 package com.ivanempire.lighthouse.parsers.packets
 
+import com.ivanempire.lighthouse.models.Constants.DEFAULT_MEDIA_HOST
 import com.ivanempire.lighthouse.models.devices.MediaDeviceServer
 import com.ivanempire.lighthouse.models.packets.AliveMediaPacket
 import com.ivanempire.lighthouse.models.packets.EmbeddedService
@@ -28,7 +29,7 @@ class AliveMediaPacketParserTest {
         sut = AliveMediaPacketParser(hashMapOf())
         val parsedPacket = sut.parseMediaPacket() as AliveMediaPacket
 
-        assertEquals(MediaHost(InetAddress.getByName("0.0.0.0"), -1), parsedPacket.host)
+        assertEquals(DEFAULT_MEDIA_HOST, parsedPacket.host)
         assertEquals(1800, parsedPacket.cache)
         assertEquals(URL("http://127.0.0.1/"), parsedPacket.location)
         assertEquals(MediaDeviceServer("N/A", "N/A", "N/A"), parsedPacket.server)
@@ -48,7 +49,7 @@ class AliveMediaPacketParserTest {
         assertEquals(MediaHost(InetAddress.getByName("239.255.255.250"), 1900), parsedPacket.host)
         assertEquals(900, parsedPacket.cache)
         assertEquals(URL("http://192.168.2.50:58121/"), parsedPacket.location)
-        assertEquals(MediaDeviceServer("Windows",  "UPnP/1.0", "NT/5.0,"), parsedPacket.server)
+        assertEquals(MediaDeviceServer("Windows", "NT/5.0,", "UPnP/1.0"), parsedPacket.server)
         assertEquals(NotificationSubtype.ALIVE, parsedPacket.notificationSubtype)
         assertEquals(NotificationType("upnp:rootdevice"), parsedPacket.notificationType)
         assertEquals(

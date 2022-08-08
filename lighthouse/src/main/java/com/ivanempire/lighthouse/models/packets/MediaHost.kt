@@ -1,7 +1,7 @@
 package com.ivanempire.lighthouse.models.packets
 
-import com.ivanempire.lighthouse.models.Constants.FIELD_SEPARATOR
 import com.ivanempire.lighthouse.models.Constants.DEFAULT_MEDIA_HOST
+import com.ivanempire.lighthouse.models.Constants.FIELD_SEPARATOR
 import java.net.InetAddress
 
 /**

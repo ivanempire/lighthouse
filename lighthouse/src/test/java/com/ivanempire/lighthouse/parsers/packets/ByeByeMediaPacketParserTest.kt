@@ -1,5 +1,6 @@
 package com.ivanempire.lighthouse.parsers.packets
 
+import com.ivanempire.lighthouse.models.Constants.DEFAULT_MEDIA_HOST
 import com.ivanempire.lighthouse.models.packets.ByeByeMediaPacket
 import com.ivanempire.lighthouse.models.packets.EmbeddedDevice
 import com.ivanempire.lighthouse.models.packets.EmbeddedService
@@ -27,7 +28,7 @@ class ByeByeMediaPacketParserTest {
         sut = ByeByeMediaPacketParser(hashMapOf())
         val parsedPacket = sut.parseMediaPacket() as ByeByeMediaPacket
 
-        assertEquals(MediaHost(InetAddress.getByName("0.0.0.0"), -1), parsedPacket.host)
+        assertEquals(DEFAULT_MEDIA_HOST, parsedPacket.host)
         assertEquals(NotificationType(null), parsedPacket.notificationType)
         assertEquals(NotificationSubtype.BYEBYE, parsedPacket.notificationSubtype)
         assertEquals(-1, parsedPacket.bootId)
@@ -39,7 +40,7 @@ class ByeByeMediaPacketParserTest {
         sut = ByeByeMediaPacketParser(PARTIAL_BYEBYE_PACKET_HEADER_SET)
         val parsedPacket = sut.parseMediaPacket() as ByeByeMediaPacket
 
-        assertEquals(MediaHost(InetAddress.getByName("0.0.0.0"), -1), parsedPacket.host)
+        assertEquals(DEFAULT_MEDIA_HOST, parsedPacket.host)
         assertEquals(
             NotificationType("urn:schemas-upnp-org:service:RenderingControl:1"),
             parsedPacket.notificationType

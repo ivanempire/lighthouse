@@ -2,6 +2,8 @@ package com.ivanempire.lighthouse.socket
 
 import android.net.wifi.WifiManager
 import android.util.Log
+import com.ivanempire.lighthouse.models.Constants.DEFAULT_MULTICAST_ADDRESS
+import com.ivanempire.lighthouse.models.Constants.LIGHTHOUSE_CLIENT
 import com.ivanempire.lighthouse.models.search.SearchRequest
 import java.net.DatagramPacket
 import java.net.InetAddress
@@ -19,11 +21,11 @@ class RealSocketListener(
 ) : SocketListener {
 
     private val multicastLock: WifiManager.MulticastLock by lazy {
-        wifiManager.createMulticastLock(MULTICAST_LOCK_TAG)
+        wifiManager.createMulticastLock(LIGHTHOUSE_CLIENT)
     }
 
     private val multicastGroup: InetAddress by lazy {
-        InetAddress.getByName(MULTICAST_ADDRESS)
+        InetAddress.getByName(DEFAULT_MULTICAST_ADDRESS)
     }
 
     override fun setupSocket(): MulticastSocket {
@@ -79,9 +81,6 @@ class RealSocketListener(
     }
 
     private companion object {
-        const val MULTICAST_LOCK_TAG = "LighthouseLock"
-        const val MULTICAST_ADDRESS = "239.255.255.250"
-
         const val MULTICAST_DATAGRAM_SIZE = 2048
         const val MULTICAST_PORT = 1900
     }

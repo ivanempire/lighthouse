@@ -2,6 +2,7 @@ package com.ivanempire.lighthouse.models.search
 
 import com.ivanempire.lighthouse.models.Constants.DEFAULT_SEARCH_MAN
 import com.ivanempire.lighthouse.models.Constants.FIELD_SEPARATOR
+import com.ivanempire.lighthouse.models.Constants.LIGHTHOUSE_CLIENT
 import com.ivanempire.lighthouse.models.Constants.NEWLINE_SEPARATOR
 import com.ivanempire.lighthouse.models.packets.HeaderKeys
 import com.ivanempire.lighthouse.models.packets.MediaHost
@@ -10,7 +11,11 @@ import java.lang.StringBuilder
 import java.util.UUID
 
 /**
- * @param hostname Required - [MediaHost]
+ * A multicast [SearchRequest] that will send the search data to all addresses on the network. This
+ * can be used to find all networked devices that are listening in on the multicast group. A default
+ * search request sent by Lighthouse is a multicast search request.
+ *
+ * @param hostname Required - IANA reserved multicast address:port - typically 239.255.255.250:1900
  * @param mx Required - seconds by which to delay the search response, between 1 and 5, inclusive
  * @param searchTarget Required - search target to use for the search request
  * @param osVersion Allowed - OS version for the user agent field
@@ -24,8 +29,8 @@ data class MulticastSearchRequest(
     val searchTarget: String,
     val osVersion: String?,
     val productVersion: String?,
-    val friendlyName: String = "LighthouseClient",
-    val uuid: UUID = UUID.nameUUIDFromBytes("LighthouseClient".toByteArray())
+    val friendlyName: String = LIGHTHOUSE_CLIENT,
+    val uuid: UUID = UUID.nameUUIDFromBytes(LIGHTHOUSE_CLIENT.toByteArray())
 ) : SearchRequest {
 
     init {

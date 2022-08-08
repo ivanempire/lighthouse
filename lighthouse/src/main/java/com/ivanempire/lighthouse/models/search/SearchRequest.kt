@@ -10,9 +10,9 @@ interface SearchRequest {
 
     /**
      * Converts a search packet into a [DatagramPacket] to send to the multicast group. Unless
-     * something special is required, the only required parameter is the multicast group address.
+     * something special is required, the only parameter is the multicast group address.
      *
-     * @param multicastAddress The [InetAddress] of the multicast group
+     * @param multicastAddress [InetAddress] of the multicast group
      * @return The search request in [DatagramPacket] form
      */
     fun toDatagramPacket(multicastAddress: InetAddress): DatagramPacket {

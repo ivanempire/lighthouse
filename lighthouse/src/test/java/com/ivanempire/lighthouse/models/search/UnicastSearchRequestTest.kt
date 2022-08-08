@@ -27,7 +27,7 @@ class UnicastSearchRequestTest {
             osVersion = null,
             productVersion = null
         )
-        val baseResultString = "${StartLine.SEARCH.rawString}\r\nHOST: 239.255.255.250:1900\r\nMAN: \"ssdp:discover\"\r\nST: ssdp:all\r\n"
+        val baseResultString = "${StartLine.SEARCH.rawString}\r\nHOST:239.255.255.250:1900\r\nMAN:\"ssdp:discover\"\r\nST:ssdp:all\r\n"
 
         assertEquals(baseResultString, baseSearchRequest.toString())
 
@@ -38,7 +38,7 @@ class UnicastSearchRequestTest {
             productVersion = "GUPnP/1.0.5"
         )
 
-        val completeResultString = "${StartLine.SEARCH.rawString}\r\nHOST: 239.255.255.250:1900\r\nMAN: \"ssdp:discover\"\r\nST: ssdp:all\r\nUSER-AGENT: Windows/NT5.0 UPnP/2.0 GUPnP/1.0.5\r\n"
+        val completeResultString = "${StartLine.SEARCH.rawString}\r\nHOST:239.255.255.250:1900\r\nMAN:\"ssdp:discover\"\r\nST:ssdp:all\r\nUSER-AGENT:Windows/NT5.0 UPnP/2.0 GUPnP/1.0.5\r\n"
 
         assertEquals(completeResultString, completeSearchRequest.toString())
     }

@@ -21,7 +21,6 @@ class SearchPacketParser(
         parseCacheControl(headerSet.getAndRemove(HeaderKeys.CACHE_CONTROL))
     }
 
-    // TODO: For a later version, parse date into a Date object
     private val date = headerSet.getAndRemove(HeaderKeys.DATE) ?: NOT_AVAILABLE
 
     private val location: URL by lazy {

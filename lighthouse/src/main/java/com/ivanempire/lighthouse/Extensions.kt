@@ -6,13 +6,11 @@ import com.ivanempire.lighthouse.models.packets.EmbeddedService
 import com.ivanempire.lighthouse.models.packets.UniqueServiceName
 
 /**
- * Handles the latest ALIVE or UPDATE media packet and replaces the relevant
- * [EmbeddedDevice] or [EmbeddedService]. An ALIVE packet should be the first
- * one we receive for any embedded component. In the case of an UPDATE packet, the [latestBootId] is
- * the only thing to really change. However, component versions may be updated as well, and so we
- * also just replace the entire component.
+ * Handles the latest [UniqueServiceName] instance from an ALIVE packet to update an embedded
+ * component - be that a device or a service. We replace the entire component because versions may
+ * change in the case of an UPDATE packet.
  *
- * @param latestComponent The latest packet's parsed [UniqueServiceName] field
+ * @param latestComponent The latest ALIVE or BYEBYE packet's parsed [UniqueServiceName] field
  */
 internal fun AbridgedMediaDevice.updateEmbeddedComponent(latestComponent: UniqueServiceName) {
     if (latestComponent is EmbeddedDevice) {
@@ -27,10 +25,10 @@ internal fun AbridgedMediaDevice.updateEmbeddedComponent(latestComponent: Unique
 }
 
 /**
- * Handles the latest BYEBYE media packet which either targets an [EmbeddedDevice] or
- * an [EmbeddedService]. Removes said embedded information from the [AbridgedMediaDevice]
+ * Handles the latest [UniqueServiceName] instance from a BYEBYE packet to remove an embedded
+ * component - be that a device or a service - from the root device
  *
- * @param latestComponent The latest packet's parsed [UniqueServiceName] field
+ * @param latestComponent The latest BYEBYE packet's parsed [UniqueServiceName] field
  */
 internal fun AbridgedMediaDevice.removeEmbeddedComponent(latestComponent: UniqueServiceName) {
     if (latestComponent is EmbeddedDevice) {

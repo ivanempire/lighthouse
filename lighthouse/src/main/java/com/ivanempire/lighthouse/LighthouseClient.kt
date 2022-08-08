@@ -12,10 +12,11 @@ import com.ivanempire.lighthouse.socket.RealSocketListener
 import kotlinx.coroutines.flow.Flow
 
 /**
- *
+ * The main entrypoint for the Lighthouse library
  */
 interface LighthouseClient {
 
+    /** Builder class for the Lighthouse configuration */
     class Builder(context: Context) {
 
         private val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
@@ -32,5 +33,12 @@ interface LighthouseClient {
         }
     }
 
+    /**
+     * When called, this method will start device discovery by kicking off all of the necessary
+     * setup steps down to the socket listener
+     *
+     * @param searchRequest The [SearchRequest] to send to the multicast group to discover devices
+     * @return Flow of lists of [AbridgedMediaDevice] that have been discovered on the network
+     */
     fun discoverDevices(searchRequest: SearchRequest = DEFAULT_SEARCH_REQUEST): Flow<List<AbridgedMediaDevice>>
 }

@@ -1,6 +1,5 @@
 package com.ivanempire.lighthouse.core
 
-import android.util.Log
 import com.ivanempire.lighthouse.models.Constants.NOT_AVAILABLE_CACHE
 import com.ivanempire.lighthouse.models.devices.AbridgedMediaDevice
 import com.ivanempire.lighthouse.models.devices.MediaDevice
@@ -13,14 +12,20 @@ import com.ivanempire.lighthouse.models.packets.UpdateMediaPacket
 import com.ivanempire.lighthouse.removeEmbeddedComponent
 import com.ivanempire.lighthouse.updateEmbeddedComponent
 
-// BOOTID.UPNP.ORG     ==> changes, means device will reboot; see how to handle this
-// NEXTBOOTID.UPNP.ORG ==> next bootId to use
+/**
+ * The one stateful component of Lighthouse - contains the list of all devices known to the library
+ * at any given time
+ */
 class LighthouseState {
 
     private val deviceList = arrayListOf<AbridgedMediaDevice>()
 
     /**
+     * Must be called from one place only so as not to mess up internal state. Clears the internal
+     * state of all devices and adds everything back from [updatedList]
      *
+     * @param updatedList The list of media devices that have been updated with the latest packets
+     * @return A new list of media devices that are as up-to-date as possible given latest packets
      */
     fun setDeviceList(updatedList: List<AbridgedMediaDevice>): List<MediaDevice> {
         deviceList.clear()
@@ -32,18 +37,15 @@ class LighthouseState {
      * Delegates all the latest incoming [MediaPacket] instances to the relevant parsing methods
      *
      * @param latestPacket The latest parsed instance of a [MediaPacket]
-     *
-     * @return A modified snapshot of [deviceList] - original list left untouched
+     * @return A new version of [deviceList] with the appropriate [AbridgedMediaDevice] updated
      */
     fun parseMediaPacket(latestPacket: MediaPacket): List<AbridgedMediaDevice> {
-        val newList = when (latestPacket) {
+        return when (latestPacket) {
             is AliveMediaPacket -> parseAliveMediaPacket(latestPacket)
             is UpdateMediaPacket -> parseUpdateMediaPacket(latestPacket)
             is ByeByeMediaPacket -> parseByeByeMediaPacket(latestPacket)
             is SearchResponseMediaPacket -> parseAliveMediaPacket(latestPacket.toAlivePacket())
         }
-        Log.d("#parseMediaPacket", "New list after packet: $newList")
-        return newList
     }
 
     /**
@@ -54,13 +56,13 @@ class LighthouseState {
      * are ignored.
      *
      * @param latestPacket Latest instance of an [AliveMediaPacket]
-     *
-     * @return A modified snapshot of [deviceList] with updated information from ALIVE packet
+     * @return A new version of [deviceList] with updated information from ALIVE packet
      */
     private fun parseAliveMediaPacket(latestPacket: AliveMediaPacket): List<AbridgedMediaDevice> {
-        Log.d("#parseAliveMediaPacket", "Parsing packet: $latestPacket")
         var targetDevice = deviceList.firstOrNull { it.uuid == latestPacket.usn.uuid }
         val targetComponent = latestPacket.usn
+
+        //Create a new device since we haven't seen it yet
         if (targetDevice == null) {
             val baseDevice = AbridgedMediaDevice(
                 uuid = targetComponent.uuid,
@@ -77,19 +79,27 @@ class LighthouseState {
             baseDevice.updateEmbeddedComponent(targetComponent)
             deviceList.add(baseDevice)
         } else {
+            // Update the existing device
             targetDevice = targetDevice.copy(latestTimestamp = System.currentTimeMillis())
             targetDevice.updateEmbeddedComponent(targetComponent)
         }
         targetDevice?.extraHeaders?.putAll(latestPacket.extraHeaders)
-        Log.d("#parseAliveMediaPacket", "Final list: $deviceList")
         return deviceList
     }
 
+    /**
+     * Handles the latest parsed instance of an [UpdateMediaPacket] and either creates a new device
+     * (since UDP does not guarantee packet order), or updates the corresponding component that said
+     * packet may target
+     *
+     * @param latestPacket Latest instance of an [UpdateMediaPacket]
+     * @return A new version of [deviceList] with updated information from UPDATE packet
+     */
     private fun parseUpdateMediaPacket(latestPacket: UpdateMediaPacket): List<AbridgedMediaDevice> {
         var targetDevice = deviceList.firstOrNull { it.uuid == latestPacket.usn.uuid }
         val targetComponent = latestPacket.usn
         if (targetDevice == null) {
-            // Edge-case 1, where UPDATE came before ALIVE - build full device, but specify
+            // Edge-case 1, where UPDATE packet came before ALIVE - build full device, but specify
             // empty fields
             val baseDevice = AbridgedMediaDevice(
                 uuid = targetComponent.uuid,
@@ -103,10 +113,7 @@ class LighthouseState {
                 secureLocation = latestPacket.secureLocation,
                 latestTimestamp = System.currentTimeMillis()
             )
-            when (targetComponent) {
-                is RootDeviceInformation -> { /* No-op */ }
-                else -> baseDevice.updateEmbeddedComponent(targetComponent)
-            }
+            baseDevice.updateEmbeddedComponent(targetComponent)
             deviceList.add(baseDevice)
         } else {
             targetDevice = targetDevice.copy(latestTimestamp = System.currentTimeMillis())
@@ -132,7 +139,11 @@ class LighthouseState {
     }
 
     /**
-     * This is done
+     * Handles the latest parsed instance of a [ByeByeMediaPacket] and removes the embedded
+     * component or root device that said packet may target
+     *
+     * @param latestPacket Latest instance of a [ByeByeMediaPacket]
+     * @return A modified version of [deviceList] with the target device/component removed
      */
     private fun parseByeByeMediaPacket(latestPacket: ByeByeMediaPacket): List<AbridgedMediaDevice> {
         val targetComponent = latestPacket.usn
@@ -147,22 +158,23 @@ class LighthouseState {
     }
 
     /**
-     * Iterates over all current instances of [MediaDevice] and removes any that have not received
-     * advertising packets in the last [AbridgedMediaDevice.cache] milliseconds. First the root
-     * device components are removed to save on further processing, then embedded devices and
-     * services are pruned
+     * Iterates over the entire device list and filters out any stale devices. A stale device is
+     * defined as one that has not seen a media packet in the last [AbridgedMediaDevice.cache]
+     * milliseconds
      *
-     * @return A device list snapshot with stale root and embedded devices/services removed
+     * @return A device list with stale root devices removed
      */
     fun parseStaleDevices(): List<AbridgedMediaDevice> {
         return deviceList.filter {
-            // TODO: Document cache units somewhere
             System.currentTimeMillis() - it.latestTimestamp > it.cache * 1000
         }
     }
 }
 
-// Awh hell ye, it's all coming together now ಠ_ಠ
+/**
+ * Converts a [SearchResponseMediaPacket] to an [AliveMediaPacket] since the parsing is almost
+ * identical between the two with regards to the creation of an [AbridgedMediaDevice]
+ */
 private fun SearchResponseMediaPacket.toAlivePacket(): AliveMediaPacket {
     return AliveMediaPacket(
         host = host,

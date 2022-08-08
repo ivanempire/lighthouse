@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 
+/** Specific implementation of [LighthouseClient] */
 class RealLighthouseClient(
     private val discoveryManager: DiscoveryManager,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO

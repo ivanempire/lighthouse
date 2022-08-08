@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.isActive
 
 /**
- * Implementation of [DiscoveryManager] that Lighthouse uses to build the relevant device flows
+ * Specific implementation of [DiscoveryManager]
  *
  * @param lighthouseState A library-wide instance of [LighthouseState] to keep track of discovered devices
  * @param multicastSocketListener An implementation of [SocketListener] to send/receive packets from the network

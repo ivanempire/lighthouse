@@ -11,6 +11,24 @@ jobs:
         uses: actions/checkout@v2
       - name: Make Gradle wrapper executable
         run: chmod +x ./gradlew
+      - name: Restore gradle.properties
+        env:
+          SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+          SIGNING_KEY_RING_FILE: ${{ secrets.SIGNING_KEY_RING_FILE }}
+          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+          SONATYPE_URL: ${{ secrets.SONATYPE_URL }}
+          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+        shell: bash
+        run: |
+          mkdir -p ~/.gradle/
+          echo signing.keyId=${SIGNING_KEY_ID} >> ~/.gradle/gradle.properties
+          echo signing.password=${SIGNING_KEY_PASSWORD} >> ~/.gradle/gradle.properties
+          echo signing.secretKeyRingFile=${SIGNING_KEY_RING_FILE} >> ~/.gradle/gradle.properties
+          echo sonatypePassword=${SONATYPE_PASSWORD} >> ~/.gradle/gradle.properties
+          echo sonatypeUrl=${SONATYPE_URL} >> ~/.gradle/gradle.properties
+          echo sonatypeUsername=${SONATYPE_USERNAME} >> ~/.gradle/gradle.properties
+          cat ~/.gradle/gradle.properties
       - name: Run lint checks on library module
         run: ./gradlew :lighthouse:ktlintCheck
       - name: Unit test the library module

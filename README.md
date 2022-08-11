@@ -48,7 +48,7 @@ suspend fun startDiscovery() {
 ```
 
 ## Searching for devices
-There are two types of search messages (also known as M-SEARCH) one may send to a multicast group: unicast and multicast. A unicast message is one that is sent to a specific device on the network. The search criterai is rather narrow, and so only 1 device will respond. A multicast message, on the other hand, is like an all-points bulletin: every single device that matches the more-generic search criteria will respond.
+There are two types of search messages (also known as M-SEARCH) one may send to a multicast group: unicast and multicast. A unicast message is one that is sent to a specific device on the network. The search criteria is rather narrow, and so only 1 device will respond. A multicast message, on the other hand, is like an all-points bulletin: every single device that matches the more-generic search criteria will respond.
 
 For example, the default search request, found [here](lighthouse/src/main/java/com/ivanempire/lighthouse/models/Constants.kt#L33), is a multicast message with a search target of `ssdp:all`. Lighthouse sets this up as an implicit argument to `discoverDevices()`. The corresponding string is:
 
@@ -62,7 +62,7 @@ CPFN.UPNP.ORG:LighthouseClient
 CPUUID.UPNP.ORG:747f550a-8dec-33a1-8470-e314bf440695
 ```
 
-If you are feeling adventurous, however, you can create your own search requests and pass them into the dicover method:
+If you are feeling adventurous, however, you can create your own search requests and pass them into the discover method:
 
 ```kotlin
 val multicastSearchRequest = MulticastSearchRequest(
@@ -84,7 +84,7 @@ Checkout the documentation for [`MulticastSearchRequest.kt`](lighthouse/src/main
 
 ## Debugging
 ### SSDP
-Unfortunately, SSDP is not an enforced protocol. As a result, every single manufacturer may add or drop headers from the network packets, save for the offical HTTP start line. To simplify things somewhat, Lighthouse follows the [UPnP Device Architecture 2.0](https://openconnectivity.org/upnp-specs/UPnP-arch-DeviceArchitecture-v2.0-20200417.pdf) specification as closely as it can. However, if you are seeing some missing information, or if the device list is not behaving as expected, here are some debugging notes to consider:
+Unfortunately, SSDP is not an enforced protocol. As a result, every single manufacturer may add or drop headers from the network packets, save for the official HTTP start line. To simplify things somewhat, Lighthouse follows the [UPnP Device Architecture 2.0](https://openconnectivity.org/upnp-specs/UPnP-arch-DeviceArchitecture-v2.0-20200417.pdf) specification as closely as it can. However, if you are seeing some missing information, or if the device list is not behaving as expected, here are some debugging notes to consider:
 
 - **Defaults**: [`Constants.kt`](lighthouse/src/main/java/com/ivanempire/lighthouse/models/Constants.kt) contains all of the default values that Lighthouse will use if a device is not advertising a specific field in an SSDP packet. For example, if an `ssdp:alive` packet does not contain a `bootId`, the parser will set a default value of `-1`. Similarly, `cache-control` defaults to 1800 seconds (30 minutes), and missing `location` URLs default to `127.0.0.1`. [`MediaDeviceServer.kt`](lighthouse/src/main/java/com/ivanempire/lighthouse/models/devices/MediaDeviceServer.kt) gets a special shoutout due the finicky format required by UPnP. All fields default to `N/A`, and the error in parsing will be logged as a warning.
 - **UUIDs**: Lighthouse groups devices and their embedded components (embedded devices and services) by the advertised UUID. However, some devices advertise each embedded component with a different UUID - usually off by 1 or 2. This is not something that's easy to fix, however, file a bug if you're seeing this and maybe we can discuss a solution! On the other hand, if a device is not advertising a UUID (or is advertising an invalid one), a zeroed-out value will be assigned to the packet. All packets under a zeroed-out UUID are grouped together in the device list as a "proper" device.
@@ -108,7 +108,7 @@ class MyViewModel: ViewModel() {
 An easy litmus test is to call this method while your device is in airplane mode - if the exception is not propagated to the very top, then you're all set!
 
 ### R8 / ProGuard
-Lighthosue is fully compatible with the standard shrinking tools and does not require any additional rules. The only two dependencies are Kotlin Coroutines and AndroidX Core.
+Lighthouse is fully compatible with the standard shrinking tools and does not require any additional rules. The only two dependencies are Kotlin Coroutines and AndroidX Core.
 
 ## Upcoming work
 Lighthouse has just reached version `1.0.0` and there are plenty of improvements coming down the pipe. In no particular order, here's a list of incoming features or bug fixes:

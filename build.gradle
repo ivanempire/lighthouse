@@ -16,7 +16,7 @@ ext {
 
     groupId = "com.ivanempire"
     artifactId = "lighthouse"
-    version = "0.9.1"
+    version = "0.9.9"
 }
 
 task clean(type: Delete) {

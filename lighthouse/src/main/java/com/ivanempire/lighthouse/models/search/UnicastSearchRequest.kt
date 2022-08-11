@@ -21,8 +21,8 @@ import java.lang.StringBuilder
 data class UnicastSearchRequest(
     val hostname: MediaHost,
     val searchTarget: String,
-    val osVersion: String?,
-    val productVersion: String?,
+    val osVersion: String? = null,
+    val productVersion: String? = null,
 ) : SearchRequest {
 
     init {

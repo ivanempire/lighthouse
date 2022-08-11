@@ -27,8 +27,8 @@ data class MulticastSearchRequest(
     val hostname: MediaHost,
     val mx: Int,
     val searchTarget: String,
-    val osVersion: String?,
-    val productVersion: String?,
+    val osVersion: String? = null,
+    val productVersion: String? = null,
     val friendlyName: String = LIGHTHOUSE_CLIENT,
     val uuid: UUID = UUID.nameUUIDFromBytes(LIGHTHOUSE_CLIENT.toByteArray())
 ) : SearchRequest {

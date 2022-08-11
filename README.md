@@ -47,7 +47,7 @@ suspend fun startDiscovery() {
 ```
 
 ## Searching for devices
-There are two types of search messages (also known as M-SEARCH) one may send to a multicast group: unicast and multicast. A unicast message. On the other hand, a multicast message is like an all-points bulletin: every single device that matches the search criteria will respond. These are known as search requests in Lighthouse.
+There are two types of search messages (also known as M-SEARCH) one may send to a multicast group: unicast and multicast. A unicast message is one that is sent to a specific device on the network. The search criterai is rather narrow, and so only 1 device will respond. A multicast message, on the other hand, is like an all-points bulletin: every single device that matches the more-generic search criteria will respond.
 
 For example, the default search request, found [here](lighthouse/src/main/java/com/ivanempire/lighthouse/models/Constants.kt#L33), is a multicast message with a search target of `ssdp:all`. Lighthouse sets this up as an implicit argument to `discoverDevices()`. The corresponding string is:
 

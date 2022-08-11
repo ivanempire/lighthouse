@@ -13,7 +13,7 @@ import java.net.URL
 import kotlin.collections.HashMap
 
 /** Parses incoming M-SEARCH response media packets */
-class SearchPacketParser(
+internal class SearchPacketParser(
     private val headerSet: HashMap<String, String>
 ) : MediaPacketParser() {
 

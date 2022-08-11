@@ -12,7 +12,7 @@ import com.ivanempire.lighthouse.models.packets.UniqueServiceName
 import java.net.URL
 
 /** Parses incoming ssdp:alive media packets */
-class AliveMediaPacketParser(
+internal class AliveMediaPacketParser(
     private val headerSet: HashMap<String, String>
 ) : MediaPacketParser() {
 

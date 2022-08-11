@@ -19,7 +19,7 @@ import kotlinx.coroutines.isActive
  * @param lighthouseState A library-wide instance of [LighthouseState] to keep track of discovered devices
  * @param multicastSocketListener An implementation of [SocketListener] to send/receive packets from the network
  */
-class RealDiscoveryManager(
+internal class RealDiscoveryManager(
     private val lighthouseState: LighthouseState,
     private val multicastSocketListener: SocketListener
 ) : DiscoveryManager {

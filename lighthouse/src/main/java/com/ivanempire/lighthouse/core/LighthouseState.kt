@@ -16,7 +16,7 @@ import com.ivanempire.lighthouse.updateEmbeddedComponent
  * The one stateful component of Lighthouse - contains the list of all devices known to the library
  * at any given time
  */
-class LighthouseState {
+internal class LighthouseState {
 
     private val deviceList = arrayListOf<AbridgedMediaDevice>()
 

@@ -1,7 +1,7 @@
 package com.ivanempire.lighthouse.models.packets
 
 /** Standard keys for all SSDP packets */
-object HeaderKeys {
+internal object HeaderKeys {
     const val MX = "MX"
     const val MAN = "MAN"
     const val HOST = "HOST"

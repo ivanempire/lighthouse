@@ -66,7 +66,7 @@ abstract class UniqueServiceName(
  * @param uuid The unique identifier of the root device
  * @param bootId The current boot ID of the root device
  */
-data class RootDeviceInformation(
+internal data class RootDeviceInformation(
     override val uuid: UUID,
     override val bootId: Int
 ) : UniqueServiceName(uuid, bootId)

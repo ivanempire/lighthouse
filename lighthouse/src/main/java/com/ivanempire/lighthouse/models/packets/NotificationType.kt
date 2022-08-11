@@ -6,4 +6,4 @@ package com.ivanempire.lighthouse.models.packets
  *
  * @param rawString The raw string that was obtained from the [HeaderKeys.NOTIFICATION_TYPE] field
  */
-data class NotificationType(val rawString: String?)
+internal data class NotificationType(val rawString: String?)

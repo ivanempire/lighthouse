@@ -6,7 +6,7 @@ import java.util.Locale
  * Represents all possible SSDP packet start lines. If a start line is invalid, the packet is
  * invalid and is not parsed by Lighthouse
  */
-enum class StartLine(val rawString: String) {
+internal enum class StartLine(val rawString: String) {
 
     NOTIFY("NOTIFY * HTTP/1.1"),
     SEARCH("M-SEARCH * HTTP/1.1"),

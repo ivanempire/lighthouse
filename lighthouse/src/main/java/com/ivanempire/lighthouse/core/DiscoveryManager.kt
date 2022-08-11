@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
  * All discovery managers should conform to this interface in order to setup two required list
  * flows: the newly-discovered devices to add, and the stale devices to remove
  */
-interface DiscoveryManager {
+internal interface DiscoveryManager {
 
     /**
      * Creates a [Flow] of a list of [AbridgedMediaDevice] instances which have been built after

@@ -10,7 +10,7 @@ import com.ivanempire.lighthouse.models.packets.NotificationType
 import com.ivanempire.lighthouse.models.packets.UniqueServiceName
 
 /** Parses incoming ssdp:byebye media packets */
-class ByeByeMediaPacketParser(
+internal class ByeByeMediaPacketParser(
     private val headerSet: HashMap<String, String>
 ) : MediaPacketParser() {
 

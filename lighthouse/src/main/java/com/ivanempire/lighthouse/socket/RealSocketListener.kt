@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.isActive
 
 /** Specific implementation of [SocketListener] */
-class RealSocketListener(
+internal class RealSocketListener(
     private val wifiManager: WifiManager
 ) : SocketListener {
 

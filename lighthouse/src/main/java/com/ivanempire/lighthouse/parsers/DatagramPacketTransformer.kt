@@ -13,7 +13,7 @@ import java.nio.charset.Charset
  * representing each SSDP packet's header-value pairs. If the incoming [StartLine] is invalid, or
  * the [HeaderKeys.LOCATION] is null, then this datagram is not processed further
  */
-class DatagramPacketTransformer {
+internal class DatagramPacketTransformer {
 
     companion object {
         operator fun invoke(datagramPacket: DatagramPacket): HashMap<String, String>? {

@@ -15,7 +15,7 @@ import kotlin.collections.HashMap
  * @param bootId The SSDP packet's boot ID of the specific device
  * @param extraHeaders Manufacturer-added headers that were parsed in the SSDP packet
  */
-sealed class MediaPacket(
+internal sealed class MediaPacket(
     open val host: MediaHost,
     open val notificationType: NotificationType,
     open val usn: UniqueServiceName,
@@ -34,7 +34,7 @@ sealed class MediaPacket(
  * @param searchPort The port number to use when sending unicast messages to this device
  * @param secureLocation Secure XML endpoint parsed from the SSDP packet
  */
-data class AliveMediaPacket(
+internal data class AliveMediaPacket(
     override val host: MediaHost,
     val cache: Int,
     val location: URL,
@@ -63,7 +63,7 @@ data class AliveMediaPacket(
  * @param searchPort The port number to use when sending unicast messages to this device
  * @param secureLocation Secure XML endpoint parsed from the SSDP packet
  */
-data class UpdateMediaPacket(
+internal data class UpdateMediaPacket(
     override val host: MediaHost,
     val location: URL,
     override val notificationType: NotificationType,
@@ -87,7 +87,7 @@ data class UpdateMediaPacket(
  *
  * @param notificationSubtype The SSDP packet's [NotificationSubtype] - in this case, BYEBYE
  */
-data class ByeByeMediaPacket(
+internal data class ByeByeMediaPacket(
     override val host: MediaHost,
     override val notificationType: NotificationType,
     val notificationSubtype: NotificationSubtype = NotificationSubtype.BYEBYE,
@@ -113,7 +113,7 @@ data class ByeByeMediaPacket(
  * @param searchPort The port number to use when sending unicast messages to this device
  * @param secureLocation Secure XML endpoint parsed from the SSDP packet
  */
-data class SearchResponseMediaPacket(
+internal data class SearchResponseMediaPacket(
     val cache: Int,
     val date: String,
     val ext: String = "",

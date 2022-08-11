@@ -16,7 +16,7 @@ import java.net.URL
  * the valid header set and figures out which parser to invoke in accordance to the [NotificationSubtype]
  * field.
  */
-abstract class MediaPacketParser {
+internal abstract class MediaPacketParser {
 
     abstract fun parseMediaPacket(): MediaPacket
 

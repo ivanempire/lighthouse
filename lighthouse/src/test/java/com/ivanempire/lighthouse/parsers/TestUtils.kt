@@ -58,7 +58,7 @@ object TestUtils {
     /**
      * Generates an instance of [AliveMediaPacket]
      */
-    fun generateAlivePacket(
+    internal fun generateAlivePacket(
         deviceUUID: UUID,
         uniqueServiceName: UniqueServiceName? = null
     ): AliveMediaPacket {
@@ -79,7 +79,7 @@ object TestUtils {
     /**
      *
      */
-    fun generateUpdatePacket(
+    internal fun generateUpdatePacket(
         deviceUUID: UUID,
         location: URL = URL("http://192.168.2.50:58121/"),
         uniqueServiceName: UniqueServiceName? = null,
@@ -100,7 +100,7 @@ object TestUtils {
         )
     }
 
-    fun generateByeByePacket(
+    internal fun generateByeByePacket(
         deviceUUID: UUID,
         uniqueServiceName: UniqueServiceName? = null,
         bootId: Int = 100,

@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
  * All socket listeners should conform to this interface in order to set up their sockets, listen
  * for network packets, and release their resources once discovery has stopped
  */
-interface SocketListener {
+internal interface SocketListener {
 
     /**
      * Creates and returns an instance of a [MulticastSocket] in order to set everything up for

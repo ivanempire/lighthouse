@@ -109,6 +109,15 @@ An easy litmus test is to call this method while your device is in airplane mode
 ### R8 / ProGuard
 Lighthosue is fully compatible with the standard shrinking tools and does not require any additional rules. The only two dependencies are Kotlin Coroutines and AndroidX Core.
 
+## Upcoming work
+Lighthouse has just reached version `1.0.0` and there are plenty of improvements coming down the pipe. In no particular order, here's a list of incoming features or bug fixes:
+
+- **Custom logging**: Lighthouse contains some log statements that will help with initial debugging. The R8 rules will strip out everything that isn't `Log.w()` or `Log.e()`. However, allowing users to set a custom logger would be ideal - for example, having a method on the `LighthouseClient` builder like `.setLogger(object: LighthouseLogger {...})` that will allow you to choose which log levels should print, and which should be ignored.
+- **Better diffing**: Lighthouse could be smarter in the way it updates the device list. Currently, the entire `AbridgedMediaDevice` object is replaced in the state list. A patch for this may come from the consumer side - implement a custom `DiffUtil` class. However, it would be preferable for Lighthouse to handle this logic - partial updates, or a built-in differ.
+- **Unicast bug**: Discovered rather late in the game, but Lighthouse will show you all devices on the network, even if you're only looking for a specific one. Look, we're just THAT good. The packet parsing mechanism should take into account the search request and filter out anything that isn't relevant to the sent out M-SEARCH request. 
+- **Multihome support**: An SSDP-capable device is able to advertise over all connected sockets. Similarly, it is possible for Lighthouse to be set up in such a way that it listens for multicast messages across all sockets on the device it's running on.
+- **Retry mechanism**: SSDP relies on UDP for packet sending, and this is, by design, an unreliable protocol. Currently Lighthouse sends out one search message and hopes that responses come back. It would be a good idea to implement a default retry mechanism, and allow users to specify the number of retries for packet sending.
+
 ## License
 
     Copyright 2022 Lighthouse Contributors

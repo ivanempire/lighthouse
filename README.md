@@ -1,6 +1,6 @@
 <div align="center">
 
-<a href="">[![Maven Central](https://img.shields.io/maven-central/v/com.ivanempire/lighthouse)](https://search.maven.org/artifact/com.ivanempire/lighthouse)</a>
+<a href="">[![Maven Central](https://img.shields.io/maven-central/v/com.ivanempire/lighthouse?color=informational)](https://search.maven.org/artifact/com.ivanempire/lighthouse)</a>
 <a href="">![Build Status](https://github.com/ivanempire/lighthouse/actions/workflows/continuous-integration.yml/badge.svg)</a>
 <a href="">![Issues](https://img.shields.io/github/issues/ivanempire/lighthouse)</a>
 <a href="">![License](https://img.shields.io/github/license/ivanempire/lighthouse)</a>
@@ -27,7 +27,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.ivanempire:lighthouse:0.9.9")
+    implementation("com.ivanempire:lighthouse:1.0.0")
 }
 ```
 

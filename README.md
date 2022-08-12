@@ -10,13 +10,13 @@
     <img src="banner.png" alt="Lighthouse banner" width="800px" />
 </p>
 
-Lighthouse is an open-source Android library which facilitates the discovery of SSDP devices found on your network. It does this by supporting the sending of unicast and multicast search messages, as well as listening to all packets that may be transmitted to the multicast group. Lighthouse is built in accordance with the [UPnP Device Architecture 2.0](https://openconnectivity.org/upnp-specs/UPnP-arch-DeviceArchitecture-v2.0-20200417.pdf).
+Lighthouse is an open-source Android library which facilitates the discovery of SSDP devices connected to your network. It does this by supporting the sending of unicast and multicast search messages, as well as listening to all packets that may be sent to the multicast group. Lighthouse is built in accordance with the [UPnP Device Architecture 2.0](https://openconnectivity.org/upnp-specs/UPnP-arch-DeviceArchitecture-v2.0-20200417.pdf) specification.
 
 Features at a glance:
-
+ 
 - **State management**: Lighthouse tracks the state of all devices found on your network. The moment a device (or any of its embedded components) changes, the list gets updated and emitted to the consumer.
 - **Search models**: Lighthouse exposes models for sending unicast and multicast M-SEARCH messages to the multicast group. No more tedious string concatenations: it does that for you!
-- **Modern stack**: Lighthouse is written using Kotlin and leverages Kotlin Coroutines. It is also grass-fed. 
+- **Modern stack**: Lighthouse is written using Kotlin and leverages Kotlin Coroutines.
 
 ## Download
 Lighthouse is published to `mavenCentral()`, so you can add it to your Android project like so:
@@ -27,7 +27,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.ivanempire:lighthouse:1.0.0")
+    implementation("com.ivanempire:lighthouse:0.9.9")
 }
 ```
 
@@ -48,7 +48,7 @@ suspend fun startDiscovery() {
 ```
 
 ## Searching for devices
-There are two types of search messages (also known as M-SEARCH) one may send to a multicast group: unicast and multicast. A unicast message is one that is sent to a specific device on the network. The search criteria is rather narrow, and so only 1 device will respond. A multicast message, on the other hand, is like an all-points bulletin: every single device that matches the more-generic search criteria will respond.
+There are two types of search messages (also known as M-SEARCH) one may send to a multicast group: unicast and multicast. A unicast message is one that is sent to a specific device on the network since the search criteria is rather narrow. A multicast message, on the other hand, is like an all-points bulletin: every single device that matches the more-generic search criteria will respond.
 
 For example, the default search request, found [here](lighthouse/src/main/java/com/ivanempire/lighthouse/models/Constants.kt#L33), is a multicast message with a search target of `ssdp:all`. Lighthouse sets this up as an implicit argument to `discoverDevices()`. The corresponding string is:
 
@@ -87,11 +87,11 @@ Checkout the documentation for [`MulticastSearchRequest.kt`](lighthouse/src/main
 Unfortunately, SSDP is not an enforced protocol. As a result, every single manufacturer may add or drop headers from the network packets, save for the official HTTP start line. To simplify things somewhat, Lighthouse follows the [UPnP Device Architecture 2.0](https://openconnectivity.org/upnp-specs/UPnP-arch-DeviceArchitecture-v2.0-20200417.pdf) specification as closely as it can. However, if you are seeing some missing information, or if the device list is not behaving as expected, here are some debugging notes to consider:
 
 - **Defaults**: [`Constants.kt`](lighthouse/src/main/java/com/ivanempire/lighthouse/models/Constants.kt) contains all of the default values that Lighthouse will use if a device is not advertising a specific field in an SSDP packet. For example, if an `ssdp:alive` packet does not contain a `bootId`, the parser will set a default value of `-1`. Similarly, `cache-control` defaults to 1800 seconds (30 minutes), and missing `location` URLs default to `127.0.0.1`. [`MediaDeviceServer.kt`](lighthouse/src/main/java/com/ivanempire/lighthouse/models/devices/MediaDeviceServer.kt) gets a special shoutout due the finicky format required by UPnP. All fields default to `N/A`, and the error in parsing will be logged as a warning.
-- **UUIDs**: Lighthouse groups devices and their embedded components (embedded devices and services) by the advertised UUID. However, some devices advertise each embedded component with a different UUID - usually off by 1 or 2. This is not something that's easy to fix, however, file a bug if you're seeing this and maybe we can discuss a solution! On the other hand, if a device is not advertising a UUID (or is advertising an invalid one), a zeroed-out value will be assigned to the packet. All packets under a zeroed-out UUID are grouped together in the device list as a "proper" device.
-- **Special headers**: If you're looking for manufacturer-specific data, then checkout `AbridgedMediaDevice.extraHeaders` - they will be located there. Similarly, additional official headers parsed outside of their proper packets will also be found there. For example, an `ssdp:update` packet does not typically contain a `cache-control` field. However, if your devices add it to said packet, the parser will simply put it into `extraHeaders`.
+- **UUIDs**: Lighthouse groups devices and their embedded components (embedded devices and services) by the advertised UUID. However, some devices advertise each embedded component with a different UUID - usually off by 1 or 2. This is not something that's easy to fix, however, file a bug if you're seeing this and maybe we can discuss a solution! On the other hand, if a device is not advertising a UUID (or is advertising an invalid one), a zeroed-out value will be assigned to the packet. Said packets will be parsed as usual, but will show up under the zeroed-out UUID in the final device list.
+- **Special headers**: If you're looking for manufacturer-specific data, then checkout [`AbridgedMediaDevice.extraHeaders`](lighthouse/src/main/java/com/ivanempire/lighthouse/models/devices/MediaDevice.kt#L38) - they will be located there. Similarly, official headers parsed outside of their proper packets will also be found there. For example, an `ssdp:update` packet does not typically contain a `cache-control` field. However, if your devices add it to said packet, the parser will simply put it into `extraHeaders`.
 
 ### Exception handling
-Kotlin Coroutines are, for the most part, absolutely fantastic for asynchronous programming. However, one area of increased complexity is exception handling. It's worth pointing out that [`RealSocketListener.kt`](lighthouse/src/main/java/com/ivanempire/lighthouse/socket/RealSocketListener.kt) may throw exceptions: IOException or SocketException, depending on what goes wrong when setting up the MulticastSocket. As a result, it's a good idea to wrap the Lighthouse call in either a [runCatching](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/run-catching.html) lambda, or use a [SupervisorJob](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-supervisor-job.html). For example:
+Kotlin Coroutines are, for the most part, absolutely fantastic for asynchronous programming. However, one area of increased complexity is exception handling. It's worth pointing out that [`RealSocketListener.kt`](lighthouse/src/main/java/com/ivanempire/lighthouse/socket/RealSocketListener.kt) may throw exceptions: IOException or SocketException, depending on what goes wrong when setting up the MulticastSocket. As a result, it's a good idea to wrap the Lighthouse discovery call in either a [runCatching](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/run-catching.html) lambda, or use a [SupervisorJob](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-supervisor-job.html). For example:
 
 ```kotlin
 class MyViewModel: ViewModel() {
@@ -111,10 +111,10 @@ An easy litmus test is to call this method while your device is in airplane mode
 Lighthouse is fully compatible with the standard shrinking tools and does not require any additional rules. The only two dependencies are Kotlin Coroutines and AndroidX Core.
 
 ## Upcoming work
-Lighthouse has just reached version `1.0.0` and there are plenty of improvements coming down the pipe. In no particular order, here's a list of incoming features or bug fixes:
+Lighthouse has just reached version `1.0.0`, so there are plenty of improvements coming down the pipe. In no particular order, here's a list of incoming features and bug fixes:
 
 - **Custom logging**: Lighthouse contains some log statements that will help with initial debugging. The R8 rules will strip out everything that isn't `Log.w()` or `Log.e()`. However, allowing users to set a custom logger would be ideal - for example, having a method on the `LighthouseClient` builder like `.setLogger(object: LighthouseLogger {...})` that will allow you to choose which log levels should print, and which should be ignored.
-- **Better diffing**: Lighthouse could be smarter in the way it updates the device list. Currently, the entire `AbridgedMediaDevice` object is replaced in the state list. A patch for this may come from the consumer side - implement a custom `DiffUtil` class. However, it would be preferable for Lighthouse to handle this logic - partial updates, or a built-in differ.
+- **Better diffing**: Lighthouse could be smarter in the way it updates the device list. Currently, each instance of an `AbridgedMediaDevice` is replaced in the list. A patch for this may come from the consumer side - implement a custom `DiffUtil` class. However, it would be preferable for Lighthouse to handle this logic via partial updates, or a built-in differ.
 - **Unicast bug**: Discovered rather late in the game, but Lighthouse will show you all devices on the network, even if you're only looking for a specific one. Look, we're just THAT good. The packet parsing mechanism should take into account the search request and filter out anything that isn't relevant to the sent out M-SEARCH request. 
 - **Multihome support**: An SSDP-capable device is able to advertise over all connected sockets. Similarly, it is possible for Lighthouse to be set up in such a way that it listens for multicast messages across all sockets on the device it's running on.
 - **Retry mechanism**: SSDP relies on UDP for packet sending, and this is, by design, an unreliable protocol. Currently Lighthouse sends out one search message and hopes that responses come back. It would be a good idea to implement a default retry mechanism, and allow users to specify the number of retries for packet sending.

@@ -9,6 +9,7 @@ import com.ivanempire.lighthouse.models.Constants.DEFAULT_SEARCH_REQUEST
 import com.ivanempire.lighthouse.models.devices.AbridgedMediaDevice
 import com.ivanempire.lighthouse.models.search.SearchRequest
 import com.ivanempire.lighthouse.socket.RealSocketListener
+import java.lang.IllegalStateException
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -21,12 +22,21 @@ interface LighthouseClient {
 
         private val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
 
-        private val socketListener = RealSocketListener(wifiManager)
+        private var retryCount = 1
+
+        private val socketListener = RealSocketListener(wifiManager, retryCount)
 
         private val discoveryManager = RealDiscoveryManager(
             LighthouseState(),
             socketListener
         )
+
+        fun setRetryCount(retryCount: Int) = apply {
+            assert(retryCount > 0) {
+                IllegalStateException("Retry count must be greater than 0")
+            }
+            this.retryCount += retryCount
+        }
 
         fun build(): LighthouseClient {
             return RealLighthouseClient(discoveryManager)

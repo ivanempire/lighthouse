@@ -17,7 +17,8 @@ import kotlinx.coroutines.isActive
 
 /** Specific implementation of [SocketListener] */
 internal class RealSocketListener(
-    private val wifiManager: WifiManager
+    private val wifiManager: WifiManager,
+    private val retryCount: Int
 ) : SocketListener {
 
     private val multicastLock: WifiManager.MulticastLock by lazy {
@@ -56,7 +57,10 @@ internal class RealSocketListener(
             multicastSocket.use {
                 val datagramPacketRequest = searchRequest.toDatagramPacket(multicastGroup)
 
-                it.send(datagramPacketRequest)
+                repeat(retryCount) {
+                    multicastSocket.send(datagramPacketRequest)
+                }
+
                 while (currentCoroutineContext().isActive) {
                     val discoveryBuffer = ByteArray(MULTICAST_DATAGRAM_SIZE)
                     val discoveryDatagram = DatagramPacket(discoveryBuffer, discoveryBuffer.size)

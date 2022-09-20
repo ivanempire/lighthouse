@@ -31,6 +31,12 @@ interface LighthouseClient {
             socketListener
         )
 
+        /**
+         * Specify a retry count in the off-chance the network packet is not received by the
+         * multicast group due to the nature of UDP
+         *
+         * @param retryCount Number of times to retry sending an SSDP search packet, must be > 0
+         */
         fun setRetryCount(retryCount: Int) = apply {
             assert(retryCount > 0) {
                 IllegalStateException("Retry count must be greater than 0")

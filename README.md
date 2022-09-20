@@ -37,7 +37,10 @@ Alternatively, if you're not about that life, feel free to either clone this rep
 To get started with Lighthouse, simply build an instance of `LighthouseClient` and call the `discoverDevices()` suspending function:
 
 ```kotlin
-val lighthouseClient = LighthouseClient.Builder(context).build()
+val lighthouseClient = LighthouseClient
+    .Builder(context)
+    .setRetryCount(3) // Optional: Retry sending packets 3 times (4 packets will be sent in total)
+    .build()
 
 suspend fun startDiscovery() {
     lighthouseClient.discoverDevices()

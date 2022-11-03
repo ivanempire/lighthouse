@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.1.1] November 3rd 2022
+## [1.1.1] - November 3rd 2022
 - **New**: Optimized device list emissions to not emit every second due to periodic stale device check. Updates will now be sent only if a device comes online, gets updated, or goes offline.
 
 ## [1.0.1] - September 20th 2022

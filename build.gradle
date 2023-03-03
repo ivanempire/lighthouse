@@ -12,7 +12,7 @@ buildscript {
 ext {
 
     minSdk = 21
-    targetSdk = 31
+    targetSdk = 33
 
     groupId = "com.ivanempire"
     artifactId = "lighthouse"

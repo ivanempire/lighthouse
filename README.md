@@ -123,7 +123,7 @@ In no particular order, here's a list of incoming features and bug fixes:
 
 ## License
 
-    Copyright 2022 Lighthouse Contributors
+    Copyright 2023 Lighthouse Contributors
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

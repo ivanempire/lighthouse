@@ -6,9 +6,13 @@
 <a href="">![License](https://img.shields.io/github/license/ivanempire/lighthouse)</a>
 
 </div>
-<p align="center">
-    <img src="banner.png" alt="Lighthouse banner" width="800px" />
-</p>
+<div align="center">
+<picture>
+    <source media="(prefers-color-scheme: dark)" srcset="banner-dark.png" width="800px">
+    <source media="(prefers-color-scheme: light)" srcset="banner-light.png" width="800px">
+    <img src="banner-light.png" alt="Lighthouse banner" width="800px" />
+</picture>
+</div>
 
 Lighthouse is an open-source Android library which facilitates the discovery of SSDP devices connected to your network. It does this by supporting the sending of unicast and multicast search messages, as well as listening to all packets that may be sent to the multicast group. Lighthouse is built in accordance with the [UPnP Device Architecture 2.0](https://openconnectivity.org/upnp-specs/UPnP-arch-DeviceArchitecture-v2.0-20200417.pdf) specification.
 
@@ -136,3 +140,6 @@ In no particular order, here's a list of incoming features and bug fixes:
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
+
+## Credits
+Thank you to [Tyler Nickerson](https://dribbble.com/TylerNickerson) and [Yulia Biziaeva](https://www.behance.net/busyjey) for their combined efforts on the Lighthouse logo.

@@ -42,12 +42,14 @@ afterEvaluate {
                 }
             }
         }
-        repositories {
-            maven {
-                url sonatypeUrl
-                credentials  {
-                    username = sonatypeUsername
-                    password = sonatypePassword
+        if (binding.hasVariable('sonatypeUrl')) {
+            repositories {
+                maven {
+                    url sonatypeUrl
+                    credentials {
+                        username = sonatypeUsername
+                        password = sonatypePassword
+                    }
                 }
             }
         }

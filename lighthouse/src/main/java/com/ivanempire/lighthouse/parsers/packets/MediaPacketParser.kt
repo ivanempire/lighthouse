@@ -27,6 +27,7 @@ internal abstract class MediaPacketParser {
      * @return Returns URL of the XML endpoint, or a loopback value if [MalformedURLException] is thrown
      */
     internal fun parseUrl(rawValue: String?): URL {
+        if (rawValue == null) return NOT_AVAILABLE_LOCATION
         return try {
             URL(rawValue)
         } catch (ex: MalformedURLException) {

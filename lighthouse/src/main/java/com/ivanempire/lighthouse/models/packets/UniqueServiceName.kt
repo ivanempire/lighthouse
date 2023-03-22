@@ -2,30 +2,34 @@ package com.ivanempire.lighthouse.models.packets
 
 import com.ivanempire.lighthouse.models.Constants.DEVICE_MARKER
 import com.ivanempire.lighthouse.models.Constants.NOT_AVAILABLE_UUID
-import com.ivanempire.lighthouse.models.Constants.REGEX_UUID
 import com.ivanempire.lighthouse.models.Constants.SERVICE_MARKER
 import com.ivanempire.lighthouse.models.Constants.UPNP_SCHEMA_MARKER
 import com.ivanempire.lighthouse.models.Constants.URN_MARKER
-import java.util.UUID
 
 /**
- * Wrapper class around an SSDP packet's USN field. This parses the string value and figures out if
- * the packet is intended to update the root device, an embedded device, or an embedded service. The
- * decision is made based on key markers present in the raw string
- *
- * @param uuid The unique identifier of the root device
- * @param bootId The boot ID of the target device or embedded component
+ * Wrapper class around an SSDP packet's USN field.
  */
-abstract class UniqueServiceName(
-    open val uuid: UUID,
-    open val bootId: Int
-) {
+interface UniqueServiceName{
+    val uuid: String
+    val bootId: Int
+
     companion object {
+        /**
+         * This parses the string value and figures out if the packet is intended to update
+         * the root device, an embedded device, or an embedded service. The
+         * decision is made based on key markers present in the raw string
+         *
+         * @param rawValue The value provided by the USN header
+         * @param bootId The boot ID of the target device or embedded component
+         */
         operator fun invoke(rawValue: String, bootId: Int): UniqueServiceName {
+            val segments = rawValue.split(":")
+            val uuid = segments.getOrNull(1) ?: NOT_AVAILABLE_UUID.toString()
+
             // If a URN marker is present, chances are the USN is targeting the root device
             val isRootMessage = rawValue.indexOf(URN_MARKER) == -1 && rawValue.isNotEmpty()
             if (isRootMessage) {
-                return RootDeviceInformation(rawValue.parseUuid(), bootId)
+                return RootDeviceInformation(uuid , bootId)
             }
 
             // If a device marker is present, chances are the USN is targeting an embedded device
@@ -33,7 +37,7 @@ abstract class UniqueServiceName(
             if (isDeviceMessage) {
                 val deviceInfoPair = rawValue.createPair(DEVICE_MARKER)
                 return EmbeddedDevice(
-                    uuid = rawValue.parseUuid(),
+                    uuid = uuid,
                     bootId = bootId,
                     deviceType = deviceInfoPair.first,
                     deviceVersion = deviceInfoPair.second,
@@ -46,7 +50,7 @@ abstract class UniqueServiceName(
             if (isServiceMessage) {
                 val serviceInfoPair = rawValue.createPair(SERVICE_MARKER)
                 return EmbeddedService(
-                    uuid = rawValue.parseUuid(),
+                    uuid = uuid,
                     bootId = bootId,
                     serviceType = serviceInfoPair.first,
                     serviceVersion = serviceInfoPair.second,
@@ -55,7 +59,7 @@ abstract class UniqueServiceName(
             }
 
             // If everything else failed, create an empty root device target
-            return RootDeviceInformation(NOT_AVAILABLE_UUID, -1)
+            return RootDeviceInformation(uuid, -1)
         }
     }
 }
@@ -67,9 +71,9 @@ abstract class UniqueServiceName(
  * @param bootId The current boot ID of the root device
  */
 internal data class RootDeviceInformation(
-    override val uuid: UUID,
+    override val uuid: String,
     override val bootId: Int
-) : UniqueServiceName(uuid, bootId)
+) : UniqueServiceName
 
 /**
  * Data class indicating that the incoming USN is targeting the an embedded device
@@ -79,12 +83,12 @@ internal data class RootDeviceInformation(
  * @param domain Domain of the embedded device
  */
 data class EmbeddedDevice(
-    override val uuid: UUID,
+    override val uuid: String,
     override val bootId: Int,
     val deviceType: String,
     val deviceVersion: String,
     val domain: String? = null
-) : UniqueServiceName(uuid, bootId)
+) : UniqueServiceName
 
 /**
  * Data class indicating that the incoming USN is targeting the an embedded service
@@ -94,26 +98,12 @@ data class EmbeddedDevice(
  * @param domain Domain of the embedded service
  */
 data class EmbeddedService(
-    override val uuid: UUID,
+    override val uuid: String,
     override val bootId: Int,
     val serviceType: String,
     val serviceVersion: String,
     val domain: String? = null
-) : UniqueServiceName(uuid, bootId)
-
-/**
- * Attempts to match a UUID and return it
- *
- * @return Parsed UUID from USN string, zeroed-out default otherwise
- */
-private fun String.parseUuid(): UUID {
-    val uuidMatch = REGEX_UUID.find(this)
-    return if (uuidMatch != null) {
-        UUID.fromString(uuidMatch.value)
-    } else {
-        NOT_AVAILABLE_UUID
-    }
-}
+) : UniqueServiceName
 
 /**
  * Creates a string pair of embedded device or service information from the USN substring

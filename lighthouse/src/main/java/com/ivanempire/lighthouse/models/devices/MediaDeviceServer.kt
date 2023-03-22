@@ -33,7 +33,7 @@ data class MediaDeviceServer(
                         "#parseFromString",
                         "SERVER field not properly advertised as 'OS/version UPnP/2.0 product/version', was $rawValue"
                     )
-                    return MediaDeviceServer("N/A", "N/A", "N/A")
+                    MediaDeviceServer("N/A", "N/A", "N/A")
                 }
             }
         }

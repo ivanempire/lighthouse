@@ -80,8 +80,10 @@ internal class LighthouseState {
             deviceList.add(baseDevice)
         } else {
             // Update the existing device
+            deviceList.remove(targetDevice)
             targetDevice = targetDevice.copy(latestTimestamp = System.currentTimeMillis())
             targetDevice.updateEmbeddedComponent(targetComponent)
+            deviceList.add(targetDevice)
         }
         targetDevice?.extraHeaders?.putAll(latestPacket.extraHeaders)
         return deviceList
@@ -116,23 +118,23 @@ internal class LighthouseState {
             baseDevice.updateEmbeddedComponent(targetComponent)
             deviceList.add(baseDevice)
         } else {
+            deviceList.remove(targetDevice)
             targetDevice = targetDevice.copy(latestTimestamp = System.currentTimeMillis())
             when (targetComponent) {
                 // ALIVE came first, UPDATE for root should only update certain fields
                 // cache and server are not affected
                 is RootDeviceInformation -> {
-                    val updatedDevice = targetDevice.copy(
+                    targetDevice = targetDevice.copy(
                         bootId = latestPacket.bootId,
                         configId = latestPacket.configId,
                         searchPort = latestPacket.searchPort,
                         location = latestPacket.location,
                         secureLocation = latestPacket.secureLocation,
                     )
-                    deviceList.remove(targetDevice)
-                    deviceList.add(updatedDevice)
                 }
                 else -> targetDevice.updateEmbeddedComponent(targetComponent)
             }
+            deviceList.add(targetDevice)
         }
         targetDevice?.extraHeaders?.putAll(latestPacket.extraHeaders)
         return deviceList

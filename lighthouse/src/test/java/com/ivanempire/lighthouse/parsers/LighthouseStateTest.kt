@@ -124,8 +124,8 @@ class LighthouseStateTest {
 
         assertTrue(finalList.isNotEmpty())
         assertEquals(3, finalList.size)
-        assertTrue(finalList[0].deviceList.isEmpty())
-        assertTrue(finalList[1].serviceList.isNotEmpty())
+        assertTrue(finalList.first { it.uuid == RANDOM_UUID_1.toString() }.deviceList.isEmpty())
+        assertTrue(finalList.first { it.uuid == RANDOM_UUID_2.toString() }.serviceList.isNotEmpty())
         assertEquals(
             EmbeddedService(
                 RANDOM_UUID_1.toString(),
@@ -133,7 +133,7 @@ class LighthouseStateTest {
                 "RenderingControl",
                 "3.0"
             ),
-            finalList[0].serviceList[0]
+            finalList.first { it.uuid == RANDOM_UUID_1.toString() }.serviceList[0]
         )
         assertEquals(
             EmbeddedDevice(
@@ -142,7 +142,7 @@ class LighthouseStateTest {
                 "RenderingControl",
                 "3.0"
             ),
-            finalList[2].deviceList[0]
+            finalList.first { it.uuid == RANDOM_UUID_3.toString() }.deviceList[0]
         )
     }
 

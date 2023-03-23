@@ -8,9 +8,9 @@ import com.ivanempire.lighthouse.socket.SocketListener
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.isActive
 
 /**
@@ -26,10 +26,8 @@ internal class RealDiscoveryManager(
 
     override fun createNewDeviceFlow(searchRequest: SearchRequest): Flow<List<AbridgedMediaDevice>> {
         return multicastSocketListener.listenForPackets(searchRequest)
-            .map { DatagramPacketTransformer(it) }
-            .filterNotNull()
-            .map { MediaPacketParser(it) }
-            .filterNotNull()
+            .mapNotNull { DatagramPacketTransformer(it) }
+            .mapNotNull { MediaPacketParser(it) }
             .map { lighthouseState.parseMediaPacket(it) }
     }
 

@@ -11,7 +11,7 @@ import com.ivanempire.lighthouse.models.packets.UniqueServiceName
 
 /** Parses incoming ssdp:byebye media packets */
 internal class ByeByeMediaPacketParser(
-    private val headerSet: HashMap<String, String>
+    private val headerSet: HashMap<String, String>,
 ) : MediaPacketParser() {
 
     private val host: MediaHost by lazy {
@@ -36,7 +36,7 @@ internal class ByeByeMediaPacketParser(
             notificationType = notificationType,
             usn = uniqueServiceName,
             bootId = bootId,
-            configId = configId
+            configId = configId,
         )
     }
 }

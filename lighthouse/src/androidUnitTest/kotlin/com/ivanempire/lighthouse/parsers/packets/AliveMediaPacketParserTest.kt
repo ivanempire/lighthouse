@@ -13,10 +13,10 @@ import com.ivanempire.lighthouse.parsers.packets.AliveMediaPacketParserTest.Fixt
 import com.ivanempire.lighthouse.parsers.packets.AliveMediaPacketParserTest.Fixtures.VALID_ALIVE_PACKET_HEADER_SET_1
 import com.ivanempire.lighthouse.parsers.packets.AliveMediaPacketParserTest.Fixtures.VALID_ALIVE_PACKET_HEADER_SET_2
 import com.ivanempire.lighthouse.parsers.packets.AliveMediaPacketParserTest.Fixtures.VALID_ALIVE_PACKET_HEADER_SET_3
-import org.junit.Assert.assertEquals
-import org.junit.Test
 import java.net.InetAddress
 import java.net.URL
+import org.junit.Assert.assertEquals
+import org.junit.Test
 
 /** Tests [AliveMediaPacketParser] */
 class AliveMediaPacketParserTest {
@@ -54,9 +54,9 @@ class AliveMediaPacketParserTest {
         assertEquals(
             RootDeviceInformation(
                 uuid = "3f8744cd-30bf-4fc9-8a42-bad80ae660c1",
-                bootId = -1
+                bootId = -1,
             ),
-            parsedPacket.usn
+            parsedPacket.usn,
         )
         assertEquals(-1, parsedPacket.bootId)
         assertEquals(-1, parsedPacket.configId)
@@ -73,32 +73,32 @@ class AliveMediaPacketParserTest {
         assertEquals(1800, parsedPacket.cache)
         assertEquals(
             URL("http://192.168.1.190:8091/b9783ad2-d548-9793-0eb9-42db373ade07.xml"),
-            parsedPacket.location
+            parsedPacket.location,
         )
         assertEquals(
             MediaDeviceServer("Linux/3.18.71+", "UPnP/1.0", "GUPnP/1.0.5"),
-            parsedPacket.server
+            parsedPacket.server,
         )
         assertEquals(NotificationSubtype.ALIVE, parsedPacket.notificationSubtype)
         assertEquals(
             NotificationType("urn:schemas-upnp-org:service:RenderingControl:1"),
-            parsedPacket.notificationType
+            parsedPacket.notificationType,
         )
         assertEquals(
             EmbeddedService(
                 uuid = "b9783ad2-d548-9793-0eb9-42db373ade07",
                 bootId = 11,
                 serviceType = "RenderingControl",
-                serviceVersion = "1"
+                serviceVersion = "1",
             ),
-            parsedPacket.usn
+            parsedPacket.usn,
         )
         assertEquals(11, parsedPacket.bootId)
         assertEquals(120, parsedPacket.configId)
         assertEquals(1900, parsedPacket.searchPort)
         assertEquals(
             URL("https://192.168.1.190:8091/b9783ad2-d548-9793-0eb9-42db373ade07.xml"),
-            parsedPacket.secureLocation
+            parsedPacket.secureLocation,
         )
     }
 
@@ -112,21 +112,21 @@ class AliveMediaPacketParserTest {
         assertEquals(URL("http://127.0.0.1:58122/"), parsedPacket.location)
         assertEquals(
             MediaDeviceServer("N/A", "N/A", "N/A"),
-            parsedPacket.server
+            parsedPacket.server,
         )
         assertEquals(NotificationSubtype.ALIVE, parsedPacket.notificationSubtype)
         assertEquals(
             NotificationType("urn:schemas-upnp-org:service:SwitchPower:1"),
-            parsedPacket.notificationType
+            parsedPacket.notificationType,
         )
         assertEquals(
             EmbeddedService(
                 uuid = "3f8744cd-30bf-4fc9-8a42-bad80ae660c1",
                 bootId = 156,
                 serviceType = "SwitchPower",
-                serviceVersion = "1"
+                serviceVersion = "1",
             ),
-            parsedPacket.usn
+            parsedPacket.usn,
         )
         assertEquals(156, parsedPacket.bootId)
         assertEquals(144, parsedPacket.configId)
@@ -144,21 +144,21 @@ class AliveMediaPacketParserTest {
         assertEquals(URL("http://192.168.2.50:58121/"), parsedPacket.location)
         assertEquals(
             MediaDeviceServer("N/A", "N/A", "N/A"),
-            parsedPacket.server
+            parsedPacket.server,
         )
         assertEquals(NotificationSubtype.ALIVE, parsedPacket.notificationSubtype)
         assertEquals(
             NotificationType("urn:schemas-upnp-org:service:Dimming:1"),
-            parsedPacket.notificationType
+            parsedPacket.notificationType,
         )
         assertEquals(
             EmbeddedService(
                 uuid = "3f8744cd-30bf-4fc9-8a42-bad80ae660c1",
                 bootId = 5,
                 serviceType = "Dimming",
-                serviceVersion = "1"
+                serviceVersion = "1",
             ),
-            parsedPacket.usn
+            parsedPacket.usn,
         )
         assertEquals(5, parsedPacket.bootId)
         assertEquals(200, parsedPacket.configId)
@@ -175,7 +175,7 @@ class AliveMediaPacketParserTest {
             HeaderKeys.NOTIFICATION_SUBTYPE to "ssdp:alive",
             HeaderKeys.UNIQUE_SERVICE_NAME to "uuid:3f8744cd-30bf-4fc9-8a42-bad80ae660c1::upnp:rootdevice",
             HeaderKeys.SERVER to "Windows NT/5.0, UPnP/1.0",
-            HeaderKeys.LOCATION to "http://192.168.2.50:58121/"
+            HeaderKeys.LOCATION to "http://192.168.2.50:58121/",
         )
 
         val VALID_ALIVE_PACKET_HEADER_SET_1 = hashMapOf(
@@ -189,7 +189,7 @@ class AliveMediaPacketParserTest {
             HeaderKeys.BOOT_ID to "11",
             HeaderKeys.CONFIG_ID to "120",
             HeaderKeys.SEARCH_PORT to "1900",
-            HeaderKeys.SECURE_LOCATION to "https://192.168.1.190:8091/b9783ad2-d548-9793-0eb9-42db373ade07.xml"
+            HeaderKeys.SECURE_LOCATION to "https://192.168.1.190:8091/b9783ad2-d548-9793-0eb9-42db373ade07.xml",
         )
 
         val VALID_ALIVE_PACKET_HEADER_SET_2 = hashMapOf(
@@ -203,7 +203,7 @@ class AliveMediaPacketParserTest {
             HeaderKeys.BOOT_ID to "156",
             HeaderKeys.CONFIG_ID to "144",
             HeaderKeys.SEARCH_PORT to "1900",
-            HeaderKeys.SECURE_LOCATION to "https://127.0.0.1:58122/"
+            HeaderKeys.SECURE_LOCATION to "https://127.0.0.1:58122/",
         )
 
         val VALID_ALIVE_PACKET_HEADER_SET_3 = hashMapOf(
@@ -217,7 +217,7 @@ class AliveMediaPacketParserTest {
             HeaderKeys.BOOT_ID to "5",
             HeaderKeys.CONFIG_ID to "200",
             HeaderKeys.SEARCH_PORT to "2100",
-            HeaderKeys.SECURE_LOCATION to "https://192.168.2.50:58121/"
+            HeaderKeys.SECURE_LOCATION to "https://192.168.2.50:58121/",
         )
     }
 }

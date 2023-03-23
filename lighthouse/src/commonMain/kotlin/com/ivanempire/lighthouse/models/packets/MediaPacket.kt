@@ -21,7 +21,7 @@ internal sealed class MediaPacket(
     open val usn: UniqueServiceName,
     open val configId: Int,
     open val bootId: Int,
-    val extraHeaders: HashMap<String, String> = hashMapOf()
+    val extraHeaders: HashMap<String, String> = hashMapOf(),
 )
 
 /**
@@ -45,13 +45,13 @@ internal data class AliveMediaPacket(
     override val bootId: Int,
     override val configId: Int,
     val searchPort: Int?,
-    val secureLocation: URL?
+    val secureLocation: URL?,
 ) : MediaPacket(
     host,
     notificationType,
     usn,
     bootId,
-    configId
+    configId,
 )
 
 /**
@@ -73,13 +73,13 @@ internal data class UpdateMediaPacket(
     override val configId: Int,
     val nextBootId: Int,
     val searchPort: Int?,
-    val secureLocation: URL?
+    val secureLocation: URL?,
 ) : MediaPacket(
     host,
     notificationType,
     usn,
     bootId,
-    configId
+    configId,
 )
 
 /**
@@ -93,13 +93,13 @@ internal data class ByeByeMediaPacket(
     val notificationSubtype: NotificationSubtype = NotificationSubtype.BYEBYE,
     override val usn: UniqueServiceName,
     override val bootId: Int,
-    override val configId: Int
+    override val configId: Int,
 ) : MediaPacket(
     host,
     notificationType,
     usn,
     bootId,
-    configId
+    configId,
 )
 
 /**
@@ -125,11 +125,11 @@ internal data class SearchResponseMediaPacket(
     override val configId: Int,
     val searchPort: Int,
     val secureLocation: URL,
-    override val host: MediaHost = DEFAULT_MEDIA_HOST
+    override val host: MediaHost = DEFAULT_MEDIA_HOST,
 ) : MediaPacket(
     host,
     notificationType,
     usn,
     bootId,
-    configId
+    configId,
 )

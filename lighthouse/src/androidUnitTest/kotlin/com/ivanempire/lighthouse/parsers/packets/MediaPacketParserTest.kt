@@ -73,22 +73,22 @@ class MediaPacketParserTest {
     object Fixtures {
         val ALIVE_PACKET_NTS_HEADER = hashMapOf(
             HeaderKeys.NOTIFICATION_SUBTYPE to "ssdp:alive",
-            HeaderKeys.UNIQUE_SERVICE_NAME to "uuid:3f8744cd-30bf-4fc9-8a42-bad80ae660c1::upnp:rootdevice"
+            HeaderKeys.UNIQUE_SERVICE_NAME to "uuid:3f8744cd-30bf-4fc9-8a42-bad80ae660c1::upnp:rootdevice",
         )
 
         val UPDATE_PACKET_NTS_HEADER = hashMapOf(
             HeaderKeys.NOTIFICATION_SUBTYPE to "ssdp:update",
-            HeaderKeys.UNIQUE_SERVICE_NAME to "uuid:3f8744cd-30bf-4fc9-8a42-bad80ae660c1::upnp:rootdevice"
+            HeaderKeys.UNIQUE_SERVICE_NAME to "uuid:3f8744cd-30bf-4fc9-8a42-bad80ae660c1::upnp:rootdevice",
         )
 
         val BYEBYE_PACKET_NTS_HEADER = hashMapOf(
             HeaderKeys.NOTIFICATION_SUBTYPE to "ssdp:byebye",
-            HeaderKeys.UNIQUE_SERVICE_NAME to "uuid:3f8744cd-30bf-4fc9-8a42-bad80ae660c1::upnp:rootdevice"
+            HeaderKeys.UNIQUE_SERVICE_NAME to "uuid:3f8744cd-30bf-4fc9-8a42-bad80ae660c1::upnp:rootdevice",
         )
 
         val INVALID_PACKET_NTS_HEADER = hashMapOf(
             HeaderKeys.NOTIFICATION_SUBTYPE to "ssdp:invalid",
-            HeaderKeys.UNIQUE_SERVICE_NAME to "uuid:3f8744cd-30bf-4fc9-8a42-bad80ae660c1::upnp:rootdevice"
+            HeaderKeys.UNIQUE_SERVICE_NAME to "uuid:3f8744cd-30bf-4fc9-8a42-bad80ae660c1::upnp:rootdevice",
         )
 
         val VALID_ALIVE_PACKET_HEADER_SET = hashMapOf(
@@ -103,7 +103,7 @@ class MediaPacketParserTest {
             HeaderKeys.CONFIG_ID to "200",
             HeaderKeys.SEARCH_PORT to "2100",
             HeaderKeys.SECURE_LOCATION to "https://192.168.2.50:58121/",
-            "Ecosystem.bose.com" to "ECO2"
+            "Ecosystem.bose.com" to "ECO2",
         )
 
         val VALID_ALIVE_PACKET_EXTRA_HEADER_SET = hashMapOf(
@@ -112,7 +112,7 @@ class MediaPacketParserTest {
             "Ecosystem.bose.com" to "ECO2",
             "custom.header.com" to "whatever",
             "microsoft.com" to "someValue",
-            "apple.com" to "-1"
+            "apple.com" to "-1",
         )
     }
 }

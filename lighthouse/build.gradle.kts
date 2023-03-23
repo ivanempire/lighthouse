@@ -3,7 +3,7 @@ plugins {
     kotlin("multiplatform")
     id("maven-publish")
     id("signing")
-    id("org.jlleitschuh.gradle.ktlint") version "10.2.1"
+    id("org.jlleitschuh.gradle.ktlint") version "11.3.1"
 }
 
 apply(from = "./ktlint.gradle")

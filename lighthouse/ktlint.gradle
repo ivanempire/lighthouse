@@ -1,5 +1,5 @@
 ktlint {
-    version = "0.45.2"
+    version = "0.48.2"
     debug = false
     verbose = true
     android = true
@@ -7,7 +7,6 @@ ktlint {
     outputColorName = "GREEN"
     ignoreFailures = false
     enableExperimentalRules = false
-    disabledRules = ["max-line-length"]
     kotlinScriptAdditionalPaths {
         include fileTree("scripts/")
     }

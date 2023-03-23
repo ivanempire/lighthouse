@@ -14,11 +14,15 @@ import com.ivanempire.lighthouse.models.packets.UniqueServiceName
  */
 internal fun AbridgedMediaDevice.updateEmbeddedComponent(latestComponent: UniqueServiceName) {
     if (latestComponent is EmbeddedDevice) {
-        val targetComponent = this.deviceList.firstOrNull { it.deviceType == latestComponent.deviceType }
+        val targetComponent = this.deviceList.firstOrNull {
+            it.deviceType == latestComponent.deviceType
+        }
         this.deviceList.remove(targetComponent)
         this.deviceList.add(latestComponent)
     } else if (latestComponent is EmbeddedService) {
-        val targetComponent = this.serviceList.firstOrNull { it.serviceType == latestComponent.serviceType }
+        val targetComponent = this.serviceList.firstOrNull {
+            it.serviceType == latestComponent.serviceType
+        }
         this.serviceList.remove(targetComponent)
         this.serviceList.add(latestComponent)
     }

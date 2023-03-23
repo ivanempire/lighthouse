@@ -9,7 +9,7 @@ import com.ivanempire.lighthouse.models.Constants.URN_MARKER
 /**
  * Wrapper class around an SSDP packet's USN field.
  */
-interface UniqueServiceName{
+interface UniqueServiceName {
     val uuid: String
     val bootId: Int
 
@@ -29,7 +29,7 @@ interface UniqueServiceName{
             // If a URN marker is present, chances are the USN is targeting the root device
             val isRootMessage = rawValue.indexOf(URN_MARKER) == -1 && rawValue.isNotEmpty()
             if (isRootMessage) {
-                return RootDeviceInformation(uuid , bootId)
+                return RootDeviceInformation(uuid, bootId)
             }
 
             // If a device marker is present, chances are the USN is targeting an embedded device
@@ -41,7 +41,7 @@ interface UniqueServiceName{
                     bootId = bootId,
                     deviceType = deviceInfoPair.first,
                     deviceVersion = deviceInfoPair.second,
-                    domain = rawValue.parseDomain()
+                    domain = rawValue.parseDomain(),
                 )
             }
 
@@ -54,7 +54,7 @@ interface UniqueServiceName{
                     bootId = bootId,
                     serviceType = serviceInfoPair.first,
                     serviceVersion = serviceInfoPair.second,
-                    domain = rawValue.parseDomain()
+                    domain = rawValue.parseDomain(),
                 )
             }
 
@@ -72,7 +72,7 @@ interface UniqueServiceName{
  */
 internal data class RootDeviceInformation(
     override val uuid: String,
-    override val bootId: Int
+    override val bootId: Int,
 ) : UniqueServiceName
 
 /**
@@ -87,7 +87,7 @@ data class EmbeddedDevice(
     override val bootId: Int,
     val deviceType: String,
     val deviceVersion: String,
-    val domain: String? = null
+    val domain: String? = null,
 ) : UniqueServiceName
 
 /**
@@ -102,7 +102,7 @@ data class EmbeddedService(
     override val bootId: Int,
     val serviceType: String,
     val serviceVersion: String,
-    val domain: String? = null
+    val domain: String? = null,
 ) : UniqueServiceName
 
 /**
@@ -114,7 +114,7 @@ private fun String.createPair(markerTag: String): Pair<String, String> {
     val splitInfo = this.split(markerTag)[1].split(":")
     return Pair(
         splitInfo[0],
-        splitInfo[1]
+        splitInfo[1],
     )
 }
 

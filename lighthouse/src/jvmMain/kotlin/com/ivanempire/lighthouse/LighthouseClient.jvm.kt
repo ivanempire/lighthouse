@@ -3,7 +3,7 @@ package com.ivanempire.lighthouse
 import com.ivanempire.lighthouse.core.LighthouseState
 import com.ivanempire.lighthouse.core.RealDiscoveryManager
 import com.ivanempire.lighthouse.core.RealLighthouseClient
-import com.ivanempire.lighthouse.socket.RealSocketListener
+import com.ivanempire.lighthouse.socket.JvmSocketListener
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -20,10 +20,10 @@ fun LighthouseClient(
 ): LighthouseClient {
     require(retryCount > 0) { "Retry count must be greater than 0" }
 
-    val socketListener = RealSocketListener(logger, retryCount)
+    val socketListener = JvmSocketListener(logger, retryCount)
     val discoveryManager = RealDiscoveryManager(
         LighthouseState(),
-        socketListener
+        socketListener,
     )
 
     return RealLighthouseClient(discoveryManager)

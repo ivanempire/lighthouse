@@ -26,5 +26,5 @@ data class DetailedEmbeddedMediaService(
     val serviceId: String,
     val descriptionUrl: String,
     val controlUrl: String,
-    val eventUrl: String
+    val eventUrl: String,
 ) : MediaService(serviceType, bootId)

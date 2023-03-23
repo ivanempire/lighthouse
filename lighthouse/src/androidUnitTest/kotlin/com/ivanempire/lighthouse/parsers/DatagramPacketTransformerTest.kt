@@ -62,19 +62,19 @@ class DatagramPacketTransformerTest {
         val INVALID_START_LINE = DatagramPacket("NOTIFYHTTP/1.1".toByteArray(), 14)
         val VALID_ALIVE_PACKET = DatagramPacket(
             "NOTIFY * HTTP/1.1\r\nHost: 239.255.255.250:1900\r\nCache-Control: max-age=1800\r\nLocation: http://192.168.1.190:8091/b9783ad2-d548-9793-0eb9-42db373ade07.xml\r\nServer: Linux/3.18.71+ UPnP/1.0 GUPnP/1.0.5\r\nNTS: ssdp:alive\r\nNT: urn:schemas-upnp-org:service:RenderingControl:1\r\nUSN: uuid:b9783ad2-d548-9793-0eb9-42db373ade07::urn:schemas-upnp-org:service:RenderingControl:1\r\nEcosystem.bose.com:ECO2".toByteArray(),
-            386
+            386,
         )
         val VALID_UPDATE_PACKET = DatagramPacket(
             "NOTIFY * HTTP/1.1\r\nHOST: 239.255.255.250:1900\r\nNT: urn:dial-multiscreen-org:service:dial:1\r\nNTS: ssdp:update\r\nLOCATION: http://192.168.1.160:8060/dial/dd.xml\r\nUSN: uuid:0175c106-5400-10f8-802d-b0a7374360b7::urn:dial-multiscreen-org:service:dial:1\r\nBOOTID.UPNP.ORG: 10\r\nCONFIGID.UPNP.ORG: 36\r\nNEXTBOOTID.UPNP.ORG: 11\r\nSEARCHPORT.UPNP.ORG: 1900\r\nSECURELOCATION.UPNP.ORG: https://192.168.1.160:8060/dial/dd.xml\r\n".toByteArray(),
-            406
+            406,
         )
         val VALID_BYEBYE_PACKET = DatagramPacket(
             "NOTIFY * HTTP/1.1\r\nHost: 239.255.255.250:1900\r\nLOCATION: http://192.168.1.160:8060/dial/dd.xml\r\nNTS: ssdp:byebye\r\nNT: urn:schemas-upnp-org:service:RenderingControl:1\r\nUSN: uuid:b9783ad2-d548-9793-0eb9-42db373ade07::urn:schemas-upnp-org:service:RenderingControl:1".toByteArray(),
-            213
+            213,
         )
         val INVALID_NO_LOCATION = DatagramPacket(
             "HTTP/1.1 200 OK\r\nCACHE-CONTROL: max-age=1900\r\nST: upnp:rootdevice\r\nUSN: uuid:73796E6F-6473-6D00-0000-00113296d0d7::upnp:rootdevice\r\nEXT:\r\nSERVER: Synology/DSM/192.168.2.41\r\nOPT: \"http://schemas.upnp.org/upnp/1/0/\"; ns=01\r\n01-NLS: 1\r\nBOOTID.UPNP.ORG: 1\r\nCONFIGID.UPNP.ORG: 1337\r\n".toByteArray(),
-            278
+            278,
         )
     }
 }

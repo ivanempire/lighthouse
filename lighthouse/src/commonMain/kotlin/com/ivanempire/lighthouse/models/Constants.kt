@@ -20,7 +20,7 @@ object Constants {
     const val UPNP_SCHEMA_MARKER = ":schemas-upnp-org:"
     val REGEX_UUID = Regex(
         "([a-f0-9]{8}(-[a-f0-9]{4}){4}[a-f0-9]{8})",
-        RegexOption.IGNORE_CASE
+        RegexOption.IGNORE_CASE,
     )
 
     const val NOT_AVAILABLE = "N/A"
@@ -35,6 +35,6 @@ object Constants {
         mx = 1,
         searchTarget = "ssdp:all",
         osVersion = null,
-        productVersion = null
+        productVersion = null,
     )
 }

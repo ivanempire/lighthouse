@@ -14,7 +14,7 @@ import kotlin.collections.HashMap
 
 /** Parses incoming M-SEARCH response media packets */
 internal class SearchPacketParser(
-    private val headerSet: HashMap<String, String>
+    private val headerSet: HashMap<String, String>,
 ) : MediaPacketParser() {
 
     private val cacheControl: Int by lazy {
@@ -60,7 +60,7 @@ internal class SearchPacketParser(
             bootId = bootId,
             configId = configId,
             searchPort = searchPort,
-            secureLocation = secureLocation
+            secureLocation = secureLocation,
         )
     }
 }

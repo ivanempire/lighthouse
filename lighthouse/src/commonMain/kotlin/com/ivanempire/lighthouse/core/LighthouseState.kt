@@ -74,7 +74,7 @@ internal class LighthouseState {
                 location = latestPacket.location,
                 searchPort = latestPacket.searchPort,
                 secureLocation = latestPacket.secureLocation,
-                latestTimestamp = System.currentTimeMillis()
+                latestTimestamp = System.currentTimeMillis(),
             )
             baseDevice.updateEmbeddedComponent(targetComponent)
             deviceList.add(baseDevice)
@@ -113,7 +113,7 @@ internal class LighthouseState {
                 location = latestPacket.location,
                 searchPort = latestPacket.searchPort,
                 secureLocation = latestPacket.secureLocation,
-                latestTimestamp = System.currentTimeMillis()
+                latestTimestamp = System.currentTimeMillis(),
             )
             baseDevice.updateEmbeddedComponent(targetComponent)
             deviceList.add(baseDevice)
@@ -149,7 +149,9 @@ internal class LighthouseState {
      */
     private fun parseByeByeMediaPacket(latestPacket: ByeByeMediaPacket): List<AbridgedMediaDevice> {
         val targetComponent = latestPacket.usn
-        val targetDevice = deviceList.firstOrNull { it.uuid == targetComponent.uuid } ?: return deviceList
+        val targetDevice = deviceList.firstOrNull {
+            it.uuid == targetComponent.uuid
+        } ?: return deviceList
 
         when (targetComponent) {
             is RootDeviceInformation -> deviceList.remove(targetDevice)
@@ -188,6 +190,6 @@ private fun SearchResponseMediaPacket.toAlivePacket(): AliveMediaPacket {
         bootId = bootId,
         configId = configId,
         searchPort = searchPort,
-        secureLocation = secureLocation
+        secureLocation = secureLocation,
     )
 }

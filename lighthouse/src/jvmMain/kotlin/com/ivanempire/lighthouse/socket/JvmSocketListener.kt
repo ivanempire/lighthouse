@@ -2,19 +2,19 @@ package com.ivanempire.lighthouse.socket
 
 import com.ivanempire.lighthouse.models.Constants.DEFAULT_MULTICAST_ADDRESS
 import com.ivanempire.lighthouse.models.search.SearchRequest
+import java.net.DatagramPacket
+import java.net.InetAddress
+import java.net.InetSocketAddress
+import java.net.MulticastSocket
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.isActive
 import org.slf4j.Logger
-import java.net.DatagramPacket
-import java.net.InetAddress
-import java.net.InetSocketAddress
-import java.net.MulticastSocket
 
 /** Specific implementation of [SocketListener] */
-internal class RealSocketListener(
+internal class JvmSocketListener(
     private val logger: Logger,
     private val retryCount: Int,
 ) : SocketListener {

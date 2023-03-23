@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.map
 /** Specific implementation of [LighthouseClient] */
 internal class RealLighthouseClient(
     private val discoveryManager: DiscoveryManager,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : LighthouseClient {
 
     override fun discoverDevices(searchRequest: SearchRequest): Flow<List<AbridgedMediaDevice>> {

@@ -37,7 +37,7 @@ object TestUtils {
         embeddedDevices: MutableList<EmbeddedDevice>? = null,
         embeddedServices: MutableList<EmbeddedService>? = null,
         cache: Int? = null,
-        latestTimestamp: Long? = null
+        latestTimestamp: Long? = null,
     ): AbridgedMediaDevice {
         return AbridgedMediaDevice(
             uuid = (deviceUUID ?: UUID.randomUUID()).toString(),
@@ -51,7 +51,7 @@ object TestUtils {
             mediaDeviceServer = SERVER_LIST.random(),
             latestTimestamp = latestTimestamp ?: System.currentTimeMillis(),
             deviceList = embeddedDevices ?: mutableListOf(),
-            serviceList = embeddedServices ?: mutableListOf()
+            serviceList = embeddedServices ?: mutableListOf(),
         )
     }
 
@@ -60,7 +60,7 @@ object TestUtils {
      */
     internal fun generateAlivePacket(
         deviceUUID: UUID,
-        uniqueServiceName: UniqueServiceName? = null
+        uniqueServiceName: UniqueServiceName? = null,
     ): AliveMediaPacket {
         return AliveMediaPacket(
             host = MediaHost(InetAddress.getByName("239.255.255.250"), 1900),
@@ -72,7 +72,7 @@ object TestUtils {
             bootId = 100,
             configId = 130,
             searchPort = 1900,
-            secureLocation = URL("https://127.0.0.1:58122/")
+            secureLocation = URL("https://127.0.0.1:58122/"),
         )
     }
 
@@ -96,7 +96,7 @@ object TestUtils {
             configId = configId,
             nextBootId = bootId + 1,
             searchPort = 1900,
-            secureLocation = secureLocation
+            secureLocation = secureLocation,
         )
     }
 
@@ -110,7 +110,7 @@ object TestUtils {
             notificationType = NotificationType("upnp:rootdevice"),
             usn = uniqueServiceName ?: UniqueServiceName("uuid:$deviceUUID", bootId),
             bootId = bootId,
-            configId = 110
+            configId = 110,
         )
     }
 
@@ -128,20 +128,29 @@ object TestUtils {
         deviceUUID: UUID,
         identifier: String = "RenderingControl",
         version: String = "3.0",
-        bootId: Int = 600
+        bootId: Int = 600,
     ): UniqueServiceName {
         return when (T::class) {
             RootDeviceInformation::class -> {
                 UniqueServiceName("uuid:$deviceUUID", -1)
             }
             EmbeddedDevice::class -> {
-                UniqueServiceName("uuid:$deviceUUID::urn:schemas-upnp-org:device:$identifier:$version", bootId)
+                UniqueServiceName(
+                    "uuid:$deviceUUID::urn:schemas-upnp-org:device:$identifier:$version",
+                    bootId,
+                )
             }
             EmbeddedService::class -> {
-                UniqueServiceName("uuid:$deviceUUID::urn:schemas-upnp-org:service:$identifier:$version", bootId)
+                UniqueServiceName(
+                    "uuid:$deviceUUID::urn:schemas-upnp-org:service:$identifier:$version",
+                    bootId,
+                )
             }
             else -> {
-                UniqueServiceName("uuid:$deviceUUID::urn:schemas-upnp-org:service:$identifier:$version", bootId)
+                UniqueServiceName(
+                    "uuid:$deviceUUID::urn:schemas-upnp-org:service:$identifier:$version",
+                    bootId,
+                )
             }
         }
     }
@@ -149,6 +158,6 @@ object TestUtils {
     private val SERVER_LIST = listOf(
         MediaDeviceServer("Windows", "NT/5.0,", "UPnP/1.0"),
         MediaDeviceServer("N/A", "N/A", "N/A"),
-        MediaDeviceServer("Linux/3.18.71+", "UPnP/1.0", "GUPnP/1.0.5")
+        MediaDeviceServer("Linux/3.18.71+", "UPnP/1.0", "GUPnP/1.0.5"),
     )
 }

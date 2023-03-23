@@ -18,7 +18,7 @@ import kotlinx.coroutines.isActive
 /** Specific implementation of [SocketListener] */
 internal class AndroidSocketListener(
     private val wifiManager: WifiManager,
-    private val retryCount: Int
+    private val retryCount: Int,
 ) : SocketListener {
 
     private val multicastLock: WifiManager.MulticastLock by lazy {

@@ -22,7 +22,7 @@ fun LighthouseClient(context: Context, retryCount: Int = 1): LighthouseClient {
     val socketListener = AndroidSocketListener(wifiManager, retryCount)
     val discoveryManager = RealDiscoveryManager(
         LighthouseState(),
-        socketListener
+        socketListener,
     )
 
     return RealLighthouseClient(discoveryManager)

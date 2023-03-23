@@ -1,6 +1,6 @@
 plugins {
     id("com.android.library")
-    kotlin("android")
+    kotlin("multiplatform")
     id("maven-publish")
     id("signing")
     id("org.jlleitschuh.gradle.ktlint") version "10.2.1"
@@ -38,17 +38,35 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
     testOptions {
         unitTests.isReturnDefaultValues = true
     }
 }
 
-dependencies {
-    implementation("androidx.core:core-ktx:1.9.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+kotlin {
+    android()
+    jvm()
 
-    testImplementation("junit:junit:4.13.2")
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+            }
+        }
+        val androidMain by getting {
+            dependencies {
+                implementation("androidx.core:core-ktx:1.9.0")
+            }
+        }
+        val androidUnitTest by getting {
+            dependencies {
+                implementation("junit:junit:4.13.2")
+            }
+        }
+        val jvmMain by getting {
+            dependencies {
+                api("org.slf4j:slf4j-api:2.0.7")
+            }
+        }
+    }
 }

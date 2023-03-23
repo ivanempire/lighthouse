@@ -37,7 +37,7 @@ class LighthouseStateTest {
         assertEquals(1, finalList.size)
 
         val mediaDevice = finalList[0]
-        assertEquals(RANDOM_UUID_1, mediaDevice.uuid)
+        assertEquals(RANDOM_UUID_1.toString(), mediaDevice.uuid)
         assertEquals(ALIVE_PACKET_1.host, mediaDevice.host)
         assertEquals(ALIVE_PACKET_1.cache, mediaDevice.cache)
         assertEquals(ALIVE_PACKET_1.bootId, mediaDevice.bootId)
@@ -67,7 +67,7 @@ class LighthouseStateTest {
         assertEquals(2, finalList.size)
 
         val mediaDevice = finalList[1]
-        assertEquals(RANDOM_UUID_2, mediaDevice.uuid)
+        assertEquals(RANDOM_UUID_2.toString(), mediaDevice.uuid)
         assertTrue(mediaDevice.deviceList.isNotEmpty())
         assertTrue(mediaDevice.serviceList.isEmpty())
     }
@@ -98,7 +98,7 @@ class LighthouseStateTest {
         val MEDIA_DEVICE_2 = generateMediaDevice(
             RANDOM_UUID_2,
             embeddedServices = mutableListOf(
-                EmbeddedService(RANDOM_UUID_2, 400, "RenderingControl", "2.0")
+                EmbeddedService(RANDOM_UUID_2.toString(), 400, "RenderingControl", "2.0")
             )
         )
         val MEDIA_DEVICE_3 = generateMediaDevice(RANDOM_UUID_3)
@@ -128,7 +128,7 @@ class LighthouseStateTest {
         assertTrue(finalList[1].serviceList.isNotEmpty())
         assertEquals(
             EmbeddedService(
-                RANDOM_UUID_1,
+                RANDOM_UUID_1.toString(),
                 600,
                 "RenderingControl",
                 "3.0"
@@ -137,7 +137,7 @@ class LighthouseStateTest {
         )
         assertEquals(
             EmbeddedDevice(
-                RANDOM_UUID_3,
+                RANDOM_UUID_3.toString(),
                 600,
                 "RenderingControl",
                 "3.0"
@@ -191,11 +191,11 @@ class LighthouseStateTest {
 
         assertTrue(finalList[0].deviceList.isNotEmpty())
         assertTrue(finalList[0].serviceList.isNotEmpty())
-        assertEquals(RANDOM_UUID_2, finalList[0].uuid)
+        assertEquals(RANDOM_UUID_2.toString(), finalList[0].uuid)
 
         assertTrue(finalList[1].deviceList.isNotEmpty())
         assertTrue(finalList[1].serviceList.isNotEmpty())
-        assertEquals(RANDOM_UUID_3, finalList[1].uuid)
+        assertEquals(RANDOM_UUID_3.toString(), finalList[1].uuid)
     }
 
     @Test

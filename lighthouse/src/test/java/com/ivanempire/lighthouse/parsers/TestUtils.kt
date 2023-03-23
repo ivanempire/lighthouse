@@ -40,7 +40,7 @@ object TestUtils {
         latestTimestamp: Long? = null
     ): AbridgedMediaDevice {
         return AbridgedMediaDevice(
-            uuid = deviceUUID ?: UUID.randomUUID(),
+            uuid = (deviceUUID ?: UUID.randomUUID()).toString(),
             host = mediaHost ?: MediaHost(InetAddress.getByName("239.255.255.250"), 1900),
             cache = cache ?: 0,
             bootId = (Math.random() * 1000).toInt(),
@@ -68,7 +68,7 @@ object TestUtils {
             location = URL("http://127.0.0.1:58122/"),
             notificationType = NotificationType("upnp:rootdevice"),
             server = SERVER_LIST.random(),
-            usn = uniqueServiceName ?: UniqueServiceName(deviceUUID.toString(), -1),
+            usn = uniqueServiceName ?: UniqueServiceName("uuid:$deviceUUID", -1),
             bootId = 100,
             configId = 130,
             searchPort = 1900,
@@ -108,7 +108,7 @@ object TestUtils {
         return ByeByeMediaPacket(
             host = MediaHost(InetAddress.getByName("239.255.255.250"), 1900),
             notificationType = NotificationType("upnp:rootdevice"),
-            usn = uniqueServiceName ?: UniqueServiceName(deviceUUID.toString(), bootId),
+            usn = uniqueServiceName ?: UniqueServiceName("uuid:$deviceUUID", bootId),
             bootId = bootId,
             configId = 110
         )
@@ -132,7 +132,7 @@ object TestUtils {
     ): UniqueServiceName {
         return when (T::class) {
             RootDeviceInformation::class -> {
-                UniqueServiceName(deviceUUID.toString(), -1)
+                UniqueServiceName("uuid:$deviceUUID", -1)
             }
             EmbeddedDevice::class -> {
                 UniqueServiceName("uuid:$deviceUUID::urn:schemas-upnp-org:device:$identifier:$version", bootId)

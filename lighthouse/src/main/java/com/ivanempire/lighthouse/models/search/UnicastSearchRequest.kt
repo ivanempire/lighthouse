@@ -42,6 +42,7 @@ data class UnicastSearchRequest(
             builder.append(HeaderKeys.USER_AGENT).append(FIELD_SEPARATOR).append("$osVersion UPnP/2.0 $productVersion").append(NEWLINE_SEPARATOR)
         }
 
+        builder.append(NEWLINE_SEPARATOR)
         return builder.toString()
     }
 }

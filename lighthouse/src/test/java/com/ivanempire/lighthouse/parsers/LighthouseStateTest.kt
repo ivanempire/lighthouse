@@ -122,10 +122,15 @@ class LighthouseStateTest {
 
         val finalList = sut.parseMediaPacket(UPDATE_PACKET_2)
 
+        // TODO: Optimize this
+        val modifiedOne = finalList.firstOrNull { it.uuid == RANDOM_UUID_1 }!!
+        val modifiedTwo = finalList.firstOrNull { it.uuid == RANDOM_UUID_2 }!!
+        val modifiedThree = finalList.firstOrNull { it.uuid == RANDOM_UUID_3 }!!
+
         assertTrue(finalList.isNotEmpty())
         assertEquals(3, finalList.size)
-        assertTrue(finalList[0].deviceList.isEmpty())
-        assertTrue(finalList[1].serviceList.isNotEmpty())
+        assertTrue(modifiedTwo.deviceList.isEmpty())
+        assertTrue(modifiedTwo.serviceList.isNotEmpty())
         assertEquals(
             EmbeddedService(
                 RANDOM_UUID_1,
@@ -133,7 +138,7 @@ class LighthouseStateTest {
                 "RenderingControl",
                 "3.0"
             ),
-            finalList[0].serviceList[0]
+            modifiedOne.serviceList[0]
         )
         assertEquals(
             EmbeddedDevice(
@@ -142,7 +147,7 @@ class LighthouseStateTest {
                 "RenderingControl",
                 "3.0"
             ),
-            finalList[2].deviceList[0]
+            modifiedThree.deviceList[0]
         )
     }
 

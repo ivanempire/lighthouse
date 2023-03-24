@@ -75,6 +75,7 @@ data class MulticastSearchRequest(
 
         builder.append(NEWLINE_SEPARATOR)
 
+        builder.append(NEWLINE_SEPARATOR)
         return builder.toString()
     }
 }

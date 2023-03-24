@@ -42,11 +42,12 @@ afterEvaluate {
                 }
             }
         }
-        if (binding.hasVariable('sonatypeUrl')) {
+        // TODO: Temporary fix for local inclusion before moving to another publishing library
+        if (binding.hasVariable("sonatypeUrl")) {
             repositories {
                 maven {
                     url sonatypeUrl
-                    credentials {
+                    credentials  {
                         username = sonatypeUsername
                         password = sonatypePassword
                     }

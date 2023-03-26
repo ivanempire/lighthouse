@@ -2,7 +2,12 @@ package com.ivanempire.lighthouse.core
 
 import com.ivanempire.lighthouse.LighthouseClient
 import com.ivanempire.lighthouse.models.devices.AbridgedMediaDevice
+import com.ivanempire.lighthouse.models.devices.DetailedMediaDevice
 import com.ivanempire.lighthouse.models.search.SearchRequest
+import com.ivanempire.lighthouse.parsers.DetailedMediaDeviceParser
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.get
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -17,6 +22,8 @@ internal class RealLighthouseClient(
     private val discoveryManager: DiscoveryManager,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : LighthouseClient {
+
+    private val httpClient = HttpClient()
 
     override fun discoverDevices(searchRequest: SearchRequest): Flow<List<AbridgedMediaDevice>> {
         val foundDevicesFlow = discoveryManager.createNewDeviceFlow(searchRequest)
@@ -34,5 +41,11 @@ internal class RealLighthouseClient(
                 }
             }
             .flowOn(dispatcher)
+    }
+
+    override suspend fun retrieveDescription(abridgedMediaDevice: AbridgedMediaDevice): DetailedMediaDevice {
+        // TODO: use secure location if it is provided
+        val response = httpClient.get(abridgedMediaDevice.location)
+        return DetailedMediaDeviceParser.parse(response.body())
     }
 }

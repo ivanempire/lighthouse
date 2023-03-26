@@ -2,7 +2,6 @@ package com.ivanempire.lighthouse.core
 
 import com.ivanempire.lighthouse.models.Constants.NOT_AVAILABLE_CACHE
 import com.ivanempire.lighthouse.models.devices.AbridgedMediaDevice
-import com.ivanempire.lighthouse.models.devices.MediaDevice
 import com.ivanempire.lighthouse.models.packets.AliveMediaPacket
 import com.ivanempire.lighthouse.models.packets.ByeByeMediaPacket
 import com.ivanempire.lighthouse.models.packets.MediaPacket
@@ -27,10 +26,9 @@ internal class LighthouseState {
      * @param updatedList The list of media devices that have been updated with the latest packets
      * @return A new list of media devices that are as up-to-date as possible given latest packets
      */
-    fun setDeviceList(updatedList: List<AbridgedMediaDevice>): List<MediaDevice> {
+    fun setDeviceList(updatedList: List<AbridgedMediaDevice>) {
         deviceList.clear()
         deviceList.addAll(updatedList)
-        return deviceList
     }
 
     /**

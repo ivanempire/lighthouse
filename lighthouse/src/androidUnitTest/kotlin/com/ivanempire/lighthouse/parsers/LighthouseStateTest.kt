@@ -29,7 +29,7 @@ class LighthouseStateTest {
 
     @Test
     fun `given ALIVE packet creates root device correctly`() {
-        val RANDOM_UUID_1 = UUID.randomUUID()
+        val RANDOM_UUID_1 = UUID.randomUUID().toString()
         val ALIVE_PACKET_1 = generateAlivePacket(RANDOM_UUID_1)
 
         val finalList = sut.parseMediaPacket(ALIVE_PACKET_1)
@@ -37,7 +37,7 @@ class LighthouseStateTest {
         assertEquals(1, finalList.size)
 
         val mediaDevice = finalList[0]
-        assertEquals(RANDOM_UUID_1.toString(), mediaDevice.uuid)
+        assertEquals(RANDOM_UUID_1, mediaDevice.uuid)
         assertEquals(ALIVE_PACKET_1.host, mediaDevice.host)
         assertEquals(ALIVE_PACKET_1.cache, mediaDevice.cache)
         assertEquals(ALIVE_PACKET_1.bootId, mediaDevice.bootId)
@@ -52,8 +52,8 @@ class LighthouseStateTest {
 
     @Test
     fun `given ALIVE packet adjusts embedded components correctly`() {
-        val RANDOM_UUID_1 = UUID.randomUUID()
-        val RANDOM_UUID_2 = UUID.randomUUID()
+        val RANDOM_UUID_1 = UUID.randomUUID().toString()
+        val RANDOM_UUID_2 = UUID.randomUUID().toString()
 
         val MEDIA_DEVICE_1 = generateMediaDevice(RANDOM_UUID_1)
         val MEDIA_DEVICE_2 = generateMediaDevice(RANDOM_UUID_2)
@@ -70,14 +70,14 @@ class LighthouseStateTest {
         assertEquals(2, finalList.size)
 
         val mediaDevice = finalList[1]
-        assertEquals(RANDOM_UUID_2.toString(), mediaDevice.uuid)
+        assertEquals(RANDOM_UUID_2, mediaDevice.uuid)
         assertTrue(mediaDevice.deviceList.isNotEmpty())
         assertTrue(mediaDevice.serviceList.isEmpty())
     }
 
     @Test
     fun `given UPDATE packet builds root device correctly`() {
-        val RANDOM_UUID_1 = UUID.randomUUID()
+        val RANDOM_UUID_1 = UUID.randomUUID().toString()
         val UPDATE_PACKET_1 = generateUpdatePacket(
             RANDOM_UUID_1,
             location = URL("http://127.0.0.1:9999/"),
@@ -99,9 +99,9 @@ class LighthouseStateTest {
 
     @Test
     fun `given UPDATE packet correctly updates embedded components`() {
-        val RANDOM_UUID_1 = UUID.randomUUID()
-        val RANDOM_UUID_2 = UUID.randomUUID()
-        val RANDOM_UUID_3 = UUID.randomUUID()
+        val RANDOM_UUID_1 = UUID.randomUUID().toString()
+        val RANDOM_UUID_2 = UUID.randomUUID().toString()
+        val RANDOM_UUID_3 = UUID.randomUUID().toString()
 
         val MEDIA_DEVICE_1 = generateMediaDevice(RANDOM_UUID_1)
         val MEDIA_DEVICE_2 = generateMediaDevice(
@@ -162,7 +162,7 @@ class LighthouseStateTest {
 
     @Test
     fun `given UPDATE packet creates embedded components correctly`() {
-        val RANDOM_UUID_1 = UUID.randomUUID()
+        val RANDOM_UUID_1 = UUID.randomUUID().toString()
         val MEDIA_DEVICE_1 = generateMediaDevice(RANDOM_UUID_1)
         sut.setDeviceList(listOf(MEDIA_DEVICE_1))
 
@@ -195,9 +195,9 @@ class LighthouseStateTest {
 
     @Test
     fun `given BYEBYE packet removes root device correctly`() {
-        val RANDOM_UUID_1 = UUID.randomUUID()
-        val RANDOM_UUID_2 = UUID.randomUUID()
-        val RANDOM_UUID_3 = UUID.randomUUID()
+        val RANDOM_UUID_1 = UUID.randomUUID().toString()
+        val RANDOM_UUID_2 = UUID.randomUUID().toString()
+        val RANDOM_UUID_3 = UUID.randomUUID().toString()
 
         val MEDIA_DEVICE_1 = generateMediaDevice(RANDOM_UUID_1)
 
@@ -232,11 +232,11 @@ class LighthouseStateTest {
 
     @Test
     fun `given BYEBYE packet removes embedded components correctly`() {
-        val RANDOM_UUID_1 = UUID.randomUUID()
-        val RANDOM_UUID_2 = UUID.randomUUID()
-        val RANDOM_UUID_3 = UUID.randomUUID()
-        val RANDOM_UUID_4 = UUID.randomUUID()
-        val RANDOM_UUID_5 = UUID.randomUUID()
+        val RANDOM_UUID_1 = UUID.randomUUID().toString()
+        val RANDOM_UUID_2 = UUID.randomUUID().toString()
+        val RANDOM_UUID_3 = UUID.randomUUID().toString()
+        val RANDOM_UUID_4 = UUID.randomUUID().toString()
+        val RANDOM_UUID_5 = UUID.randomUUID().toString()
 
         val MEDIA_DEVICE_1 = generateMediaDevice(RANDOM_UUID_1)
         MEDIA_DEVICE_1.deviceList.add(generateUSN<EmbeddedDevice>(RANDOM_UUID_1) as EmbeddedDevice)
@@ -272,9 +272,9 @@ class LighthouseStateTest {
 
     @Test
     fun `given BYEBYE packet and no matching device does not remove anything`() {
-        val RANDOM_UUID_1 = UUID.randomUUID()
-        val RANDOM_UUID_2 = UUID.randomUUID()
-        val RANDOM_UUID_3 = UUID.randomUUID()
+        val RANDOM_UUID_1 = UUID.randomUUID().toString()
+        val RANDOM_UUID_2 = UUID.randomUUID().toString()
+        val RANDOM_UUID_3 = UUID.randomUUID().toString()
 
         val MEDIA_DEVICE_1 = generateMediaDevice(RANDOM_UUID_1)
         val MEDIA_DEVICE_2 = generateMediaDevice(RANDOM_UUID_2)
@@ -289,8 +289,8 @@ class LighthouseStateTest {
 
     @Test
     fun `given no stale devices doesn't return anything`() {
-        val RANDOM_UUID_1 = UUID.randomUUID()
-        val RANDOM_UUID_2 = UUID.randomUUID()
+        val RANDOM_UUID_1 = UUID.randomUUID().toString()
+        val RANDOM_UUID_2 = UUID.randomUUID().toString()
 
         val MEDIA_DEVICE_1 = generateMediaDevice(RANDOM_UUID_1, cache = 1900)
         val MEDIA_DEVICE_2 = generateMediaDevice(RANDOM_UUID_2, cache = 1900)
@@ -303,8 +303,8 @@ class LighthouseStateTest {
 
     @Test
     fun `given stale devices returns them`() {
-        val RANDOM_UUID_1 = UUID.randomUUID()
-        val RANDOM_UUID_2 = UUID.randomUUID()
+        val RANDOM_UUID_1 = UUID.randomUUID().toString()
+        val RANDOM_UUID_2 = UUID.randomUUID().toString()
 
         val MEDIA_DEVICE_1 = generateMediaDevice(RANDOM_UUID_1, cache = 30, latestTimestamp = System.currentTimeMillis() - 35 * 1000)
         val MEDIA_DEVICE_2 = generateMediaDevice(RANDOM_UUID_2, cache = 10, latestTimestamp = System.currentTimeMillis() - 25 * 1000)

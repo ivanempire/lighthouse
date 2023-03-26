@@ -2,6 +2,7 @@ package com.ivanempire.lighthouse
 
 import com.ivanempire.lighthouse.models.Constants.DEFAULT_SEARCH_REQUEST
 import com.ivanempire.lighthouse.models.devices.AbridgedMediaDevice
+import com.ivanempire.lighthouse.models.devices.DetailedMediaDevice
 import com.ivanempire.lighthouse.models.search.SearchRequest
 import kotlinx.coroutines.flow.Flow
 
@@ -18,4 +19,11 @@ interface LighthouseClient {
      * @return Flow of lists of [AbridgedMediaDevice] that have been discovered on the network
      */
     fun discoverDevices(searchRequest: SearchRequest = DEFAULT_SEARCH_REQUEST): Flow<List<AbridgedMediaDevice>>
+
+    /**
+     * When called, downloads the description from the device and parses the response
+     *
+     * @param abridgedMediaDevice device to use to request the description
+     */
+    suspend fun retrieveDescription(abridgedMediaDevice: AbridgedMediaDevice): DetailedMediaDevice
 }

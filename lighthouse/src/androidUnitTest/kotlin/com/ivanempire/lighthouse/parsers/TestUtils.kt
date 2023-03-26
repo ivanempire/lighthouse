@@ -32,16 +32,16 @@ object TestUtils {
      * @return An instance of [AbridgedMediaDevice] to use during unit testing
      */
     fun generateMediaDevice(
-        deviceUUID: UUID? = null,
-        mediaHost: MediaHost? = null,
+        deviceUUID: String = UUID.randomUUID().toString(),
+        mediaHost: MediaHost = MediaHost(InetAddress.getByName("239.255.255.250"), 1900),
         embeddedDevices: MutableList<EmbeddedDevice>? = null,
         embeddedServices: MutableList<EmbeddedService>? = null,
         cache: Int? = null,
         latestTimestamp: Long? = null,
     ): AbridgedMediaDevice {
         return AbridgedMediaDevice(
-            uuid = (deviceUUID ?: UUID.randomUUID()).toString(),
-            host = mediaHost ?: MediaHost(InetAddress.getByName("239.255.255.250"), 1900),
+            uuid = deviceUUID,
+            host = mediaHost,
             cache = cache ?: 0,
             bootId = (Math.random() * 1000).toInt(),
             configId = (Math.random() * 1000).toInt(),
@@ -59,7 +59,7 @@ object TestUtils {
      * Generates an instance of [AliveMediaPacket]
      */
     internal fun generateAlivePacket(
-        deviceUUID: UUID,
+        deviceUUID: String,
         uniqueServiceName: UniqueServiceName? = null,
     ): AliveMediaPacket {
         return AliveMediaPacket(
@@ -80,7 +80,7 @@ object TestUtils {
      *
      */
     internal fun generateUpdatePacket(
-        deviceUUID: UUID,
+        deviceUUID: String,
         location: URL = URL("http://192.168.2.50:58121/"),
         uniqueServiceName: UniqueServiceName? = null,
         bootId: Int = 100,
@@ -91,7 +91,7 @@ object TestUtils {
             host = MediaHost(InetAddress.getByName("239.255.255.250"), 1900),
             location = location,
             notificationType = NotificationType("upnp:rootdevice"),
-            usn = uniqueServiceName ?: UniqueServiceName(deviceUUID.toString(), bootId),
+            usn = uniqueServiceName ?: UniqueServiceName("uuid:$deviceUUID", bootId),
             bootId = bootId,
             configId = configId,
             nextBootId = bootId + 1,
@@ -101,7 +101,7 @@ object TestUtils {
     }
 
     internal fun generateByeByePacket(
-        deviceUUID: UUID,
+        deviceUUID: String,
         uniqueServiceName: UniqueServiceName? = null,
         bootId: Int = 100,
     ): ByeByeMediaPacket {
@@ -125,7 +125,7 @@ object TestUtils {
      * @return An instance of [UniqueServiceName] to use in unit testing
      */
     inline fun <reified T : UniqueServiceName> generateUSN(
-        deviceUUID: UUID,
+        deviceUUID: String,
         identifier: String = "RenderingControl",
         version: String = "3.0",
         bootId: Int = 600,

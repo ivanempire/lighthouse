@@ -59,6 +59,7 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation(compose.desktop.currentOs)
+                implementation("org.slf4j:slf4j-simple:2.0.7")
             }
         }
     }

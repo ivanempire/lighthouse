@@ -24,11 +24,17 @@ class MainActivity : ComponentActivity() {
             .map { devices -> devices.sortedBy { it.uuid } }
 
         setContent {
-            val devices by devicesFlow.collectAsState(emptyList())
-
-            Surface(modifier = Modifier.fillMaxSize()) {
-                DeviceList(devices)
-            }
+            DemoContent(
+                devicesFlow = devicesFlow,
+                loadDetailedDevice = {
+                    try {
+                        lighthouseClient.retrieveDescription(it)
+                    } catch (e: Throwable) {
+                        e.printStackTrace()
+                        null
+                    }
+                }
+            )
         }
     }
 }

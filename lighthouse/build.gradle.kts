@@ -1,6 +1,7 @@
 plugins {
     id("com.android.library")
     kotlin("multiplatform")
+    kotlin("plugin.serialization") version "1.8.10"
     id("maven-publish")
     id("signing")
     id("org.jlleitschuh.gradle.ktlint") version "11.3.1"
@@ -35,8 +36,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     testOptions {
         unitTests.isReturnDefaultValues = true
@@ -51,6 +52,13 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+
+                val xmlutil_version = "0.85.0"
+                implementation("io.github.pdvrieze.xmlutil:serialization:$xmlutil_version")
+                implementation("io.github.pdvrieze.xmlutil:serialutil:$xmlutil_version")
+
+                val ktor_version = "2.2.4"
+                implementation("io.ktor:ktor-client-cio:$ktor_version")
             }
         }
         val androidMain by getting {
@@ -69,4 +77,6 @@ kotlin {
             }
         }
     }
+
+    jvmToolchain(11)
 }

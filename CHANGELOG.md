@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.1] - March 27th 2023
+- Fix: Adding newline to end of M-SEARCH message so that some devices do not ignore the search requests
+- Fix: Properly updating discovered devices list when parsing ALIVE and UPDATE SSDP packets
+
 ## [1.1.1] - November 3rd 2022
 - **New**: Optimized device list emissions to not emit every second due to periodic stale device check. Updates will now be sent only if a device comes online, gets updated, or goes offline.
 

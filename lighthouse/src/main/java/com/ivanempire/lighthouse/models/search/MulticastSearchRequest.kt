@@ -48,17 +48,17 @@ data class MulticastSearchRequest(
     override fun toString(): String {
         val builder = StringBuilder()
         builder.append(StartLine.SEARCH.rawString).append(NEWLINE_SEPARATOR)
-        builder.append(HeaderKeys.HOST).append(FIELD_SEPARATOR).append(hostname.toString()).append(NEWLINE_SEPARATOR)
-            .append(HeaderKeys.MAN).append(FIELD_SEPARATOR).append(DEFAULT_SEARCH_MAN).append(NEWLINE_SEPARATOR)
-            .append(HeaderKeys.MX).append(FIELD_SEPARATOR).append(mx).append(NEWLINE_SEPARATOR)
-            .append(HeaderKeys.SEARCH_TARGET).append(FIELD_SEPARATOR).append(searchTarget).append(NEWLINE_SEPARATOR)
+        builder.append(HeaderKeys.HOST).append("$FIELD_SEPARATOR ").append(hostname.toString()).append(NEWLINE_SEPARATOR)
+            .append(HeaderKeys.MAN).append("$FIELD_SEPARATOR ").append(DEFAULT_SEARCH_MAN).append(NEWLINE_SEPARATOR)
+            .append(HeaderKeys.MX).append("$FIELD_SEPARATOR ").append(mx).append(NEWLINE_SEPARATOR)
+            .append(HeaderKeys.SEARCH_TARGET).append("$FIELD_SEPARATOR ").append(searchTarget).append(NEWLINE_SEPARATOR)
 
         if (!osVersion.isNullOrEmpty() && !productVersion.isNullOrEmpty()) {
-            builder.append(HeaderKeys.USER_AGENT).append(FIELD_SEPARATOR).append("$osVersion UPnP/2.0 $productVersion").append(NEWLINE_SEPARATOR)
+            builder.append(HeaderKeys.USER_AGENT).append("$FIELD_SEPARATOR ").append("$osVersion UPnP/2.0 $productVersion").append(NEWLINE_SEPARATOR)
         }
 
-        builder.append(HeaderKeys.FRIENDLY_NAME).append(FIELD_SEPARATOR).append(friendlyName).append(NEWLINE_SEPARATOR)
-        builder.append(HeaderKeys.CONTROL_POINT_UUID).append(FIELD_SEPARATOR).append(uuid).append(NEWLINE_SEPARATOR)
+        builder.append(HeaderKeys.FRIENDLY_NAME).append("$FIELD_SEPARATOR ").append(friendlyName).append(NEWLINE_SEPARATOR)
+        builder.append(HeaderKeys.CONTROL_POINT_UUID).append("$FIELD_SEPARATOR ").append(uuid).append(NEWLINE_SEPARATOR)
 
         builder.append(NEWLINE_SEPARATOR)
         return builder.toString()

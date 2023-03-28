@@ -60,7 +60,7 @@ class MulticastSearchRequestTest {
             friendlyName = "LighthouseClient",
             uuid = UUID.nameUUIDFromBytes("LighthouseClient".toByteArray())
         )
-        val baseResultString = "${StartLine.SEARCH.rawString}\r\nHOST:239.255.255.250:1900\r\nMAN:\"ssdp:discover\"\r\nMX:5\r\nST:ssdp:all\r\nCPFN.UPNP.ORG:LighthouseClient\r\nCPUUID.UPNP.ORG:747f550a-8dec-33a1-8470-e314bf440695\r\n\r\n"
+        val baseResultString = "${StartLine.SEARCH.rawString}\r\nHOST: 239.255.255.250:1900\r\nMAN: \"ssdp:discover\"\r\nMX: 5\r\nST: ssdp:all\r\nCPFN.UPNP.ORG: LighthouseClient\r\nCPUUID.UPNP.ORG: 747f550a-8dec-33a1-8470-e314bf440695\r\n\r\n"
 
         assertEquals(baseResultString, baseSearchRequest.toString())
 
@@ -73,7 +73,7 @@ class MulticastSearchRequestTest {
             friendlyName = "LighthouseClient",
             uuid = UUID.nameUUIDFromBytes("LighthouseClient".toByteArray())
         )
-        val completeResultString = "${StartLine.SEARCH.rawString}\r\nHOST:239.255.255.250:1900\r\nMAN:\"ssdp:discover\"\r\nMX:5\r\nST:ssdp:all\r\nUSER-AGENT:Windows/NT5.0 UPnP/2.0 GUPnP/1.0.5\r\nCPFN.UPNP.ORG:LighthouseClient\r\nCPUUID.UPNP.ORG:747f550a-8dec-33a1-8470-e314bf440695\r\n\r\n"
+        val completeResultString = "${StartLine.SEARCH.rawString}\r\nHOST: 239.255.255.250:1900\r\nMAN: \"ssdp:discover\"\r\nMX: 5\r\nST: ssdp:all\r\nUSER-AGENT: Windows/NT5.0 UPnP/2.0 GUPnP/1.0.5\r\nCPFN.UPNP.ORG: LighthouseClient\r\nCPUUID.UPNP.ORG: 747f550a-8dec-33a1-8470-e314bf440695\r\n\r\n"
 
         assertEquals(completeResultString, completeSearchRequest.toString())
     }

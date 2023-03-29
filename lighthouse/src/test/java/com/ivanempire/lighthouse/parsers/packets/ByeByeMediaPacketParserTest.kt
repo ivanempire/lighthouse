@@ -13,9 +13,9 @@ import com.ivanempire.lighthouse.parsers.packets.ByeByeMediaPacketParserTest.Fix
 import com.ivanempire.lighthouse.parsers.packets.ByeByeMediaPacketParserTest.Fixtures.VALID_BYEBYE_PACKET_HEADER_SET_1
 import com.ivanempire.lighthouse.parsers.packets.ByeByeMediaPacketParserTest.Fixtures.VALID_BYEBYE_PACKET_HEADER_SET_2
 import com.ivanempire.lighthouse.parsers.packets.ByeByeMediaPacketParserTest.Fixtures.VALID_BYEBYE_PACKET_HEADER_SET_3
+import java.net.InetAddress
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import java.net.InetAddress
 
 /** Tests [ByeByeMediaPacketParser] */
 class ByeByeMediaPacketParserTest {

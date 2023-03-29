@@ -31,7 +31,6 @@ interface UniqueServiceName {
                 }
             val extraSegments = groups.getOrNull(1)?.split(":")
 
-
             // If a URN marker is present, chances are the USN is targeting the root device
             val isRootMessage = extraSegments == null || extraSegments.getOrNull(1) == "rootdevice"
             if (isRootMessage) {

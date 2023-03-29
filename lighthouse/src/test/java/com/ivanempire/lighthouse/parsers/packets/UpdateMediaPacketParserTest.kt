@@ -11,10 +11,10 @@ import com.ivanempire.lighthouse.parsers.packets.UpdateMediaPacketParserTest.Fix
 import com.ivanempire.lighthouse.parsers.packets.UpdateMediaPacketParserTest.Fixtures.VALID_UPDATE_PACKET_HEADER_SET_1
 import com.ivanempire.lighthouse.parsers.packets.UpdateMediaPacketParserTest.Fixtures.VALID_UPDATE_PACKET_HEADER_SET_2
 import com.ivanempire.lighthouse.parsers.packets.UpdateMediaPacketParserTest.Fixtures.VALID_UPDATE_PACKET_HEADER_SET_3
-import org.junit.Assert.assertEquals
-import org.junit.Test
 import java.net.InetAddress
 import java.net.URL
+import org.junit.Assert.assertEquals
+import org.junit.Test
 
 /** Tests [UpdateMediaPacketParser] */
 class UpdateMediaPacketParserTest {

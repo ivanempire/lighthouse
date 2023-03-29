@@ -32,7 +32,7 @@ object TestUtils {
      * @return An instance of [AbridgedMediaDevice] to use during unit testing
      */
     fun generateMediaDevice(
-        deviceUUID: UUID? = null,
+        deviceUUID: String? = null,
         mediaHost: MediaHost? = null,
         embeddedDevices: MutableList<EmbeddedDevice>? = null,
         embeddedServices: MutableList<EmbeddedService>? = null,
@@ -40,7 +40,7 @@ object TestUtils {
         latestTimestamp: Long? = null
     ): AbridgedMediaDevice {
         return AbridgedMediaDevice(
-            uuid = deviceUUID ?: UUID.randomUUID(),
+            uuid = deviceUUID ?: UUID.randomUUID().toString(),
             host = mediaHost ?: MediaHost(InetAddress.getByName("239.255.255.250"), 1900),
             cache = cache ?: 0,
             bootId = (Math.random() * 1000).toInt(),
@@ -59,7 +59,7 @@ object TestUtils {
      * Generates an instance of [AliveMediaPacket]
      */
     internal fun generateAlivePacket(
-        deviceUUID: UUID,
+        deviceUUID: String,
         uniqueServiceName: UniqueServiceName? = null
     ): AliveMediaPacket {
         return AliveMediaPacket(
@@ -68,7 +68,7 @@ object TestUtils {
             location = URL("http://127.0.0.1:58122/"),
             notificationType = NotificationType("upnp:rootdevice"),
             server = SERVER_LIST.random(),
-            usn = uniqueServiceName ?: UniqueServiceName(deviceUUID.toString(), -1),
+            usn = uniqueServiceName ?: UniqueServiceName("uuid:$deviceUUID", -1),
             bootId = 100,
             configId = 130,
             searchPort = 1900,
@@ -80,7 +80,7 @@ object TestUtils {
      *
      */
     internal fun generateUpdatePacket(
-        deviceUUID: UUID,
+        deviceUUID: String,
         location: URL = URL("http://192.168.2.50:58121/"),
         uniqueServiceName: UniqueServiceName? = null,
         bootId: Int = 100,
@@ -91,7 +91,7 @@ object TestUtils {
             host = MediaHost(InetAddress.getByName("239.255.255.250"), 1900),
             location = location,
             notificationType = NotificationType("upnp:rootdevice"),
-            usn = uniqueServiceName ?: UniqueServiceName(deviceUUID.toString(), bootId),
+            usn = uniqueServiceName ?: UniqueServiceName("uuid:$deviceUUID", bootId),
             bootId = bootId,
             configId = configId,
             nextBootId = bootId + 1,
@@ -101,14 +101,14 @@ object TestUtils {
     }
 
     internal fun generateByeByePacket(
-        deviceUUID: UUID,
+        deviceUUID: String,
         uniqueServiceName: UniqueServiceName? = null,
         bootId: Int = 100,
     ): ByeByeMediaPacket {
         return ByeByeMediaPacket(
             host = MediaHost(InetAddress.getByName("239.255.255.250"), 1900),
             notificationType = NotificationType("upnp:rootdevice"),
-            usn = uniqueServiceName ?: UniqueServiceName(deviceUUID.toString(), bootId),
+            usn = uniqueServiceName ?: UniqueServiceName("uuid:$deviceUUID", bootId),
             bootId = bootId,
             configId = 110
         )
@@ -125,14 +125,14 @@ object TestUtils {
      * @return An instance of [UniqueServiceName] to use in unit testing
      */
     inline fun <reified T : UniqueServiceName> generateUSN(
-        deviceUUID: UUID,
+        deviceUUID: String,
         identifier: String = "RenderingControl",
         version: String = "3.0",
         bootId: Int = 600
     ): UniqueServiceName {
         return when (T::class) {
             RootDeviceInformation::class -> {
-                UniqueServiceName(deviceUUID.toString(), -1)
+                UniqueServiceName("uuid:$deviceUUID", -1)
             }
             EmbeddedDevice::class -> {
                 UniqueServiceName("uuid:$deviceUUID::urn:schemas-upnp-org:device:$identifier:$version", bootId)

@@ -9,7 +9,7 @@ import com.ivanempire.lighthouse.models.Constants.URN_MARKER
 /**
  * Wrapper class around an SSDP packet's USN field.
  */
-interface UniqueServiceName{
+interface UniqueServiceName {
     val uuid: String
     val bootId: Int
 

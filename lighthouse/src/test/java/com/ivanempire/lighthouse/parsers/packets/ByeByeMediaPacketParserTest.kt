@@ -13,10 +13,9 @@ import com.ivanempire.lighthouse.parsers.packets.ByeByeMediaPacketParserTest.Fix
 import com.ivanempire.lighthouse.parsers.packets.ByeByeMediaPacketParserTest.Fixtures.VALID_BYEBYE_PACKET_HEADER_SET_1
 import com.ivanempire.lighthouse.parsers.packets.ByeByeMediaPacketParserTest.Fixtures.VALID_BYEBYE_PACKET_HEADER_SET_2
 import com.ivanempire.lighthouse.parsers.packets.ByeByeMediaPacketParserTest.Fixtures.VALID_BYEBYE_PACKET_HEADER_SET_3
-import java.net.InetAddress
-import java.util.UUID
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.net.InetAddress
 
 /** Tests [ByeByeMediaPacketParser] */
 class ByeByeMediaPacketParserTest {
@@ -47,7 +46,7 @@ class ByeByeMediaPacketParserTest {
         )
         assertEquals(
             RootDeviceInformation(
-                uuid = UUID.fromString("3f8744cd-30bf-4fc9-8a42-bad80ae660c1"),
+                uuid = "3f8744cd-30bf-4fc9-8a42-bad80ae660c1",
                 bootId = 100,
             ),
             parsedPacket.usn
@@ -69,7 +68,7 @@ class ByeByeMediaPacketParserTest {
         )
         assertEquals(
             EmbeddedDevice(
-                uuid = UUID.fromString("00000000-0000-0000-0200-00125A8A0960"),
+                uuid = "00000000-0000-0000-0200-00125A8A0960",
                 bootId = 200,
                 deviceType = "presence",
                 deviceVersion = "1",
@@ -94,7 +93,7 @@ class ByeByeMediaPacketParserTest {
         )
         assertEquals(
             EmbeddedService(
-                uuid = UUID.fromString("9ab0c000-f668-11de-9976-00a0ded0e859"),
+                uuid = "9ab0c000-f668-11de-9976-00a0ded0e859",
                 bootId = 4,
                 serviceType = "RenderingControl",
                 serviceVersion = "1"
@@ -118,7 +117,7 @@ class ByeByeMediaPacketParserTest {
         )
         assertEquals(
             EmbeddedService(
-                uuid = UUID.fromString("00000000-0000-0000-0000-000000000000"),
+                uuid = "00000000-0000-0000-0000-000000000000",
                 bootId = 9,
                 serviceType = "SwitchPower",
                 serviceVersion = "1"

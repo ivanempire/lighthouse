@@ -11,11 +11,10 @@ import com.ivanempire.lighthouse.parsers.packets.UpdateMediaPacketParserTest.Fix
 import com.ivanempire.lighthouse.parsers.packets.UpdateMediaPacketParserTest.Fixtures.VALID_UPDATE_PACKET_HEADER_SET_1
 import com.ivanempire.lighthouse.parsers.packets.UpdateMediaPacketParserTest.Fixtures.VALID_UPDATE_PACKET_HEADER_SET_2
 import com.ivanempire.lighthouse.parsers.packets.UpdateMediaPacketParserTest.Fixtures.VALID_UPDATE_PACKET_HEADER_SET_3
-import java.net.InetAddress
-import java.net.URL
-import java.util.UUID
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.net.InetAddress
+import java.net.URL
 
 /** Tests [UpdateMediaPacketParser] */
 class UpdateMediaPacketParserTest {
@@ -52,7 +51,7 @@ class UpdateMediaPacketParserTest {
         )
         assertEquals(
             EmbeddedService(
-                UUID.fromString("b9783ad2-d548-9793-0eb9-42db373ade07"),
+                "b9783ad2-d548-9793-0eb9-42db373ade07",
                 100,
                 "SwitchPower",
                 "1"
@@ -80,7 +79,7 @@ class UpdateMediaPacketParserTest {
         assertEquals(NotificationSubtype.UPDATE, parsedPacket.notificationSubtype)
         assertEquals(
             EmbeddedService(
-                UUID.fromString("3ddcd1d3-2380-45f5-b069-2c4d54008cf2"),
+                "3ddcd1d3-2380-45f5-b069-2c4d54008cf2",
                 1525511561,
                 "WANPPPConnection",
                 "1"
@@ -112,7 +111,7 @@ class UpdateMediaPacketParserTest {
         )
         assertEquals(
             EmbeddedService(
-                UUID.fromString("b9783ad2-d548-9793-0eb9-42db373ade07"),
+                "b9783ad2-d548-9793-0eb9-42db373ade07",
                 -1,
                 "RenderingControl",
                 "1"
@@ -140,7 +139,7 @@ class UpdateMediaPacketParserTest {
         )
         assertEquals(
             EmbeddedService(
-                UUID.fromString("3f8744cd-30bf-4fc9-8a42-bad80ae660c1"),
+                "3f8744cd-30bf-4fc9-8a42-bad80ae660c1",
                 50,
                 "Dimming",
                 "1"

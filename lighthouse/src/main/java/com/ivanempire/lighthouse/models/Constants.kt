@@ -26,7 +26,7 @@ object Constants {
     const val NOT_AVAILABLE = "N/A"
     const val NOT_AVAILABLE_NUM = -1
     const val NOT_AVAILABLE_CACHE = 1800
-    val NOT_AVAILABLE_UUID = UUID(0, 0)
+    val NOT_AVAILABLE_UUID = UUID(0, 0).toString()
     val NOT_AVAILABLE_LOCATION = URL("http://127.0.0.1/")
     val DEFAULT_MEDIA_HOST = MediaHost(InetAddress.getByName(DEFAULT_MULTICAST_ADDRESS), 1900)
 

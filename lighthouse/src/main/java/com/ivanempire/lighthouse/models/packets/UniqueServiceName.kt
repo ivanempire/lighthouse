@@ -1,8 +1,6 @@
 package com.ivanempire.lighthouse.models.packets
 
-import com.ivanempire.lighthouse.models.Constants.DEVICE_MARKER
 import com.ivanempire.lighthouse.models.Constants.NOT_AVAILABLE_UUID
-import com.ivanempire.lighthouse.models.Constants.SERVICE_MARKER
 import com.ivanempire.lighthouse.models.Constants.UPNP_SCHEMA_MARKER
 import com.ivanempire.lighthouse.models.Constants.URN_MARKER
 
@@ -23,38 +21,44 @@ interface UniqueServiceName {
          * @param bootId The boot ID of the target device or embedded component
          */
         operator fun invoke(rawValue: String, bootId: Int): UniqueServiceName {
-            val segments = rawValue.split(":")
-            val uuid = segments.getOrNull(1) ?: NOT_AVAILABLE_UUID.toString()
+            val groups = rawValue.split("::")
+            val uuidSegments = groups[0].split(":")
+            val uuid =
+                if (uuidSegments[0] == "uuid") {
+                    uuidSegments.getOrNull(1) ?: NOT_AVAILABLE_UUID
+                } else {
+                    NOT_AVAILABLE_UUID
+                }
+            val extraSegments = groups.getOrNull(1)?.split(":")
+
 
             // If a URN marker is present, chances are the USN is targeting the root device
-            val isRootMessage = rawValue.indexOf(URN_MARKER) == -1 && rawValue.isNotEmpty()
+            val isRootMessage = extraSegments == null || extraSegments.getOrNull(1) == "rootdevice"
             if (isRootMessage) {
-                return RootDeviceInformation(uuid , bootId)
+                return RootDeviceInformation(uuid, bootId)
             }
 
             // If a device marker is present, chances are the USN is targeting an embedded device
-            val isDeviceMessage = rawValue.indexOf(DEVICE_MARKER) != -1
+            val isDeviceMessage = extraSegments?.getOrNull(2) == "device"
             if (isDeviceMessage) {
-                val deviceInfoPair = rawValue.createPair(DEVICE_MARKER)
                 return EmbeddedDevice(
                     uuid = uuid,
                     bootId = bootId,
-                    deviceType = deviceInfoPair.first,
-                    deviceVersion = deviceInfoPair.second,
-                    domain = rawValue.parseDomain()
+                    deviceType = extraSegments?.getOrNull(3) ?: "",
+                    deviceVersion = extraSegments?.getOrNull(4) ?: "",
+                    domain = rawValue.parseDomain(),
                 )
             }
 
             // If a service marker is present, chances are the USN is targeting an embedded service
-            val isServiceMessage = rawValue.indexOf(SERVICE_MARKER) != -1
+            val isServiceMessage = extraSegments?.getOrNull(2) == "service"
             if (isServiceMessage) {
-                val serviceInfoPair = rawValue.createPair(SERVICE_MARKER)
                 return EmbeddedService(
                     uuid = uuid,
                     bootId = bootId,
-                    serviceType = serviceInfoPair.first,
-                    serviceVersion = serviceInfoPair.second,
-                    domain = rawValue.parseDomain()
+                    serviceType = extraSegments?.getOrNull(3) ?: "",
+                    serviceVersion = extraSegments?.getOrNull(4) ?: "",
+                    domain = rawValue.parseDomain(),
                 )
             }
 
@@ -104,19 +108,6 @@ data class EmbeddedService(
     val serviceVersion: String,
     val domain: String? = null
 ) : UniqueServiceName
-
-/**
- * Creates a string pair of embedded device or service information from the USN substring
- *
- * @return Pair of string values representing Pair<device|service, version>
- */
-private fun String.createPair(markerTag: String): Pair<String, String> {
-    val splitInfo = this.split(markerTag)[1].split(":")
-    return Pair(
-        splitInfo[0],
-        splitInfo[1]
-    )
-}
 
 /**
  * Extracts the domain from the USN substring

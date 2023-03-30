@@ -23,7 +23,7 @@ abstract class MediaDevice
  * @param deviceList The list of devices (embedded AND root) present on this device
  */
 data class AbridgedMediaDevice(
-    val uuid: UUID,
+    val uuid: String,
     val host: MediaHost,
     val cache: Int,
     val bootId: Int?,

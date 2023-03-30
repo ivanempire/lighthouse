@@ -36,7 +36,7 @@ internal class RealSocketListener(
         val multicastSocket = MulticastSocket(null)
         multicastSocket.reuseAddress = true
         multicastSocket.broadcast = true
-        multicastSocket.loopbackMode = false
+        multicastSocket.loopbackMode = true // disable LoopbackMode
 
         try {
             multicastSocket.joinGroup(multicastGroup)

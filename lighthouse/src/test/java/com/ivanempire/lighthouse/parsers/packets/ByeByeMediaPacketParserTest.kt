@@ -45,10 +45,7 @@ class ByeByeMediaPacketParserTest {
             parsedPacket.notificationType
         )
         assertEquals(
-            RootDeviceInformation(
-                uuid = "3f8744cd-30bf-4fc9-8a42-bad80ae660c1",
-                bootId = 100,
-            ),
+            RootDeviceInformation("3f8744cd-30bf-4fc9-8a42-bad80ae660c1"),
             parsedPacket.usn
         )
         assertEquals(NotificationSubtype.BYEBYE, parsedPacket.notificationSubtype)
@@ -69,7 +66,6 @@ class ByeByeMediaPacketParserTest {
         assertEquals(
             EmbeddedDevice(
                 uuid = "00000000-0000-0000-0200-00125A8A0960",
-                bootId = 200,
                 deviceType = "presence",
                 deviceVersion = "1",
                 domain = "schemas-microsoft-com"
@@ -94,9 +90,9 @@ class ByeByeMediaPacketParserTest {
         assertEquals(
             EmbeddedService(
                 uuid = "9ab0c000-f668-11de-9976-00a0ded0e859",
-                bootId = 4,
                 serviceType = "RenderingControl",
-                serviceVersion = "1"
+                serviceVersion = "1",
+                domain = "schemas-upnp-org"
             ),
             parsedPacket.usn
         )
@@ -118,9 +114,9 @@ class ByeByeMediaPacketParserTest {
         assertEquals(
             EmbeddedService(
                 uuid = "00000000-0000-0000-0000-000000000000",
-                bootId = 9,
                 serviceType = "SwitchPower",
-                serviceVersion = "1"
+                serviceVersion = "1",
+                domain = "schemas-upnp-org"
             ),
             parsedPacket.usn
         )

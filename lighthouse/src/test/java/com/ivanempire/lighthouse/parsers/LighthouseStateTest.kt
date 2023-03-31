@@ -98,7 +98,7 @@ class LighthouseStateTest {
         val MEDIA_DEVICE_2 = generateMediaDevice(
             RANDOM_UUID_2,
             embeddedServices = mutableListOf(
-                EmbeddedService(RANDOM_UUID_2, 400, "RenderingControl", "2.0")
+                EmbeddedService(RANDOM_UUID_2, "RenderingControl", "2.0", "")
             )
         )
         val MEDIA_DEVICE_3 = generateMediaDevice(RANDOM_UUID_3)
@@ -134,18 +134,18 @@ class LighthouseStateTest {
         assertEquals(
             EmbeddedService(
                 RANDOM_UUID_1,
-                600,
                 "RenderingControl",
-                "3.0"
+                "3.0",
+                "schemas-upnp-org"
             ),
             modifiedOne.serviceList[0]
         )
         assertEquals(
             EmbeddedDevice(
                 RANDOM_UUID_3,
-                600,
                 "RenderingControl",
-                "3.0"
+                "3.0",
+                "schemas-upnp-org"
             ),
             modifiedThree.deviceList[0]
         )

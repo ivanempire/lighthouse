@@ -1,15 +1,12 @@
 package com.ivanempire.lighthouse.models.packets
 
 import com.ivanempire.lighthouse.models.Constants.NOT_AVAILABLE_UUID
-import com.ivanempire.lighthouse.models.Constants.UPNP_SCHEMA_MARKER
-import com.ivanempire.lighthouse.models.Constants.URN_MARKER
 
 /**
  * Wrapper class around an SSDP packet's USN field.
  */
-interface UniqueServiceName {
+internal interface UniqueServiceName {
     val uuid: String
-    val bootId: Int
 
     companion object {
         /**
@@ -18,9 +15,8 @@ interface UniqueServiceName {
          * decision is made based on key markers present in the raw string
          *
          * @param rawValue The value provided by the USN header
-         * @param bootId The boot ID of the target device or embedded component
          */
-        operator fun invoke(rawValue: String, bootId: Int): UniqueServiceName {
+        operator fun invoke(rawValue: String): UniqueServiceName {
             val groups = rawValue.split("::")
             val uuidSegments = groups[0].split(":")
             val uuid =
@@ -31,21 +27,14 @@ interface UniqueServiceName {
                 }
             val extraSegments = groups.getOrNull(1)?.split(":")
 
-            // If a URN marker is present, chances are the USN is targeting the root device
-            val isRootMessage = extraSegments == null || extraSegments.getOrNull(1) == "rootdevice"
-            if (isRootMessage) {
-                return RootDeviceInformation(uuid, bootId)
-            }
-
             // If a device marker is present, chances are the USN is targeting an embedded device
             val isDeviceMessage = extraSegments?.getOrNull(2) == "device"
             if (isDeviceMessage) {
                 return EmbeddedDevice(
                     uuid = uuid,
-                    bootId = bootId,
                     deviceType = extraSegments?.getOrNull(3) ?: "",
                     deviceVersion = extraSegments?.getOrNull(4) ?: "",
-                    domain = rawValue.parseDomain(),
+                    domain = extraSegments?.getOrNull(1) ?: "",
                 )
             }
 
@@ -54,15 +43,14 @@ interface UniqueServiceName {
             if (isServiceMessage) {
                 return EmbeddedService(
                     uuid = uuid,
-                    bootId = bootId,
                     serviceType = extraSegments?.getOrNull(3) ?: "",
                     serviceVersion = extraSegments?.getOrNull(4) ?: "",
-                    domain = rawValue.parseDomain(),
+                    domain = extraSegments?.getOrNull(1) ?: "",
                 )
             }
 
             // If everything else failed, create an empty root device target
-            return RootDeviceInformation(uuid, -1)
+            return RootDeviceInformation(uuid)
         }
     }
 }
@@ -71,11 +59,9 @@ interface UniqueServiceName {
  * Data class indicating that the incoming USN is targeting the root device
  *
  * @param uuid The unique identifier of the root device
- * @param bootId The current boot ID of the root device
  */
-internal data class RootDeviceInformation(
-    override val uuid: String,
-    override val bootId: Int
+data class RootDeviceInformation(
+    override val uuid: String
 ) : UniqueServiceName
 
 /**
@@ -87,10 +73,9 @@ internal data class RootDeviceInformation(
  */
 data class EmbeddedDevice(
     override val uuid: String,
-    override val bootId: Int,
     val deviceType: String,
     val deviceVersion: String,
-    val domain: String? = null
+    val domain: String
 ) : UniqueServiceName
 
 /**
@@ -102,23 +87,7 @@ data class EmbeddedDevice(
  */
 data class EmbeddedService(
     override val uuid: String,
-    override val bootId: Int,
     val serviceType: String,
     val serviceVersion: String,
-    val domain: String? = null
+    val domain: String
 ) : UniqueServiceName
-
-/**
- * Extracts the domain from the USN substring
- *
- * @return USN domain as a string, null otherwise
- */
-private fun String.parseDomain(): String? {
-    val domainMarkerIndex = this.indexOf(UPNP_SCHEMA_MARKER)
-    return if (domainMarkerIndex != -1) {
-        null
-    } else {
-        val domainHalf = this.split(URN_MARKER)[1]
-        domainHalf.substring(0, domainHalf.indexOf(":"))
-    }
-}

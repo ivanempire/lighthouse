@@ -23,7 +23,7 @@ internal class ByeByeMediaPacketParser(
     }
 
     private val uniqueServiceName: UniqueServiceName by lazy {
-        UniqueServiceName(headerSet.getAndRemove(HeaderKeys.UNIQUE_SERVICE_NAME) ?: "", bootId)
+        UniqueServiceName(headerSet.getAndRemove(HeaderKeys.UNIQUE_SERVICE_NAME) ?: "")
     }
 
     private val bootId = headerSet.getAndRemove(HeaderKeys.BOOT_ID)?.toInt() ?: NOT_AVAILABLE_NUM

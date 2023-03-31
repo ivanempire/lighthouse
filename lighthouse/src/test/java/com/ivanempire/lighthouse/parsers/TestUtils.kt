@@ -68,7 +68,7 @@ object TestUtils {
             location = URL("http://127.0.0.1:58122/"),
             notificationType = NotificationType("upnp:rootdevice"),
             server = SERVER_LIST.random(),
-            usn = uniqueServiceName ?: UniqueServiceName("uuid:$deviceUUID", -1),
+            usn = uniqueServiceName ?: UniqueServiceName("uuid:$deviceUUID"),
             bootId = 100,
             configId = 130,
             searchPort = 1900,
@@ -91,7 +91,7 @@ object TestUtils {
             host = MediaHost(InetAddress.getByName("239.255.255.250"), 1900),
             location = location,
             notificationType = NotificationType("upnp:rootdevice"),
-            usn = uniqueServiceName ?: UniqueServiceName("uuid:$deviceUUID", bootId),
+            usn = uniqueServiceName ?: UniqueServiceName("uuid:$deviceUUID"),
             bootId = bootId,
             configId = configId,
             nextBootId = bootId + 1,
@@ -108,7 +108,7 @@ object TestUtils {
         return ByeByeMediaPacket(
             host = MediaHost(InetAddress.getByName("239.255.255.250"), 1900),
             notificationType = NotificationType("upnp:rootdevice"),
-            usn = uniqueServiceName ?: UniqueServiceName("uuid:$deviceUUID", bootId),
+            usn = uniqueServiceName ?: UniqueServiceName("uuid:$deviceUUID"),
             bootId = bootId,
             configId = 110
         )
@@ -124,24 +124,24 @@ object TestUtils {
      *
      * @return An instance of [UniqueServiceName] to use in unit testing
      */
-    inline fun <reified T : UniqueServiceName> generateUSN(
+    internal inline fun <reified T : UniqueServiceName> generateUSN(
         deviceUUID: String,
         identifier: String = "RenderingControl",
         version: String = "3.0",
-        bootId: Int = 600
+        domain: String = "schemas-upnp-org"
     ): UniqueServiceName {
         return when (T::class) {
             RootDeviceInformation::class -> {
-                UniqueServiceName("uuid:$deviceUUID", -1)
+                UniqueServiceName("uuid:$deviceUUID")
             }
             EmbeddedDevice::class -> {
-                UniqueServiceName("uuid:$deviceUUID::urn:schemas-upnp-org:device:$identifier:$version", bootId)
+                UniqueServiceName("uuid:$deviceUUID::urn:$domain:device:$identifier:$version")
             }
             EmbeddedService::class -> {
-                UniqueServiceName("uuid:$deviceUUID::urn:schemas-upnp-org:service:$identifier:$version", bootId)
+                UniqueServiceName("uuid:$deviceUUID::urn:$domain:service:$identifier:$version")
             }
             else -> {
-                UniqueServiceName("uuid:$deviceUUID::urn:schemas-upnp-org:service:$identifier:$version", bootId)
+                UniqueServiceName("uuid:$deviceUUID::urn:$domain:service:$identifier:$version")
             }
         }
     }

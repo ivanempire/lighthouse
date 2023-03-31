@@ -32,7 +32,7 @@ class LighthouseStateTest {
         val RANDOM_UUID_1 = UUID.randomUUID().toString()
         val ALIVE_PACKET_1 = generateAlivePacket(RANDOM_UUID_1)
 
-        val finalList = sut.parseMediaPacket(ALIVE_PACKET_1)
+        val finalList = sut.parseMediaPacket(ALIVE_PACKET_1, System.currentTimeMillis())
         assertTrue(finalList.isNotEmpty())
         assertEquals(1, finalList.size)
 
@@ -61,7 +61,7 @@ class LighthouseStateTest {
         val ALIVE_PACKET_1 = generateAlivePacket(RANDOM_UUID_2, generateUSN<EmbeddedDevice>(RANDOM_UUID_2))
 
         sut.setDeviceList(listOf(MEDIA_DEVICE_1, MEDIA_DEVICE_2))
-        val finalList = sut.parseMediaPacket(ALIVE_PACKET_1)
+        val finalList = sut.parseMediaPacket(ALIVE_PACKET_1, System.currentTimeMillis())
 
         assertTrue(finalList.isNotEmpty())
         assertEquals(2, finalList.size)
@@ -77,7 +77,7 @@ class LighthouseStateTest {
         val RANDOM_UUID_1 = UUID.randomUUID().toString()
         val UPDATE_PACKET_1 = generateUpdatePacket(RANDOM_UUID_1, location = URL("http://127.0.0.1:9999/"), bootId = 200, configId = 300, secureLocation = URL("https://127.0.0.1:9999/"))
 
-        val finalList = sut.parseMediaPacket(UPDATE_PACKET_1)
+        val finalList = sut.parseMediaPacket(UPDATE_PACKET_1, System.currentTimeMillis())
         assertTrue(finalList.isNotEmpty())
         assertEquals(1, finalList.size)
 
@@ -118,9 +118,9 @@ class LighthouseStateTest {
         )
 
         sut.setDeviceList(listOf(MEDIA_DEVICE_1, MEDIA_DEVICE_2, MEDIA_DEVICE_3))
-        sut.parseMediaPacket(UPDATE_PACKET_3)
+        sut.parseMediaPacket(UPDATE_PACKET_3, System.currentTimeMillis())
 
-        val finalList = sut.parseMediaPacket(UPDATE_PACKET_2)
+        val finalList = sut.parseMediaPacket(UPDATE_PACKET_2, System.currentTimeMillis())
 
         // TODO: Optimize this
         val modifiedOne = finalList.firstOrNull { it.uuid == RANDOM_UUID_1 }!!
@@ -158,13 +158,13 @@ class LighthouseStateTest {
         sut.setDeviceList(listOf(MEDIA_DEVICE_1))
 
         val UPDATE_PACKET_1 = generateUpdatePacket(RANDOM_UUID_1, location = URL("http://127.0.0.1:9999/"), uniqueServiceName = generateUSN<EmbeddedDevice>(RANDOM_UUID_1), bootId = 200, configId = 300, secureLocation = URL("https://127.0.0.1:9999/"))
-        val initialList = sut.parseMediaPacket(UPDATE_PACKET_1)
+        val initialList = sut.parseMediaPacket(UPDATE_PACKET_1, System.currentTimeMillis())
 
         assertTrue(initialList.isNotEmpty())
         assertEquals(1, initialList.size)
 
         val UPDATE_PACKET_2 = generateUpdatePacket(RANDOM_UUID_1, location = URL("http://127.0.0.2:9999/"), uniqueServiceName = generateUSN<EmbeddedService>(RANDOM_UUID_1), bootId = 450, configId = 350, secureLocation = URL("https://127.0.0.2:9999/"))
-        val finalList = sut.parseMediaPacket(UPDATE_PACKET_2)
+        val finalList = sut.parseMediaPacket(UPDATE_PACKET_2, System.currentTimeMillis())
 
         assertTrue(finalList.isNotEmpty())
         assertEquals(1, finalList.size)
@@ -189,7 +189,7 @@ class LighthouseStateTest {
         val BYEBYE_PACKET_1 = generateByeByePacket(RANDOM_UUID_1, generateUSN<RootDeviceInformation>(RANDOM_UUID_1))
 
         sut.setDeviceList(listOf(MEDIA_DEVICE_1, MEDIA_DEVICE_2, MEDIA_DEVICE_3))
-        val finalList = sut.parseMediaPacket(BYEBYE_PACKET_1)
+        val finalList = sut.parseMediaPacket(BYEBYE_PACKET_1, System.currentTimeMillis())
 
         assertTrue(finalList.isNotEmpty())
         assertEquals(2, finalList.size)
@@ -232,9 +232,9 @@ class LighthouseStateTest {
 
         sut.setDeviceList(listOf(MEDIA_DEVICE_1, MEDIA_DEVICE_2, MEDIA_DEVICE_3, MEDIA_DEVICE_4, MEDIA_DEVICE_5))
 
-        sut.parseMediaPacket(BYEBYE_PACKET_1)
-        sut.parseMediaPacket(BYEBYE_PACKET_2)
-        val finalList = sut.parseMediaPacket(BYEBYE_PACKET_3)
+        sut.parseMediaPacket(BYEBYE_PACKET_1, System.currentTimeMillis())
+        sut.parseMediaPacket(BYEBYE_PACKET_2, System.currentTimeMillis())
+        val finalList = sut.parseMediaPacket(BYEBYE_PACKET_3, System.currentTimeMillis())
 
         assertTrue(finalList.isNotEmpty())
         assertEquals(5, finalList.size)
@@ -255,7 +255,7 @@ class LighthouseStateTest {
         val BYEBYE_PACKET_1 = generateByeByePacket(RANDOM_UUID_1, generateUSN<RootDeviceInformation>(RANDOM_UUID_3))
         sut.setDeviceList(listOf(MEDIA_DEVICE_1, MEDIA_DEVICE_2))
 
-        val finalList = sut.parseMediaPacket(BYEBYE_PACKET_1)
+        val finalList = sut.parseMediaPacket(BYEBYE_PACKET_1, System.currentTimeMillis())
         assertTrue(finalList.isNotEmpty())
         assertEquals(2, finalList.size)
     }
@@ -270,21 +270,22 @@ class LighthouseStateTest {
 
         sut.setDeviceList(listOf(MEDIA_DEVICE_1, MEDIA_DEVICE_2))
 
-        val finalList = sut.parseStaleDevices()
+        val finalList = sut.findStaleDevices(System.currentTimeMillis())
         assertTrue(finalList.isEmpty())
     }
 
     @Test
     fun `given stale devices returns them`() {
+        val currentTime = 1680267973881
         val RANDOM_UUID_1 = UUID.randomUUID().toString()
         val RANDOM_UUID_2 = UUID.randomUUID().toString()
 
-        val MEDIA_DEVICE_1 = generateMediaDevice(RANDOM_UUID_1, cache = 30, latestTimestamp = System.currentTimeMillis() - 35 * 1000)
-        val MEDIA_DEVICE_2 = generateMediaDevice(RANDOM_UUID_2, cache = 10, latestTimestamp = System.currentTimeMillis() - 25 * 1000)
+        val MEDIA_DEVICE_1 = generateMediaDevice(RANDOM_UUID_1, cache = 30, latestTimestamp = currentTime - 35_000)
+        val MEDIA_DEVICE_2 = generateMediaDevice(RANDOM_UUID_2, cache = 10, latestTimestamp = currentTime - 25_000)
 
         sut.setDeviceList(listOf(MEDIA_DEVICE_1, MEDIA_DEVICE_2))
 
-        val finalList = sut.parseStaleDevices()
+        val finalList = sut.findStaleDevices(currentTime)
         assertTrue(finalList.isNotEmpty())
     }
 }

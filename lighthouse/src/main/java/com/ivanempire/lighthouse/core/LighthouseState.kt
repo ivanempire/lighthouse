@@ -39,12 +39,12 @@ internal class LighthouseState {
      * @param latestPacket The latest parsed instance of a [MediaPacket]
      * @return A new version of [deviceList] with the appropriate [AbridgedMediaDevice] updated
      */
-    fun parseMediaPacket(latestPacket: MediaPacket): List<AbridgedMediaDevice> {
+    fun parseMediaPacket(latestPacket: MediaPacket, currentTime: Long): List<AbridgedMediaDevice> {
         return when (latestPacket) {
-            is AliveMediaPacket -> parseAliveMediaPacket(latestPacket)
-            is UpdateMediaPacket -> parseUpdateMediaPacket(latestPacket)
+            is AliveMediaPacket -> parseAliveMediaPacket(latestPacket, currentTime)
+            is UpdateMediaPacket -> parseUpdateMediaPacket(latestPacket, currentTime)
             is ByeByeMediaPacket -> parseByeByeMediaPacket(latestPacket)
-            is SearchResponseMediaPacket -> parseAliveMediaPacket(latestPacket.toAlivePacket())
+            is SearchResponseMediaPacket -> parseAliveMediaPacket(latestPacket.toAlivePacket(), currentTime)
         }
     }
 
@@ -58,7 +58,10 @@ internal class LighthouseState {
      * @param latestPacket Latest instance of an [AliveMediaPacket]
      * @return A new version of [deviceList] with updated information from ALIVE packet
      */
-    private fun parseAliveMediaPacket(latestPacket: AliveMediaPacket): List<AbridgedMediaDevice> {
+    private fun parseAliveMediaPacket(
+        latestPacket: AliveMediaPacket,
+        currentTime: Long
+    ): List<AbridgedMediaDevice> {
         var targetDevice = deviceList.firstOrNull { it.uuid == latestPacket.usn.uuid }
         val targetComponent = latestPacket.usn
 
@@ -74,14 +77,14 @@ internal class LighthouseState {
                 location = latestPacket.location,
                 searchPort = latestPacket.searchPort,
                 secureLocation = latestPacket.secureLocation,
-                latestTimestamp = System.currentTimeMillis()
+                latestTimestamp = currentTime
             )
             baseDevice.updateEmbeddedComponent(targetComponent)
             deviceList.add(baseDevice)
         } else {
             // Update the existing device
             deviceList.remove(targetDevice)
-            targetDevice = targetDevice.copy(latestTimestamp = System.currentTimeMillis())
+            targetDevice = targetDevice.copy(latestTimestamp = currentTime)
             targetDevice.updateEmbeddedComponent(targetComponent)
             deviceList.add(targetDevice)
         }
@@ -97,7 +100,10 @@ internal class LighthouseState {
      * @param latestPacket Latest instance of an [UpdateMediaPacket]
      * @return A new version of [deviceList] with updated information from UPDATE packet
      */
-    private fun parseUpdateMediaPacket(latestPacket: UpdateMediaPacket): List<AbridgedMediaDevice> {
+    private fun parseUpdateMediaPacket(
+        latestPacket: UpdateMediaPacket,
+        currentTime: Long
+    ): List<AbridgedMediaDevice> {
         var targetDevice = deviceList.firstOrNull { it.uuid == latestPacket.usn.uuid }
         val targetComponent = latestPacket.usn
         if (targetDevice == null) {
@@ -113,13 +119,13 @@ internal class LighthouseState {
                 location = latestPacket.location,
                 searchPort = latestPacket.searchPort,
                 secureLocation = latestPacket.secureLocation,
-                latestTimestamp = System.currentTimeMillis()
+                latestTimestamp = currentTime
             )
             baseDevice.updateEmbeddedComponent(targetComponent)
             deviceList.add(baseDevice)
         } else {
             deviceList.remove(targetDevice)
-            targetDevice = targetDevice.copy(latestTimestamp = System.currentTimeMillis())
+            targetDevice = targetDevice.copy(latestTimestamp = currentTime)
             when (targetComponent) {
                 // ALIVE came first, UPDATE for root should only update certain fields
                 // cache and server are not affected
@@ -166,9 +172,9 @@ internal class LighthouseState {
      *
      * @return A device list with stale root devices removed
      */
-    fun parseStaleDevices(): List<AbridgedMediaDevice> {
+    fun findStaleDevices(currentTime: Long): List<AbridgedMediaDevice> {
         return deviceList.filter {
-            System.currentTimeMillis() - it.latestTimestamp > it.cache * 1000
+            currentTime - it.latestTimestamp > it.cache * 1000
         }
     }
 }

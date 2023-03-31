@@ -9,8 +9,10 @@ import com.ivanempire.lighthouse.models.Constants.DEFAULT_SEARCH_REQUEST
 import com.ivanempire.lighthouse.models.devices.AbridgedMediaDevice
 import com.ivanempire.lighthouse.models.search.SearchRequest
 import com.ivanempire.lighthouse.socket.RealSocketListener
+import kotlinx.coroutines.delay
 import java.lang.IllegalStateException
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 /**
  * The main entrypoint for the Lighthouse library
@@ -28,7 +30,12 @@ interface LighthouseClient {
 
         private val discoveryManager = RealDiscoveryManager(
             LighthouseState(),
-            socketListener
+            socketListener,
+            flow {
+                delay(1_000)
+                emit(System.currentTimeMillis())
+            },
+            System::currentTimeMillis
         )
 
         /**

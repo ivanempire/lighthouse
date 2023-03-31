@@ -85,8 +85,7 @@ class AliveMediaPacketParserTest {
             EmbeddedService(
                 uuid = "b9783ad2-d548-9793-0eb9-42db373ade07",
                 serviceType = "RenderingControl",
-                serviceVersion = "1",
-                domain = "schemas-upnp-org"
+                serviceVersion = "1"
             ),
             parsedPacket.usn
         )
@@ -120,8 +119,7 @@ class AliveMediaPacketParserTest {
             EmbeddedService(
                 uuid = "3f8744cd-30bf-4fc9-8a42-bad80ae660c1",
                 serviceType = "SwitchPower",
-                serviceVersion = "1",
-                domain = "schemas-upnp-org"
+                serviceVersion = "1"
             ),
             parsedPacket.usn
         )
@@ -152,8 +150,7 @@ class AliveMediaPacketParserTest {
             EmbeddedService(
                 uuid = "3f8744cd-30bf-4fc9-8a42-bad80ae660c1",
                 serviceType = "Dimming",
-                serviceVersion = "1",
-                domain = "schemas-upnp-org"
+                serviceVersion = "1"
             ),
             parsedPacket.usn
         )

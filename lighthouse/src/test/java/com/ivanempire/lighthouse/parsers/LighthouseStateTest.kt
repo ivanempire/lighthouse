@@ -135,8 +135,7 @@ class LighthouseStateTest {
             EmbeddedService(
                 RANDOM_UUID_1,
                 "RenderingControl",
-                "3.0",
-                "schemas-upnp-org"
+                "3.0"
             ),
             modifiedOne.serviceList[0]
         )
@@ -144,8 +143,7 @@ class LighthouseStateTest {
             EmbeddedDevice(
                 RANDOM_UUID_3,
                 "RenderingControl",
-                "3.0",
-                "schemas-upnp-org"
+                "3.0"
             ),
             modifiedThree.deviceList[0]
         )

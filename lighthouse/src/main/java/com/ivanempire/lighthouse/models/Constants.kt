@@ -14,11 +14,12 @@ object Constants {
     const val DEFAULT_SEARCH_MAN = "\"ssdp:discover\""
     const val DEFAULT_MULTICAST_ADDRESS = "239.255.255.250"
 
-    const val DEVICE_MARKER = ":device:"
-    const val SERVICE_MARKER = ":service:"
-    const val URN_MARKER = "urn:"
-    const val UPNP_SCHEMA_MARKER = ":schemas-upnp-org:"
-    val REGEX_UUID = Regex(
+    internal const val UUID_MARKER = "uuid"
+    internal const val DEVICE_MARKER = "device"
+    internal const val SERVICE_MARKER = "service"
+    internal const val URN_MARKER = "urn"
+    internal const val UPNP_SCHEMA = "schemas-upnp-org"
+    internal val REGEX_UUID = Regex(
         "([a-f0-9]{8}(-[a-f0-9]{4}){4}[a-f0-9]{8})",
         RegexOption.IGNORE_CASE
     )

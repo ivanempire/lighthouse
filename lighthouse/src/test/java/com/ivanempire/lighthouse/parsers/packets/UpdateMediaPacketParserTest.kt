@@ -53,8 +53,7 @@ class UpdateMediaPacketParserTest {
             EmbeddedService(
                 "b9783ad2-d548-9793-0eb9-42db373ade07",
                 "SwitchPower",
-                "1",
-                domain = "schemas-upnp-org"
+                "1"
             ),
             parsedPacket.usn
         )
@@ -81,8 +80,7 @@ class UpdateMediaPacketParserTest {
             EmbeddedService(
                 "3ddcd1d3-2380-45f5-b069-2c4d54008cf2",
                 "WANPPPConnection",
-                "1",
-                "schemas-upnp-org"
+                "1"
             ),
             parsedPacket.usn
         )
@@ -113,8 +111,7 @@ class UpdateMediaPacketParserTest {
             EmbeddedService(
                 "b9783ad2-d548-9793-0eb9-42db373ade07",
                 "RenderingControl",
-                "1",
-                "schemas-upnp-org"
+                "1"
             ),
             parsedPacket.usn
         )
@@ -141,8 +138,7 @@ class UpdateMediaPacketParserTest {
             EmbeddedService(
                 "3f8744cd-30bf-4fc9-8a42-bad80ae660c1",
                 "Dimming",
-                "1",
-                "schemas-upnp-org"
+                "1"
             ),
             parsedPacket.usn
         )

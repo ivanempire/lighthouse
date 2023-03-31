@@ -91,8 +91,7 @@ class ByeByeMediaPacketParserTest {
             EmbeddedService(
                 uuid = "9ab0c000-f668-11de-9976-00a0ded0e859",
                 serviceType = "RenderingControl",
-                serviceVersion = "1",
-                domain = "schemas-upnp-org"
+                serviceVersion = "1"
             ),
             parsedPacket.usn
         )
@@ -115,8 +114,7 @@ class ByeByeMediaPacketParserTest {
             EmbeddedService(
                 uuid = "00000000-0000-0000-0000-000000000000",
                 serviceType = "SwitchPower",
-                serviceVersion = "1",
-                domain = "schemas-upnp-org"
+                serviceVersion = "1"
             ),
             parsedPacket.usn
         )

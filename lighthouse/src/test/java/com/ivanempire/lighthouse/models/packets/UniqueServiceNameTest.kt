@@ -14,4 +14,19 @@ class UniqueServiceNameTest {
             usn
         )
     }
+
+    @Test
+    fun `given USN with custom domain parses domain`() {
+        val usnString = "uuid:00000000-0000-0000-0200-00125A8A0960::urn:schemas-microsoft-com:device:presence:1"
+        val usn = UniqueServiceName(usnString)
+        assertEquals(
+            EmbeddedDevice(
+                uuid = "00000000-0000-0000-0200-00125A8A0960",
+                deviceType = "presence",
+                deviceVersion = "1",
+                domain = "schemas-microsoft-com"
+            ),
+            usn
+        )
+    }
 }

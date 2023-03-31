@@ -98,7 +98,7 @@ class LighthouseStateTest {
         val MEDIA_DEVICE_2 = generateMediaDevice(
             RANDOM_UUID_2,
             embeddedServices = mutableListOf(
-                EmbeddedService(RANDOM_UUID_2, "RenderingControl", "2.0", "")
+                EmbeddedService(RANDOM_UUID_2, "RenderingControl", "2.0")
             )
         )
         val MEDIA_DEVICE_3 = generateMediaDevice(RANDOM_UUID_3)

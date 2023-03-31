@@ -5,7 +5,7 @@ import com.ivanempire.lighthouse.models.Constants.NOT_AVAILABLE_UUID
 /**
  * Wrapper class around an SSDP packet's USN field.
  */
-internal interface UniqueServiceName {
+interface UniqueServiceName {
     val uuid: String
 
     companion object {
@@ -60,7 +60,7 @@ internal interface UniqueServiceName {
  *
  * @param uuid The unique identifier of the root device
  */
-data class RootDeviceInformation(
+internal data class RootDeviceInformation(
     override val uuid: String
 ) : UniqueServiceName
 

@@ -1,8 +1,6 @@
 package com.ivanempire.lighthouse.core
 
-import com.ivanempire.lighthouse.models.Constants.NOT_AVAILABLE_CACHE
 import com.ivanempire.lighthouse.models.devices.AbridgedMediaDevice
-import com.ivanempire.lighthouse.models.devices.MediaDevice
 import com.ivanempire.lighthouse.models.packets.AliveMediaPacket
 import com.ivanempire.lighthouse.models.packets.ByeByeMediaPacket
 import com.ivanempire.lighthouse.models.packets.MediaPacket
@@ -11,6 +9,12 @@ import com.ivanempire.lighthouse.models.packets.SearchResponseMediaPacket
 import com.ivanempire.lighthouse.models.packets.UpdateMediaPacket
 import com.ivanempire.lighthouse.removeEmbeddedComponent
 import com.ivanempire.lighthouse.updateEmbeddedComponent
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.mutate
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.getAndUpdate
 
 /**
  * The one stateful component of Lighthouse - contains the list of all devices known to the library
@@ -18,19 +22,16 @@ import com.ivanempire.lighthouse.updateEmbeddedComponent
  */
 internal class LighthouseState {
 
-    private val deviceList = arrayListOf<AbridgedMediaDevice>()
+    val deviceList = MutableStateFlow<PersistentList<AbridgedMediaDevice>>(persistentListOf())
 
     /**
-     * Must be called from one place only so as not to mess up internal state. Clears the internal
-     * state of all devices and adds everything back from [updatedList]
+     * Clears the internal state of all devices and adds everything back from [updatedList]
      *
      * @param updatedList The list of media devices that have been updated with the latest packets
      * @return A new list of media devices that are as up-to-date as possible given latest packets
      */
-    fun setDeviceList(updatedList: List<AbridgedMediaDevice>): List<MediaDevice> {
-        deviceList.clear()
-        deviceList.addAll(updatedList)
-        return deviceList
+    fun setDeviceList(updatedList: List<AbridgedMediaDevice>) {
+        deviceList.value = updatedList.toPersistentList()
     }
 
     /**
@@ -39,12 +40,15 @@ internal class LighthouseState {
      * @param latestPacket The latest parsed instance of a [MediaPacket]
      * @return A new version of [deviceList] with the appropriate [AbridgedMediaDevice] updated
      */
-    fun parseMediaPacket(latestPacket: MediaPacket, currentTime: Long): List<AbridgedMediaDevice> {
+    fun parseMediaPacket(latestPacket: MediaPacket, currentTime: Long) {
         return when (latestPacket) {
             is AliveMediaPacket -> parseAliveMediaPacket(latestPacket, currentTime)
             is UpdateMediaPacket -> parseUpdateMediaPacket(latestPacket, currentTime)
             is ByeByeMediaPacket -> parseByeByeMediaPacket(latestPacket)
-            is SearchResponseMediaPacket -> parseAliveMediaPacket(latestPacket.toAlivePacket(), currentTime)
+            is SearchResponseMediaPacket -> parseAliveMediaPacket(
+                latestPacket.toAlivePacket(),
+                currentTime
+            )
         }
     }
 
@@ -61,35 +65,40 @@ internal class LighthouseState {
     private fun parseAliveMediaPacket(
         latestPacket: AliveMediaPacket,
         currentTime: Long
-    ): List<AbridgedMediaDevice> {
-        var targetDevice = deviceList.firstOrNull { it.uuid == latestPacket.usn.uuid }
-        val targetComponent = latestPacket.usn
+    ) {
+        deviceList.getAndUpdate { existingList ->
+            var newList = existingList
+            var targetDevice = existingList.firstOrNull { it.uuid == latestPacket.usn.uuid }
+            val targetComponent = latestPacket.usn
 
-        // Create a new device since we haven't seen it yet
-        if (targetDevice == null) {
-            val baseDevice = AbridgedMediaDevice(
-                uuid = targetComponent.uuid,
-                host = latestPacket.host,
-                cache = latestPacket.cache,
-                bootId = latestPacket.bootId,
-                mediaDeviceServer = latestPacket.server,
-                configId = latestPacket.configId,
-                location = latestPacket.location,
-                searchPort = latestPacket.searchPort,
-                secureLocation = latestPacket.secureLocation,
-                latestTimestamp = currentTime
-            )
-            baseDevice.updateEmbeddedComponent(targetComponent)
-            deviceList.add(baseDevice)
-        } else {
-            // Update the existing device
-            deviceList.remove(targetDevice)
-            targetDevice = targetDevice.copy(latestTimestamp = currentTime)
-            targetDevice.updateEmbeddedComponent(targetComponent)
-            deviceList.add(targetDevice)
+            // Create a new device since we haven't seen it yet
+            if (targetDevice == null) {
+                val baseDevice = AbridgedMediaDevice(
+                    uuid = targetComponent.uuid,
+                    host = latestPacket.host,
+                    cache = latestPacket.cache,
+                    bootId = latestPacket.bootId,
+                    mediaDeviceServer = latestPacket.server,
+                    configId = latestPacket.configId,
+                    location = latestPacket.location,
+                    searchPort = latestPacket.searchPort,
+                    secureLocation = latestPacket.secureLocation,
+                    latestTimestamp = currentTime
+                )
+                baseDevice.updateEmbeddedComponent(targetComponent)
+                newList = newList.mutate { it.add(baseDevice) }
+            } else {
+                // Update the existing device
+                newList = newList.mutate {
+                    val listWithoutTarget = it - targetDevice
+                    targetDevice = targetDevice!!.copy(latestTimestamp = currentTime)
+                    targetDevice!!.updateEmbeddedComponent(targetComponent)
+                    listWithoutTarget + targetDevice
+                }
+            }
+            targetDevice?.extraHeaders?.putAll(latestPacket.extraHeaders)
+            newList
         }
-        targetDevice?.extraHeaders?.putAll(latestPacket.extraHeaders)
-        return deviceList
     }
 
     /**
@@ -103,47 +112,37 @@ internal class LighthouseState {
     private fun parseUpdateMediaPacket(
         latestPacket: UpdateMediaPacket,
         currentTime: Long
-    ): List<AbridgedMediaDevice> {
-        var targetDevice = deviceList.firstOrNull { it.uuid == latestPacket.usn.uuid }
-        val targetComponent = latestPacket.usn
-        if (targetDevice == null) {
-            // Edge-case 1, where UPDATE packet came before ALIVE - build full device, but specify
-            // empty fields
-            val baseDevice = AbridgedMediaDevice(
-                uuid = targetComponent.uuid,
-                host = latestPacket.host,
-                cache = NOT_AVAILABLE_CACHE,
-                bootId = latestPacket.bootId,
-                mediaDeviceServer = null,
-                configId = latestPacket.configId,
-                location = latestPacket.location,
-                searchPort = latestPacket.searchPort,
-                secureLocation = latestPacket.secureLocation,
-                latestTimestamp = currentTime
-            )
-            baseDevice.updateEmbeddedComponent(targetComponent)
-            deviceList.add(baseDevice)
-        } else {
-            deviceList.remove(targetDevice)
-            targetDevice = targetDevice.copy(latestTimestamp = currentTime)
-            when (targetComponent) {
-                // ALIVE came first, UPDATE for root should only update certain fields
-                // cache and server are not affected
-                is RootDeviceInformation -> {
-                    targetDevice = targetDevice.copy(
-                        bootId = latestPacket.bootId,
-                        configId = latestPacket.configId,
-                        searchPort = latestPacket.searchPort,
-                        location = latestPacket.location,
-                        secureLocation = latestPacket.secureLocation,
-                    )
+    ) {
+        deviceList.getAndUpdate { existingList ->
+            val targetDevice = existingList.firstOrNull { it.uuid == latestPacket.usn.uuid }
+            val targetComponent = latestPacket.usn
+            if (targetDevice != null) {
+                var newTargetDevice = targetDevice.copy(latestTimestamp = currentTime)
+                when (targetComponent) {
+                    // ALIVE came first, UPDATE for root should only update certain fields
+                    // cache and server are not affected
+                    is RootDeviceInformation -> {
+                        newTargetDevice = targetDevice.copy(
+                            bootId = latestPacket.bootId,
+                            configId = latestPacket.configId,
+                            searchPort = latestPacket.searchPort,
+                            location = latestPacket.location,
+                            secureLocation = latestPacket.secureLocation,
+                        )
+                    }
+
+                    else -> newTargetDevice.updateEmbeddedComponent(targetComponent)
                 }
-                else -> targetDevice.updateEmbeddedComponent(targetComponent)
+                newTargetDevice.extraHeaders.putAll(latestPacket.extraHeaders)
+                existingList.mutate {
+                    it.remove(targetDevice)
+                    it.add(newTargetDevice)
+                }
+            } else {
+                // Don't do anything if we haven't already found the device
+                existingList
             }
-            deviceList.add(targetDevice)
         }
-        targetDevice?.extraHeaders?.putAll(latestPacket.extraHeaders)
-        return deviceList
     }
 
     /**
@@ -153,16 +152,23 @@ internal class LighthouseState {
      * @param latestPacket Latest instance of a [ByeByeMediaPacket]
      * @return A modified version of [deviceList] with the target device/component removed
      */
-    private fun parseByeByeMediaPacket(latestPacket: ByeByeMediaPacket): List<AbridgedMediaDevice> {
-        val targetComponent = latestPacket.usn
-        val targetDevice = deviceList.firstOrNull { it.uuid == targetComponent.uuid } ?: return deviceList
+    private fun parseByeByeMediaPacket(latestPacket: ByeByeMediaPacket) {
+        deviceList.getAndUpdate { existingList ->
+            val targetComponent = latestPacket.usn
+            val targetDevice = existingList.firstOrNull { it.uuid == targetComponent.uuid }
 
-        when (targetComponent) {
-            is RootDeviceInformation -> deviceList.remove(targetDevice)
-            else -> targetDevice.removeEmbeddedComponent(targetComponent)
+            if (targetDevice != null) {
+                when (targetComponent) {
+                    is RootDeviceInformation -> existingList.mutate { it.remove(targetDevice) }
+                    else -> {
+                        targetDevice.removeEmbeddedComponent(targetComponent)
+                        existingList
+                    }
+                }
+            } else {
+                existingList
+            }
         }
-
-        return deviceList
     }
 
     /**
@@ -172,9 +178,13 @@ internal class LighthouseState {
      *
      * @return A device list with stale root devices removed
      */
-    fun findStaleDevices(currentTime: Long): List<AbridgedMediaDevice> {
-        return deviceList.filter {
-            currentTime - it.latestTimestamp > it.cache * 1000
+    fun pruneStaleDevices(currentTime: Long) {
+        deviceList.getAndUpdate { existingList ->
+            existingList.mutate { mutableList ->
+                mutableList.removeAll {
+                    currentTime - it.latestTimestamp > it.cache * 1000
+                }
+            }
         }
     }
 }

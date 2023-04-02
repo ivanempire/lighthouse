@@ -5,9 +5,11 @@ import com.ivanempire.lighthouse.models.search.SearchRequest
 import com.ivanempire.lighthouse.parsers.DatagramPacketTransformer
 import com.ivanempire.lighthouse.parsers.packets.MediaPacketParser
 import com.ivanempire.lighthouse.socket.SocketListener
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * Specific implementation of [DiscoveryManager]
@@ -23,15 +25,32 @@ internal class RealDiscoveryManager(
 ) : DiscoveryManager {
 
     override fun createNewDeviceFlow(searchRequest: SearchRequest): Flow<List<AbridgedMediaDevice>> {
-        return multicastSocketListener.listenForPackets(searchRequest)
-            .mapNotNull { DatagramPacketTransformer(it) }
-            .mapNotNull { MediaPacketParser(it) }
-            .map { lighthouseState.parseMediaPacket(it, timeSource()) }
+        return flow {
+            withContext(currentCoroutineContext()) {
+                launch {
+                    handleIncomingPackets(searchRequest)
+                }
+                launch {
+                    removeStateDevices()
+                }
+            }
+
+            lighthouseState.deviceList
+        }
     }
 
-    override fun createStaleDeviceFlow(): Flow<List<AbridgedMediaDevice>> {
-        return timeFlow.map {
-            lighthouseState.findStaleDevices(it)
+    private suspend fun handleIncomingPackets(searchRequest: SearchRequest) {
+        multicastSocketListener.listenForPackets(searchRequest)
+            .collect { packet ->
+                DatagramPacketTransformer(packet)
+                    ?.let { MediaPacketParser(it) }
+                    ?.let { lighthouseState.parseMediaPacket(it, timeSource()) }
+            }
+    }
+
+    private suspend fun removeStateDevices() {
+        timeFlow.collect {
+            lighthouseState.pruneStaleDevices(it)
         }
     }
 }

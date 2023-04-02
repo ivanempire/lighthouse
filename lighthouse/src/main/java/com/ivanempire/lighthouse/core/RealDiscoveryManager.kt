@@ -5,11 +5,12 @@ import com.ivanempire.lighthouse.models.search.SearchRequest
 import com.ivanempire.lighthouse.parsers.DatagramPacketTransformer
 import com.ivanempire.lighthouse.parsers.packets.MediaPacketParser
 import com.ivanempire.lighthouse.socket.SocketListener
-import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 /**
  * Specific implementation of [DiscoveryManager]
@@ -21,22 +22,22 @@ internal class RealDiscoveryManager(
     private val lighthouseState: LighthouseState,
     private val multicastSocketListener: SocketListener,
     private val timeFlow: Flow<Long>,
-    private val timeSource: () -> Long
+    private val timeSource: () -> Long,
+    private val dispatcher: CoroutineDispatcher
 ) : DiscoveryManager {
 
     override fun createNewDeviceFlow(searchRequest: SearchRequest): Flow<List<AbridgedMediaDevice>> {
-        return flow {
-            withContext(currentCoroutineContext()) {
-                launch {
-                    handleIncomingPackets(searchRequest)
-                }
-                launch {
-                    removeStateDevices()
-                }
-            }
-
-            lighthouseState.deviceList
+        val scope = CoroutineScope(dispatcher)
+        scope.launch {
+            handleIncomingPackets(searchRequest)
         }
+        scope.launch {
+            removeStateDevices()
+        }
+        return lighthouseState.deviceList
+            .onCompletion {
+                scope.cancel()
+            }
     }
 
     private suspend fun handleIncomingPackets(searchRequest: SearchRequest) {

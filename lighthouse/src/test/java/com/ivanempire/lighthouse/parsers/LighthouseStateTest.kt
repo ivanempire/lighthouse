@@ -307,6 +307,7 @@ class LighthouseStateTest {
             generateMediaDevice(RANDOM_UUID_2, cache = 10, latestTimestamp = currentTime - 25_000)
 
         sut.setDeviceList(listOf(MEDIA_DEVICE_1, MEDIA_DEVICE_2))
+        assertTrue(sut.deviceList.value.isNotEmpty())
 
         sut.pruneStaleDevices(currentTime)
         assertTrue(sut.deviceList.value.isEmpty())

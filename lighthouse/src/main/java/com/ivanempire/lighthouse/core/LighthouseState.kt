@@ -14,7 +14,7 @@ import kotlinx.collections.immutable.mutate
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.getAndUpdate
+import kotlinx.coroutines.flow.update
 
 /**
  * The one stateful component of Lighthouse - contains the list of all devices known to the library
@@ -66,7 +66,7 @@ internal class LighthouseState {
         latestPacket: AliveMediaPacket,
         currentTime: Long
     ) {
-        deviceList.getAndUpdate { existingList ->
+        deviceList.update { existingList ->
             var newList = existingList
             var targetDevice = existingList.firstOrNull { it.uuid == latestPacket.usn.uuid }
             val targetComponent = latestPacket.usn
@@ -113,7 +113,7 @@ internal class LighthouseState {
         latestPacket: UpdateMediaPacket,
         currentTime: Long
     ) {
-        deviceList.getAndUpdate { existingList ->
+        deviceList.update { existingList ->
             val targetDevice = existingList.firstOrNull { it.uuid == latestPacket.usn.uuid }
             val targetComponent = latestPacket.usn
             if (targetDevice != null) {
@@ -153,7 +153,7 @@ internal class LighthouseState {
      * @return A modified version of [deviceList] with the target device/component removed
      */
     private fun parseByeByeMediaPacket(latestPacket: ByeByeMediaPacket) {
-        deviceList.getAndUpdate { existingList ->
+        deviceList.update { existingList ->
             val targetComponent = latestPacket.usn
             val targetDevice = existingList.firstOrNull { it.uuid == targetComponent.uuid }
 
@@ -179,7 +179,7 @@ internal class LighthouseState {
      * @return A device list with stale root devices removed
      */
     fun pruneStaleDevices(currentTime: Long) {
-        deviceList.getAndUpdate { existingList ->
+        deviceList.update { existingList ->
             existingList.mutate { mutableList ->
                 mutableList.removeAll {
                     currentTime - it.latestTimestamp > it.cache * 1000

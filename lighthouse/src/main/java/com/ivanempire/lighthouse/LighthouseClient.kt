@@ -9,6 +9,7 @@ import com.ivanempire.lighthouse.models.Constants.DEFAULT_SEARCH_REQUEST
 import com.ivanempire.lighthouse.models.devices.AbridgedMediaDevice
 import com.ivanempire.lighthouse.models.search.SearchRequest
 import com.ivanempire.lighthouse.socket.RealSocketListener
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import java.lang.IllegalStateException
 import kotlinx.coroutines.flow.Flow
@@ -35,7 +36,8 @@ interface LighthouseClient {
                 delay(1_000)
                 emit(System.currentTimeMillis())
             },
-            System::currentTimeMillis
+            System::currentTimeMillis,
+            Dispatchers.IO
         )
 
         /**

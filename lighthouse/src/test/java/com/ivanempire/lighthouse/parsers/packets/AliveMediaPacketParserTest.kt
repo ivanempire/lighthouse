@@ -13,10 +13,10 @@ import com.ivanempire.lighthouse.parsers.packets.AliveMediaPacketParserTest.Fixt
 import com.ivanempire.lighthouse.parsers.packets.AliveMediaPacketParserTest.Fixtures.VALID_ALIVE_PACKET_HEADER_SET_1
 import com.ivanempire.lighthouse.parsers.packets.AliveMediaPacketParserTest.Fixtures.VALID_ALIVE_PACKET_HEADER_SET_2
 import com.ivanempire.lighthouse.parsers.packets.AliveMediaPacketParserTest.Fixtures.VALID_ALIVE_PACKET_HEADER_SET_3
-import java.net.InetAddress
-import java.net.URL
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.net.InetAddress
+import java.net.URL
 
 /** Tests [AliveMediaPacketParser] */
 class AliveMediaPacketParserTest {

@@ -2,16 +2,14 @@ package com.ivanempire.lighthouse.core
 
 import app.cash.turbine.test
 import com.ivanempire.lighthouse.models.Constants.DEFAULT_SEARCH_REQUEST
+import java.net.DatagramPacket
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import java.net.DatagramPacket
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class DiscoveryManagerTest {

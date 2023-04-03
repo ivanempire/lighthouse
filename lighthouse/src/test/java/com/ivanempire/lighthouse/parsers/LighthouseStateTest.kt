@@ -9,12 +9,12 @@ import com.ivanempire.lighthouse.parsers.TestUtils.generateByeByePacket
 import com.ivanempire.lighthouse.parsers.TestUtils.generateMediaDevice
 import com.ivanempire.lighthouse.parsers.TestUtils.generateUSN
 import com.ivanempire.lighthouse.parsers.TestUtils.generateUpdatePacket
+import java.net.URL
+import java.util.UUID
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import java.net.URL
-import java.util.UUID
 
 /** Tests [LighthouseState] */
 @Suppress("LocalVariableName")

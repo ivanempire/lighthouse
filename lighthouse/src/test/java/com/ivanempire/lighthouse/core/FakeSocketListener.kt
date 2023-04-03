@@ -2,9 +2,9 @@ package com.ivanempire.lighthouse.core
 
 import com.ivanempire.lighthouse.models.search.SearchRequest
 import com.ivanempire.lighthouse.socket.SocketListener
-import kotlinx.coroutines.flow.Flow
 import java.net.DatagramPacket
 import java.net.MulticastSocket
+import kotlinx.coroutines.flow.Flow
 
 class FakeSocketListener(
     private val packetFlow: Flow<DatagramPacket>

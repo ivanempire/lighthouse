@@ -1,5 +1,6 @@
 package com.ivanempire.lighthouse.core
 
+import com.ivanempire.lighthouse.models.Constants.NOT_AVAILABLE_CACHE
 import com.ivanempire.lighthouse.models.devices.AbridgedMediaDevice
 import com.ivanempire.lighthouse.models.packets.AliveMediaPacket
 import com.ivanempire.lighthouse.models.packets.ByeByeMediaPacket
@@ -116,7 +117,26 @@ internal class LighthouseState {
         deviceList.update { existingList ->
             val targetDevice = existingList.firstOrNull { it.uuid == latestPacket.usn.uuid }
             val targetComponent = latestPacket.usn
-            if (targetDevice != null) {
+            if (targetDevice == null) {
+                // Edge-case 1, where UPDATE packet came before ALIVE - build full device, but specify
+                // empty fields
+                val baseDevice = AbridgedMediaDevice(
+                    uuid = targetComponent.uuid,
+                    host = latestPacket.host,
+                    cache = NOT_AVAILABLE_CACHE,
+                    bootId = latestPacket.bootId,
+                    mediaDeviceServer = null,
+                    configId = latestPacket.configId,
+                    location = latestPacket.location,
+                    searchPort = latestPacket.searchPort,
+                    secureLocation = latestPacket.secureLocation,
+                    latestTimestamp = currentTime
+                )
+                baseDevice.updateEmbeddedComponent(targetComponent)
+                existingList.mutate {
+                    it.add(baseDevice)
+                }
+            } else {
                 var newTargetDevice = targetDevice.copy(latestTimestamp = currentTime)
                 when (targetComponent) {
                     // ALIVE came first, UPDATE for root should only update certain fields
@@ -138,9 +158,6 @@ internal class LighthouseState {
                     it.remove(targetDevice)
                     it.add(newTargetDevice)
                 }
-            } else {
-                // Don't do anything if we haven't already found the device
-                existingList
             }
         }
     }

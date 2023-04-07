@@ -25,7 +25,7 @@ class LighthouseClientTest {
                 { startTime },
                 UnconfinedTestDispatcher()
             )
-            val client = RealLighthouseClient(discoveryManager, UnconfinedTestDispatcher())
+            val client = RealLighthouseClient(discoveryManager)
             client.discoverDevices().test {
                 packetFlow.emit(Fixtures.ALIVE_PACKET_1800)
                 assertEquals(1, expectMostRecentItem().size)

@@ -11,11 +11,9 @@ import kotlinx.coroutines.flow.flowOn
 /** Specific implementation of [LighthouseClient] */
 internal class RealLighthouseClient(
     private val discoveryManager: DiscoveryManager,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : LighthouseClient {
 
     override fun discoverDevices(searchRequest: SearchRequest): Flow<List<AbridgedMediaDevice>> {
         return discoveryManager.createNewDeviceFlow(searchRequest)
-            .flowOn(dispatcher)
     }
 }

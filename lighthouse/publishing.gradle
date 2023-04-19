@@ -2,9 +2,9 @@ afterEvaluate {
     publishing {
         publications {
             release(MavenPublication) {
-                groupId rootProject.ext.groupId
-                artifactId rootProject.ext.artifactId
-                version rootProject.ext.version
+                groupId project.property("POM_GROUP_ID")
+                artifactId project.property("POM_ARTIFACT_ID")
+                version project.property("POM_VERSION")
 
                 afterEvaluate {
                     from components.release
@@ -12,28 +12,28 @@ afterEvaluate {
 
                 pom {
                     name = "Lighthouse"
-                    description = "An SSDP discovery library for Android, powered by Kotlin Coroutines"
-                    url = "https://github.com/ivanempire/lighthouse"
+                    description = project.property("POM_DESCRIPTION")
+                    url = project.property("POM_URL")
 
                     licenses {
                         license {
-                            name = "The Apache License, Version 2.0"
-                            url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                            name = project.property("POM_LICENSE_NAME")
+                            url = project.property("POM_LICENSE_URL")
                         }
                     }
 
                     developers {
                         developer {
-                            id = "ivanempire"
-                            name = "Ivan Melnikov"
-                            email = "ivanempire@gmail.com"
+                            id = project.property("POM_DEVELOPER_ID")
+                            name = project.property("POM_DEVELOPER_NAME")
+                            email = project.property("POM_DEVELOPER_EMAIL")
                         }
                     }
 
                     scm {
-                        connection = "git@github.com:ivanempire/lighthouse.git"
-                        developerConnection = "git@github.com:ivanempire/lighthouse.git"
-                        url = "https://github.com/ivanempire/lighthouse"
+                        connection = project.property("POM_CONNECTION")
+                        developerConnection = project.property("POM_DEV_CONNECTION")
+                        url = project.property("POM_URL")
                     }
                 }
 

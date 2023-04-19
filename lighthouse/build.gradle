@@ -7,7 +7,7 @@ plugins {
 }
 
 apply from: "./ktlint.gradle"
-// apply from: "./publishing.gradle"
+apply from: "./publishing.gradle"
 
 group = "${project.property("POM_GROUP_ID")}.${project.property("POM_ARTIFACT_ID")}"
 version = project.property("POM_VERSION")

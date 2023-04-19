@@ -124,23 +124,24 @@ object TestUtils {
      *
      * @return An instance of [UniqueServiceName] to use in unit testing
      */
-    inline fun <reified T : UniqueServiceName> generateUSN(
+    internal inline fun <reified T : UniqueServiceName> generateUSN(
         deviceUUID: String,
         identifier: String = "RenderingControl",
-        version: String = "3.0"
+        version: String = "3.0",
+        domain: String = "schemas-upnp-org"
     ): UniqueServiceName {
         return when (T::class) {
             RootDeviceInformation::class -> {
                 UniqueServiceName("uuid:$deviceUUID")
             }
             EmbeddedDevice::class -> {
-                UniqueServiceName("uuid:$deviceUUID::urn:schemas-upnp-org:device:$identifier:$version")
+                UniqueServiceName("uuid:$deviceUUID::urn:$domain:device:$identifier:$version")
             }
             EmbeddedService::class -> {
-                UniqueServiceName("uuid:$deviceUUID::urn:schemas-upnp-org:service:$identifier:$version")
+                UniqueServiceName("uuid:$deviceUUID::urn:$domain:service:$identifier:$version")
             }
             else -> {
-                UniqueServiceName("uuid:$deviceUUID::urn:schemas-upnp-org:service:$identifier:$version")
+                UniqueServiceName("uuid:$deviceUUID::urn:$domain:service:$identifier:$version")
             }
         }
     }

@@ -14,11 +14,10 @@ object Constants {
     const val DEFAULT_SEARCH_MAN = "\"ssdp:discover\""
     const val DEFAULT_MULTICAST_ADDRESS = "239.255.255.250"
 
+    const val UUID_MARKER = "uuid"
     const val DEVICE_MARKER = "device"
     const val SERVICE_MARKER = "service"
-    const val ROOT_DEVICE_MARKER = "rootdevice"
-    const val URN_MARKER = "urn:"
-    const val UPNP_SCHEMA_MARKER = ":schemas-upnp-org:"
+    const val UPNP_SCHEMA_MARKER = "schemas-upnp-org"
 
     const val NOT_AVAILABLE = "N/A"
     const val NOT_AVAILABLE_NUM = -1

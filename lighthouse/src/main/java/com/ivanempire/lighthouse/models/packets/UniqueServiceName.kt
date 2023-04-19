@@ -2,10 +2,9 @@ package com.ivanempire.lighthouse.models.packets
 
 import com.ivanempire.lighthouse.models.Constants.DEVICE_MARKER
 import com.ivanempire.lighthouse.models.Constants.NOT_AVAILABLE_UUID
-import com.ivanempire.lighthouse.models.Constants.ROOT_DEVICE_MARKER
 import com.ivanempire.lighthouse.models.Constants.SERVICE_MARKER
 import com.ivanempire.lighthouse.models.Constants.UPNP_SCHEMA_MARKER
-import com.ivanempire.lighthouse.models.Constants.URN_MARKER
+import com.ivanempire.lighthouse.models.Constants.UUID_MARKER
 
 /**
  * Wrapper class around an SSDP packet's USN field.
@@ -25,38 +24,30 @@ interface UniqueServiceName {
             val groups = rawValue.split("::")
             val uuidSegments = groups[0].split(":")
             val uuid =
-                if (uuidSegments[0] == "uuid") {
+                if (uuidSegments[0] == UUID_MARKER) {
                     uuidSegments.getOrNull(1) ?: NOT_AVAILABLE_UUID
                 } else {
                     NOT_AVAILABLE_UUID
                 }
             val extraSegments = groups.getOrNull(1)?.split(":")
 
-            // If a URN marker is present, chances are the USN is targeting the root device
-            val isRootMessage = extraSegments == null || extraSegments.getOrNull(1) == ROOT_DEVICE_MARKER
-            if (isRootMessage) {
-                return RootDeviceInformation(uuid)
-            }
-
             // If a device marker is present, chances are the USN is targeting an embedded device
-            val isDeviceMessage = extraSegments?.getOrNull(2) == DEVICE_MARKER
-            if (isDeviceMessage) {
+            if (extraSegments?.getOrNull(2) == DEVICE_MARKER) {
                 return EmbeddedDevice(
                     uuid = uuid,
-                    deviceType = extraSegments?.getOrNull(3) ?: "",
-                    deviceVersion = extraSegments?.getOrNull(4) ?: "",
-                    domain = rawValue.parseDomain(),
+                    deviceType = extraSegments.getOrNull(3) ?: "",
+                    deviceVersion = extraSegments.getOrNull(4) ?: "",
+                    domain = extraSegments.getDomain(),
                 )
             }
 
             // If a service marker is present, chances are the USN is targeting an embedded service
-            val isServiceMessage = extraSegments?.getOrNull(2) == SERVICE_MARKER
-            if (isServiceMessage) {
+            if (extraSegments?.getOrNull(2) == SERVICE_MARKER) {
                 return EmbeddedService(
                     uuid = uuid,
-                    serviceType = extraSegments?.getOrNull(3) ?: "",
-                    serviceVersion = extraSegments?.getOrNull(4) ?: "",
-                    domain = rawValue.parseDomain(),
+                    serviceType = extraSegments.getOrNull(3) ?: "",
+                    serviceVersion = extraSegments.getOrNull(4) ?: "",
+                    domain = extraSegments.getDomain(),
                 )
             }
 
@@ -108,12 +99,11 @@ data class EmbeddedService(
  *
  * @return USN domain as a string, null otherwise
  */
-private fun String.parseDomain(): String? {
-    val domainMarkerIndex = this.indexOf(UPNP_SCHEMA_MARKER)
-    return if (domainMarkerIndex != -1) {
+private fun List<String>.getDomain(): String? {
+    val segment = getOrNull(1) ?: return null
+    return if (segment == UPNP_SCHEMA_MARKER) {
         null
     } else {
-        val domainHalf = this.split(URN_MARKER)[1]
-        domainHalf.substring(0, domainHalf.indexOf(":"))
+        segment
     }
 }

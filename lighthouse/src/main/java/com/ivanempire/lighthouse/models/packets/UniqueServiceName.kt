@@ -1,6 +1,9 @@
 package com.ivanempire.lighthouse.models.packets
 
+import com.ivanempire.lighthouse.models.Constants.DEVICE_MARKER
 import com.ivanempire.lighthouse.models.Constants.NOT_AVAILABLE_UUID
+import com.ivanempire.lighthouse.models.Constants.ROOT_DEVICE_MARKER
+import com.ivanempire.lighthouse.models.Constants.SERVICE_MARKER
 import com.ivanempire.lighthouse.models.Constants.UPNP_SCHEMA_MARKER
 import com.ivanempire.lighthouse.models.Constants.URN_MARKER
 
@@ -32,13 +35,13 @@ interface UniqueServiceName {
             val extraSegments = groups.getOrNull(1)?.split(":")
 
             // If a URN marker is present, chances are the USN is targeting the root device
-            val isRootMessage = extraSegments == null || extraSegments.getOrNull(1) == "rootdevice"
+            val isRootMessage = extraSegments == null || extraSegments.getOrNull(1) == ROOT_DEVICE_MARKER
             if (isRootMessage) {
                 return RootDeviceInformation(uuid, bootId)
             }
 
             // If a device marker is present, chances are the USN is targeting an embedded device
-            val isDeviceMessage = extraSegments?.getOrNull(2) == "device"
+            val isDeviceMessage = extraSegments?.getOrNull(2) == DEVICE_MARKER
             if (isDeviceMessage) {
                 return EmbeddedDevice(
                     uuid = uuid,
@@ -50,7 +53,7 @@ interface UniqueServiceName {
             }
 
             // If a service marker is present, chances are the USN is targeting an embedded service
-            val isServiceMessage = extraSegments?.getOrNull(2) == "service"
+            val isServiceMessage = extraSegments?.getOrNull(2) == SERVICE_MARKER
             if (isServiceMessage) {
                 return EmbeddedService(
                     uuid = uuid,

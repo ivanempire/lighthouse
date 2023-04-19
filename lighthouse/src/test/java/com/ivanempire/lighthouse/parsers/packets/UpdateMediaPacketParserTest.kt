@@ -52,7 +52,6 @@ class UpdateMediaPacketParserTest {
         assertEquals(
             EmbeddedService(
                 "b9783ad2-d548-9793-0eb9-42db373ade07",
-                100,
                 "SwitchPower",
                 "1"
             ),
@@ -80,7 +79,6 @@ class UpdateMediaPacketParserTest {
         assertEquals(
             EmbeddedService(
                 "3ddcd1d3-2380-45f5-b069-2c4d54008cf2",
-                1525511561,
                 "WANPPPConnection",
                 "1"
             ),
@@ -112,7 +110,6 @@ class UpdateMediaPacketParserTest {
         assertEquals(
             EmbeddedService(
                 "b9783ad2-d548-9793-0eb9-42db373ade07",
-                -1,
                 "RenderingControl",
                 "1"
             ),
@@ -140,7 +137,6 @@ class UpdateMediaPacketParserTest {
         assertEquals(
             EmbeddedService(
                 "3f8744cd-30bf-4fc9-8a42-bad80ae660c1",
-                50,
                 "Dimming",
                 "1"
             ),

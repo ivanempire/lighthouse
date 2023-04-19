@@ -7,24 +7,24 @@ plugins {
 }
 
 apply from: "./ktlint.gradle"
-apply from: "./publishing.gradle"
+// apply from: "./publishing.gradle"
 
-group = "${rootProject.ext.groupId}.${rootProject.ext.artifactId}"
-version = rootProject.ext.version
+group = "${project.property("POM_GROUP_ID")}.${project.property("POM_ARTIFACT_ID")}"
+version = project.property("POM_VERSION")
 
 android {
-    namespace = "${rootProject.ext.groupId}.${rootProject.ext.artifactId}"
-    compileSdk rootProject.ext.targetSdk
+    namespace = "${project.property("POM_GROUP_ID")}.${project.property("POM_ARTIFACT_ID")}"
+    compileSdk project.property("compileSdk").toInteger()
 
     defaultConfig {
-        minSdk rootProject.ext.minSdk
-        targetSdk rootProject.ext.targetSdk
+        minSdk project.property("minSdk").toInteger()
+        targetSdk project.property("targetSdk").toInteger()
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
 
         aarMetadata {
-            minCompileSdk rootProject.ext.minSdk
+            minCompileSdk project.property("minSdk").toInteger()
         }
     }
 

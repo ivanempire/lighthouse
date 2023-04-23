@@ -30,9 +30,10 @@ class DatagramPacketTransformerTest {
     }
 
     @Test
-    fun `given no location field returns null`() {
+    fun `given no location field returns correct headers`() {
         val headerSet = DatagramPacketTransformer(INVALID_NO_LOCATION)
-        assertNull(headerSet)
+        assertNotNull(headerSet)
+        assertEquals(9, headerSet?.size)
     }
 
     @Test

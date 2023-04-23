@@ -33,11 +33,6 @@ internal class DatagramPacketTransformer {
                 packetHeaders[splitField[0].trim().uppercase()] = splitField[1].trim()
             }
 
-            if (packetHeaders[HeaderKeys.LOCATION] == null) {
-                Log.w("DatagramTransformer", "Location was null, ignoring header set: $packetHeaders")
-                return null
-            }
-
             return packetHeaders
         }
     }

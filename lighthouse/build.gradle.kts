@@ -6,8 +6,7 @@ plugins {
     id("signing")
 }
 
-//apply(from = "./ktlint.gradle.kts")
-//apply(from = "./publishing.gradle")
+// apply(from = "./publishing.gradle")
 
 group = "${project.property("POM_GROUP_ID")}.${project.property("POM_ARTIFACT_ID")}"
 // version = project.property("POM_VERSION")
@@ -49,6 +48,26 @@ android {
         unitTests {
             isReturnDefaultValues = true
         }
+    }
+}
+
+// TODO: Temporary configuration until this gets put into a separate file
+configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
+    version.set("0.45.2")
+    debug.set(false)
+    verbose.set(true)
+    android.set(true)
+    outputToConsole.set(true)
+    outputColorName.set("GREEN")
+    ignoreFailures.set(false)
+    enableExperimentalRules.set(false)
+    disabledRules.set(setOf("max-line-length"))
+    kotlinScriptAdditionalPaths {
+        include(fileTree("scripts/"))
+    }
+    filter {
+        exclude("**/generated/**")
+        include("**/kotlin/**")
     }
 }
 

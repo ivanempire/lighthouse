@@ -15,6 +15,10 @@ jobs:
         uses: actions/checkout@v2
       - name: Make Gradle wrapper executable
         run: chmod +x ./gradlew
+      - uses: actions/setup-java@v3
+        with:
+          distribution: "zulu"
+          java-version: "17"
       - name: Restore gradle.properties
         env:
           SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}

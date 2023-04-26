@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace 'com.ivanempire.lighthouse.demo'
-    compileSdk rootProject.ext.targetSdk
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.ivanempire.lighthouse.demo"
-        minSdk rootProject.ext.minSdk
-        targetSdk rootProject.ext.targetSdk
+        minSdk 21
+        targetSdk 33
         versionCode 1
         versionName "1.0"
     }

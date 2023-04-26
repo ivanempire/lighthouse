@@ -1,57 +1,40 @@
+// apply plugin: "com.vanniktech.maven.publish@0.25.2"
+// import com.vanniktech.maven.publish.SonatypeHost
+
 afterEvaluate {
-    publishing {
-        publications {
-            release(MavenPublication) {
-                groupId project.property("POM_GROUP_ID")
-                artifactId project.property("POM_ARTIFACT_ID")
-                version project.property("POM_VERSION")
+    apply plugin: "com.vanniktech.maven.publish"
 
-                afterEvaluate {
-                    from components.release
-                }
+    mavenPublishing {
+        // publishToMavenCentral(SonatypeHost.S01)
 
-                pom {
-                    name = "Lighthouse"
-                    description = project.property("POM_DESCRIPTION")
-                    url = project.property("POM_URL")
+        signAllPublications()
+        pom {
+            name = "Lighthouse"
+            description = project.property("POM_DESCRIPTION")
+            inceptionYear = "2022"
+            url = project.property("POM_URL")
 
-                    licenses {
-                        license {
-                            name = project.property("POM_LICENSE_NAME")
-                            url = project.property("POM_LICENSE_URL")
-                        }
-                    }
-
-                    developers {
-                        developer {
-                            id = project.property("POM_DEVELOPER_ID")
-                            name = project.property("POM_DEVELOPER_NAME")
-                            email = project.property("POM_DEVELOPER_EMAIL")
-                        }
-                    }
-
-                    scm {
-                        connection = project.property("POM_CONNECTION")
-                        developerConnection = project.property("POM_DEV_CONNECTION")
-                        url = project.property("POM_URL")
-                    }
-                }
-
-                signing {
-                    sign publishing.publications.release
+            licenses {
+                license {
+                    name = project.property("POM_LICENSE_NAME")
+                    url = project.property("POM_LICENSE_URL")
+                    description = project.property("POM_LICENSE_URL")
                 }
             }
-        }
-        // TODO: Temporary fix for local inclusion before moving to another publishing library
-        if (binding.hasVariable("sonatypeUrl")) {
-            repositories {
-                maven {
-                    url sonatypeUrl
-                    credentials  {
-                        username = sonatypeUsername
-                        password = sonatypePassword
-                    }
+
+            developers {
+                developer {
+                    id = project.property("POM_DEVELOPER_ID")
+                    name = project.property("POM_DEVELOPER_NAME")
+                    email = project.property("POM_DEVELOPER_EMAIL")
+                    url = "https://github.com/username/"
                 }
+            }
+
+            scm {
+                url = project.property("POM_URL")
+                connection = project.property("POM_CONNECTION")
+                developerConnection = project.property("POM_DEV_CONNECTION")
             }
         }
     }

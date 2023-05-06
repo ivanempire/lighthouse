@@ -107,14 +107,18 @@ class LighthouseStateTest {
             RANDOM_UUID_1,
             location = URL("http://127.0.0.1:9999/"),
             uniqueServiceName = generateUSN<EmbeddedService>(RANDOM_UUID_1),
-            bootId = 600, configId = 300, secureLocation = URL("https://127.0.0.1:9999/")
+            bootId = 600,
+            configId = 300,
+            secureLocation = URL("https://127.0.0.1:9999/")
         )
 
         val UPDATE_PACKET_3 = generateUpdatePacket(
             RANDOM_UUID_3,
             location = URL("http://127.0.0.1:9999/"),
             uniqueServiceName = generateUSN<EmbeddedDevice>(RANDOM_UUID_3),
-            bootId = 600, configId = 300, secureLocation = URL("https://127.0.0.1:9999/")
+            bootId = 600,
+            configId = 300,
+            secureLocation = URL("https://127.0.0.1:9999/")
         )
 
         sut.setDeviceList(listOf(MEDIA_DEVICE_1, MEDIA_DEVICE_2, MEDIA_DEVICE_3))

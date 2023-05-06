@@ -129,7 +129,7 @@ internal class LighthouseState {
                         configId = latestPacket.configId,
                         searchPort = latestPacket.searchPort,
                         location = latestPacket.location,
-                        secureLocation = latestPacket.secureLocation,
+                        secureLocation = latestPacket.secureLocation
                     )
                 }
                 else -> targetDevice.updateEmbeddedComponent(targetComponent)

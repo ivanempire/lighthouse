@@ -2,7 +2,6 @@ plugins {
     id("com.android.library")
     id("kotlin-android")
     id("maven-publish")
-    id("org.jlleitschuh.gradle.ktlint") version "10.2.1"
     id("signing")
 }
 
@@ -48,26 +47,6 @@ android {
         unitTests {
             isReturnDefaultValues = true
         }
-    }
-}
-
-// TODO: Temporary configuration until this gets put into a separate file
-configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
-    version.set("0.45.2")
-    debug.set(false)
-    verbose.set(true)
-    android.set(true)
-    outputToConsole.set(true)
-    outputColorName.set("GREEN")
-    ignoreFailures.set(false)
-    enableExperimentalRules.set(false)
-    disabledRules.set(setOf("max-line-length"))
-    kotlinScriptAdditionalPaths {
-        include(fileTree("scripts/"))
-    }
-    filter {
-        exclude("**/generated/**")
-        include("**/kotlin/**")
     }
 }
 

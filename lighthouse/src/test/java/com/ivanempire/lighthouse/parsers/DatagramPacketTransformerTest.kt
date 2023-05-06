@@ -1,7 +1,7 @@
 package com.ivanempire.lighthouse.parsers
 
-import com.ivanempire.lighthouse.parsers.DatagramPacketTransformerTest.Fixtures.EMPTY_DATAGRAM
 import com.ivanempire.lighthouse.parsers.DatagramPacketTransformerTest.Fixtures.DATAGRAM_PACKET_NO_LOCATION
+import com.ivanempire.lighthouse.parsers.DatagramPacketTransformerTest.Fixtures.EMPTY_DATAGRAM
 import com.ivanempire.lighthouse.parsers.DatagramPacketTransformerTest.Fixtures.INVALID_START_LINE
 import com.ivanempire.lighthouse.parsers.DatagramPacketTransformerTest.Fixtures.VALID_ALIVE_PACKET
 import com.ivanempire.lighthouse.parsers.DatagramPacketTransformerTest.Fixtures.VALID_BYEBYE_PACKET

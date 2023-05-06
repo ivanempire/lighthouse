@@ -8,7 +8,7 @@ package com.ivanempire.lighthouse.models.devices
  */
 open class MediaService(
     open val serviceType: String,
-    open val bootId: Int,
+    open val bootId: Int
 )
 
 /**

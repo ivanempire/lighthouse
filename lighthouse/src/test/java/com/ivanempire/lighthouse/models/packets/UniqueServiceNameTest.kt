@@ -18,7 +18,7 @@ class UniqueServiceNameTest {
         val usnString2 = "uuid:66363c8f-408d-47eb-9c5b-9d5301eb93d3::upnp:rootdevice"
         assertEquals(
             RootDeviceInformation(
-                uuid = "66363c8f-408d-47eb-9c5b-9d5301eb93d3",
+                uuid = "66363c8f-408d-47eb-9c5b-9d5301eb93d3"
             ),
             UniqueServiceName(usnString2)
         )

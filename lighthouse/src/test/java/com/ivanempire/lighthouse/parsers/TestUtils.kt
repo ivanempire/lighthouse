@@ -85,7 +85,7 @@ object TestUtils {
         uniqueServiceName: UniqueServiceName? = null,
         bootId: Int = 100,
         configId: Int = 110,
-        secureLocation: URL = URL("https://192.168.2.50:58121/"),
+        secureLocation: URL = URL("https://192.168.2.50:58121/")
     ): UpdateMediaPacket {
         return UpdateMediaPacket(
             host = MediaHost(InetAddress.getByName("239.255.255.250"), 1900),
@@ -103,7 +103,7 @@ object TestUtils {
     internal fun generateByeByePacket(
         deviceUUID: String,
         uniqueServiceName: UniqueServiceName? = null,
-        bootId: Int = 100,
+        bootId: Int = 100
     ): ByeByeMediaPacket {
         return ByeByeMediaPacket(
             host = MediaHost(InetAddress.getByName("239.255.255.250"), 1900),

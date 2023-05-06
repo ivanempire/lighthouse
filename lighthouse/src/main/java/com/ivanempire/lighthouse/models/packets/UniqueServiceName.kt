@@ -37,7 +37,7 @@ interface UniqueServiceName {
                     uuid = uuid,
                     deviceType = extraSegments.getOrNull(3) ?: "",
                     deviceVersion = extraSegments.getOrNull(4) ?: "",
-                    domain = extraSegments.getDomain(),
+                    domain = extraSegments.getDomain()
                 )
             }
 
@@ -47,7 +47,7 @@ interface UniqueServiceName {
                     uuid = uuid,
                     serviceType = extraSegments.getOrNull(3) ?: "",
                     serviceVersion = extraSegments.getOrNull(4) ?: "",
-                    domain = extraSegments.getDomain(),
+                    domain = extraSegments.getDomain()
                 )
             }
 

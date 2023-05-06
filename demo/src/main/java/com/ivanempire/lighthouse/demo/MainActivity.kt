@@ -63,7 +63,7 @@ fun DeviceListItem(device: AbridgedMediaDevice) {
     ListItem(
         headlineText = { Text(device.location.toString()) },
         supportingText = { Text(device.uuid) },
-        trailingContent = { Text(ttl.toString())}
+        trailingContent = { Text(ttl.toString()) }
     )
     LaunchedEffect(Unit) {
         while (true) {

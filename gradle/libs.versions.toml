@@ -1,0 +1,21 @@
+[versions]
+junit = "4.13.2"
+runtime = "2.6.1"
+compose = "1.7.1"
+androidx = "1.10.0"
+coroutines = "1.6.4"
+compose-bom = "2023.01.00"
+
+[libraries]
+# Core Android dependencies
+androidx-core = { module = "androidx.core:core-ktx", version.ref = "androidx" }
+androidx-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "runtime"}
+android-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
+
+# Jetpack Compose
+material3 = { module = "androidx.compose.material3:material3" }
+compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom"}
+compose-activity = { module = "androidx.activity:activity-compose", version.ref = "compose"}
+
+# Testing dependencies
+testing-junit = { module = "junit:junit", version.ref = "junit" }

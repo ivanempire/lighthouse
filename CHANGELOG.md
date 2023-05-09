@@ -1,5 +1,10 @@
 # Changelog
 
+## [2.0.0] - May 9th 2023
+- **New**: `bootId` has been decoupled from the Unique Service Name (USN) field
+- **New**: Gradle build files have all been rewritten in Kotlin
+- **New**: Very basic demo app has been added to the project
+
 ## [1.2.1] - March 27th 2023
 - Fix: Adding newline to end of M-SEARCH message so that some devices do not ignore the search requests
 - Fix: Properly updating discovered devices list when parsing ALIVE and UPDATE SSDP packets

@@ -1,6 +1,7 @@
 package com.ivanempire.lighthouse.parsers.packets
 
 import com.ivanempire.lighthouse.models.Constants.DEFAULT_MEDIA_HOST
+import com.ivanempire.lighthouse.models.Constants.NOT_AVAILABLE_LOCATION
 import com.ivanempire.lighthouse.models.packets.EmbeddedService
 import com.ivanempire.lighthouse.models.packets.HeaderKeys
 import com.ivanempire.lighthouse.models.packets.MediaHost
@@ -27,14 +28,14 @@ class UpdateMediaPacketParserTest {
         val parsedPacket = sut.parseMediaPacket() as UpdateMediaPacket
 
         assertEquals(DEFAULT_MEDIA_HOST, parsedPacket.host)
-        assertEquals(URL("http://127.0.0.1/"), parsedPacket.location)
+        assertEquals(NOT_AVAILABLE_LOCATION, parsedPacket.location)
         assertEquals(NotificationSubtype.UPDATE, parsedPacket.notificationSubtype)
         assertEquals(NotificationType(null), parsedPacket.notificationType)
         assertEquals(-1, parsedPacket.bootId)
         assertEquals(-1, parsedPacket.configId)
         assertEquals(-1, parsedPacket.nextBootId)
         assertEquals(-1, parsedPacket.searchPort)
-        assertEquals(URL("http://127.0.0.1/"), parsedPacket.secureLocation)
+        assertEquals(NOT_AVAILABLE_LOCATION, parsedPacket.secureLocation)
     }
 
     @Test
@@ -89,7 +90,7 @@ class UpdateMediaPacketParserTest {
         assertEquals(1337, parsedPacket.configId)
         assertEquals(-1, parsedPacket.nextBootId)
         assertEquals(-1, parsedPacket.searchPort)
-        assertEquals(URL("http://127.0.0.1/"), parsedPacket.secureLocation)
+        assertEquals(NOT_AVAILABLE_LOCATION, parsedPacket.secureLocation)
     }
 
     @Test
@@ -119,7 +120,7 @@ class UpdateMediaPacketParserTest {
         assertEquals(-1, parsedPacket.configId)
         assertEquals(-1, parsedPacket.nextBootId)
         assertEquals(-1, parsedPacket.searchPort)
-        assertEquals(URL("http://127.0.0.1/"), parsedPacket.secureLocation)
+        assertEquals(NOT_AVAILABLE_LOCATION, parsedPacket.secureLocation)
     }
 
     @Test

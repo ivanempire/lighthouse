@@ -24,12 +24,7 @@ interface LighthouseClient {
 
         private var retryCount = 1
 
-        private val socketListener = RealSocketListener(wifiManager, retryCount)
-
-        private val discoveryManager = RealDiscoveryManager(
-            LighthouseState(),
-            socketListener
-        )
+        private var logger: LighthouseLogger? = null
 
         /**
          * Specify a retry count in the off-chance the network packet is not received by the
@@ -44,8 +39,19 @@ interface LighthouseClient {
             this.retryCount += retryCount
         }
 
+        fun setLogger(logger: LighthouseLogger) = apply {
+            this.logger = logger
+        }
+
         fun build(): LighthouseClient {
-            return RealLighthouseClient(discoveryManager)
+            val socketListener = RealSocketListener(wifiManager, retryCount, logger)
+
+            val discoveryManager = RealDiscoveryManager(
+                LighthouseState(),
+                socketListener,
+                logger
+            )
+            return RealLighthouseClient(discoveryManager, logger = logger)
         }
     }
 

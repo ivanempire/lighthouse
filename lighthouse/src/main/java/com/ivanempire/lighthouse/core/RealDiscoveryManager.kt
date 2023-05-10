@@ -1,5 +1,6 @@
 package com.ivanempire.lighthouse.core
 
+import com.ivanempire.lighthouse.LighthouseLogger
 import com.ivanempire.lighthouse.models.devices.AbridgedMediaDevice
 import com.ivanempire.lighthouse.models.search.SearchRequest
 import com.ivanempire.lighthouse.parsers.DatagramPacketTransformer
@@ -21,7 +22,8 @@ import kotlinx.coroutines.isActive
  */
 internal class RealDiscoveryManager(
     private val lighthouseState: LighthouseState,
-    private val multicastSocketListener: SocketListener
+    private val multicastSocketListener: SocketListener,
+    private val logger: LighthouseLogger? = null
 ) : DiscoveryManager {
 
     override fun createNewDeviceFlow(searchRequest: SearchRequest): Flow<List<AbridgedMediaDevice>> {

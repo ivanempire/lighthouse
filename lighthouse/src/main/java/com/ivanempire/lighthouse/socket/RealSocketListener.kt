@@ -2,6 +2,7 @@ package com.ivanempire.lighthouse.socket
 
 import android.net.wifi.WifiManager
 import android.util.Log
+import com.ivanempire.lighthouse.LighthouseLogger
 import com.ivanempire.lighthouse.models.Constants.DEFAULT_MULTICAST_ADDRESS
 import com.ivanempire.lighthouse.models.Constants.LIGHTHOUSE_CLIENT
 import com.ivanempire.lighthouse.models.search.SearchRequest
@@ -18,7 +19,8 @@ import kotlinx.coroutines.isActive
 /** Specific implementation of [SocketListener] */
 internal class RealSocketListener(
     private val wifiManager: WifiManager,
-    private val retryCount: Int
+    private val retryCount: Int,
+    private val logger: LighthouseLogger? = null
 ) : SocketListener {
 
     private val multicastLock: WifiManager.MulticastLock by lazy {

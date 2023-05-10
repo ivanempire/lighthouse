@@ -1,6 +1,7 @@
 package com.ivanempire.lighthouse.core
 
 import com.ivanempire.lighthouse.LighthouseClient
+import com.ivanempire.lighthouse.LighthouseLogger
 import com.ivanempire.lighthouse.models.devices.AbridgedMediaDevice
 import com.ivanempire.lighthouse.models.search.SearchRequest
 import kotlinx.coroutines.CoroutineDispatcher
@@ -15,7 +16,8 @@ import kotlinx.coroutines.flow.flowOn
 /** Specific implementation of [LighthouseClient] */
 internal class RealLighthouseClient(
     private val discoveryManager: DiscoveryManager,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val logger: LighthouseLogger? = null
 ) : LighthouseClient {
 
     @OptIn(FlowPreview::class)

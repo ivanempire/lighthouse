@@ -31,7 +31,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.ivanempire:lighthouse:1.2.1")
+    implementation("com.ivanempire:lighthouse:2.0.0")
 }
 ```
 
@@ -93,7 +93,7 @@ Checkout the documentation for [`MulticastSearchRequest.kt`](lighthouse/src/main
 ### SSDP
 Unfortunately, SSDP is not an enforced protocol. As a result, every single manufacturer may add or drop headers from the network packets, save for the official HTTP start line. To simplify things somewhat, Lighthouse follows the [UPnP Device Architecture 2.0](https://openconnectivity.org/upnp-specs/UPnP-arch-DeviceArchitecture-v2.0-20200417.pdf) specification as closely as it can. However, if you are seeing some missing information, or if the device list is not behaving as expected, here are some debugging notes to consider:
 
-- **Defaults**: [`Constants.kt`](lighthouse/src/main/java/com/ivanempire/lighthouse/models/Constants.kt) contains all of the default values that Lighthouse will use if a device is not advertising a specific field in an SSDP packet. For example, if an `ssdp:alive` packet does not contain a `bootId`, the parser will set a default value of `-1`. Similarly, `cache-control` defaults to 1800 seconds (30 minutes), and missing `location` URLs default to `127.0.0.1`. [`MediaDeviceServer.kt`](lighthouse/src/main/java/com/ivanempire/lighthouse/models/devices/MediaDeviceServer.kt) gets a special shoutout due the finicky format required by UPnP. All fields default to `N/A`, and the error in parsing will be logged as a warning.
+- **Defaults**: [`Constants.kt`](lighthouse/src/main/java/com/ivanempire/lighthouse/models/Constants.kt) contains all of the default values that Lighthouse will use if a device is not advertising a specific field in an SSDP packet. For example, if an `ssdp:alive` packet does not contain a `bootId`, the parser will set a default value of `-1`. Similarly, `cache-control` defaults to 1800 seconds (30 minutes), and missing `location` URLs default to `0.0.0.0`. [`MediaDeviceServer.kt`](lighthouse/src/main/java/com/ivanempire/lighthouse/models/devices/MediaDeviceServer.kt) gets a special shoutout due the finicky format required by UPnP. All fields default to `N/A`, and the error in parsing will be logged as a warning.
 - **UUIDs**: Lighthouse groups devices and their embedded components (embedded devices and services) by the advertised UUID. However, some devices advertise each embedded component with a different UUID - usually off by 1 or 2. This is not something that's easy to fix, however, file a bug if you're seeing this and maybe we can discuss a solution! On the other hand, if a device is not advertising a UUID (or is advertising an invalid one), a zeroed-out value will be assigned to the packet. Said packets will be parsed as usual, but will show up under the zeroed-out UUID in the final device list.
 - **Special headers**: If you're looking for manufacturer-specific data, then checkout [`AbridgedMediaDevice.extraHeaders`](lighthouse/src/main/java/com/ivanempire/lighthouse/models/devices/MediaDevice.kt#L38) - they will be located there. Similarly, official headers parsed outside of their proper packets will also be found there. For example, an `ssdp:update` packet does not typically contain a `cache-control` field. However, if your devices add it to said packet, the parser will simply put it into `extraHeaders`.
 

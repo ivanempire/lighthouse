@@ -1,9 +1,12 @@
 # Changelog
 
-## [2.0.0] - May 9th 2023
-- **New**: `bootId` has been decoupled from the Unique Service Name (USN) field
-- **New**: Gradle build files have all been rewritten in Kotlin
-- **New**: Very basic demo app has been added to the project
+## [2.0.0] - May 10th 2023
+- **Breaking**: `AbridgedMediaDevice.uuid` field type has changed from `UUID` to string in order to support UPnP1.0 advertisements
+- **New**: Default `NOT_AVAILABLE_LOCATION` value changed from `URL("http://0.0.0.0/")` to `URL("http://0.0.0.0/")`
+- **New**: `DatagramPacketTransformer` no longer filters out packets with an empty `LOCATION` header
+- **New**: App module added for a bare-bones usage demonstration
+- `bootId` has been decoupled from the USN field
+- Gradle build files have been rewritten in Kotlin
 
 ## [1.2.1] - March 27th 2023
 - Fix: Adding newline to end of M-SEARCH message so that some devices do not ignore the search requests

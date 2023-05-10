@@ -5,7 +5,7 @@ plugins {
     id("kotlin-android")
 }
 
-setupLibraryModule(name = "com.ivanempire.lighthouse", shouldBePublished = true) {
+setupLibraryModule(moduleName = "com.ivanempire.lighthouse", shouldBePublished = true) {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = true

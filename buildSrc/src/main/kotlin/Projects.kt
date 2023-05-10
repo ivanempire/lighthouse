@@ -7,10 +7,15 @@ import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.TestExtension
 import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
 import com.vanniktech.maven.publish.MavenPublishBaseExtension
+import com.vanniktech.maven.publish.SonatypeHost
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
+import org.gradle.api.publish.PublishingExtension
+import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.create
+import org.gradle.kotlin.dsl.get
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
@@ -19,10 +24,10 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
  *
  */
 fun Project.setupLibraryModule(
-    name: String,
+    moduleName: String,
     shouldBePublished: Boolean,
     action: LibraryExtension.() -> Unit = {},
-) = setupBaseModule<LibraryExtension>(name) {
+) = setupBaseModule<LibraryExtension>(moduleName) {
     if (shouldBePublished) {
         apply(plugin = "com.vanniktech.maven.publish.base")
         publishing {
@@ -31,9 +36,18 @@ fun Project.setupLibraryModule(
                 withSourcesJar()
             }
         }
+        afterEvaluate {
+            extensions.configure<PublishingExtension> {
+                publications.create<MavenPublication>("release") {
+                    from(components["release"])
+                    // https://github.com/vanniktech/gradle-maven-publish-plugin/issues/326
+                    val id = project.property("POM_ARTIFACT_ID").toString()
+                    artifactId = artifactId.replace(project.name, id)
+                }
+            }
+        }
         extensions.configure<MavenPublishBaseExtension> {
-            pomFromGradleProperties()
-            publishToMavenCentral()
+            publishToMavenCentral(SonatypeHost.S01, automaticRelease = true)
             signAllPublications()
 
             coordinates(
@@ -41,6 +55,36 @@ fun Project.setupLibraryModule(
                 artifactId = project.property("POM_ARTIFACT_ID").toString(),
                 version = project.property("POM_VERSION").toString(),
             )
+
+            pom {
+                name.set("Lighthouse")
+                description.set(project.property("POM_DESCRIPTION").toString())
+                inceptionYear.set("2022")
+                url.set(project.property("POM_URL").toString())
+
+                licenses {
+                    license {
+                        name.set(project.property("POM_LICENSE_NAME").toString())
+                        url.set(project.property("POM_LICENSE_URL").toString())
+                        description.set(project.property("POM_LICENSE_URL").toString())
+                    }
+                }
+
+                developers {
+                    developer {
+                        id.set(project.property("POM_DEVELOPER_ID").toString())
+                        name.set(project.property("POM_DEVELOPER_NAME").toString())
+                        email.set(project.property("POM_DEVELOPER_EMAIL").toString())
+                        url.set("https://github.com/username/")
+                    }
+                }
+
+                scm {
+                    url.set(project.property("POM_URL").toString())
+                    connection.set(project.property("POM_CONNECTION").toString())
+                    developerConnection.set(project.property("POM_DEV_CONNECTION").toString())
+                }
+            }
         }
     }
     action()

@@ -1,5 +1,5 @@
 plugins {
-    id("org.jlleitschuh.gradle.ktlint") version "11.3.2"
+    alias(libs.plugins.ktlint)
 }
 
 subprojects {

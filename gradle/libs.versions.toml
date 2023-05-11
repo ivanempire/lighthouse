@@ -7,6 +7,11 @@ coroutines = "1.6.4"
 compose-bom = "2023.01.00"
 
 [libraries]
+# Core Gradle dependencies
+gradle-android = { module = "com.android.tools.build:gradle", version = "8.0.1"}
+gradle-kotlin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version = "1.8.10"}
+gradle-maven = { module = "com.vanniktech:gradle-maven-publish-plugin", version = "0.25.2"}
+
 # Core Android dependencies
 androidx-core = { module = "androidx.core:core-ktx", version.ref = "androidx" }
 androidx-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "runtime"}

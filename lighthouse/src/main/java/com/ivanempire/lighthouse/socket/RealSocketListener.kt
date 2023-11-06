@@ -1,7 +1,6 @@
 package com.ivanempire.lighthouse.socket
 
 import android.net.wifi.WifiManager
-import android.util.Log
 import com.ivanempire.lighthouse.LighthouseLogger
 import com.ivanempire.lighthouse.models.Constants.DEFAULT_MULTICAST_ADDRESS
 import com.ivanempire.lighthouse.models.Constants.LIGHTHOUSE_CLIENT
@@ -43,16 +42,16 @@ internal class RealSocketListener(
         try {
             multicastSocket.joinGroup(multicastGroup)
             multicastSocket.bind(InetSocketAddress(MULTICAST_PORT))
-            Log.d("#setupSocket", "MulticastSocket has been setup")
+            logger?.logStatusMessage("$TAG#setupSocket", "MulticastSocket has been setup")
         } catch (ex: Exception) {
-            Log.e("#setupSocket", "Could finish setting up the multicast socket and group", ex)
+            logger?.logErrorMessage("$TAG#setupSocket", "MulticastSocket has been setup", ex)
         }
 
         return multicastSocket
     }
 
     override fun listenForPackets(searchRequest: SearchRequest): Flow<DatagramPacket> {
-        Log.d("#listenForPackets", "Setting up datagram packet flow")
+        logger?.logStatusMessage("$TAG#listenForPackets", "Setting up datagram packet flow")
         val multicastSocket = setupSocket()
 
         return flow {
@@ -67,6 +66,7 @@ internal class RealSocketListener(
                     val discoveryBuffer = ByteArray(MULTICAST_DATAGRAM_SIZE)
                     val discoveryDatagram = DatagramPacket(discoveryBuffer, discoveryBuffer.size)
                     it.receive(discoveryDatagram)
+                    logger?.logPacketMessage("$TAG#listenForPackets", "Received datagram: $discoveryDatagram")
                     emit(discoveryDatagram)
                 }
             }
@@ -74,7 +74,7 @@ internal class RealSocketListener(
     }
 
     override fun teardownSocket(multicastSocket: MulticastSocket) {
-        Log.d("#teardownSocket", "Releasing resources")
+        logger?.logStatusMessage("$TAG#teardownSocket", "Releasing resources")
 
         if (multicastLock.isHeld) {
             multicastLock.release()
@@ -87,6 +87,7 @@ internal class RealSocketListener(
     }
 
     private companion object {
+        const val TAG = "RealSocketListener"
         const val MULTICAST_DATAGRAM_SIZE = 2048
         const val MULTICAST_PORT = 1900
     }

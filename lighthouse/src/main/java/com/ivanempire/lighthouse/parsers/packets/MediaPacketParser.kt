@@ -1,6 +1,7 @@
 package com.ivanempire.lighthouse.parsers.packets
 
 import android.util.Log
+import com.ivanempire.lighthouse.LighthouseLogger
 import com.ivanempire.lighthouse.getAndRemove
 import com.ivanempire.lighthouse.models.Constants.NOT_AVAILABLE_CACHE
 import com.ivanempire.lighthouse.models.Constants.NOT_AVAILABLE_LOCATION
@@ -52,7 +53,8 @@ internal abstract class MediaPacketParser {
     }
 
     companion object {
-        operator fun invoke(packetHeaders: HashMap<String, String>): MediaPacket? {
+        operator fun invoke(packetHeaders: HashMap<String, String>, logger: LighthouseLogger?): MediaPacket? {
+            logger?.logPacketMessage(TAG, "Headers to parse into packet: $packetHeaders")
             // Figure out if this is a search response packet; special case with no NTS field
             val isSearchPacket = packetHeaders.getAndRemove(HeaderKeys.SEARCH_TARGET) != null
             if (isSearchPacket) {
@@ -67,7 +69,7 @@ internal abstract class MediaPacketParser {
                     NotificationSubtype.UPDATE -> UpdateMediaPacketParser(packetHeaders)
                     NotificationSubtype.BYEBYE -> ByeByeMediaPacketParser(packetHeaders)
                     else -> {
-                        Log.e("MediaPacketParser", "Received an invalid NotificationSubtype: $notificationSubtype")
+                        logger?.logErrorMessage(TAG, "Received an invalid NotificationSubtype: $notificationSubtype")
                         null
                     }
                 }
@@ -75,12 +77,14 @@ internal abstract class MediaPacketParser {
                 val parsedPacket = packetParser?.parseMediaPacket()
                 return if (parsedPacket != null) {
                     parsedPacket.extraHeaders.putAll(packetHeaders)
+                    logger?.logPacketMessage(TAG, "Parsed SSDP packet as $parsedPacket")
                     parsedPacket
                 } else {
-                    Log.e("MediaPacketParser", "No appropriate packet parser found, returning")
+                    logger?.logErrorMessage(TAG, "No appropriate packet parser found, returning")
                     null
                 }
             }
         }
+        private const val TAG = "MediaPacketParser"
     }
 }

@@ -6,7 +6,7 @@ import com.ivanempire.lighthouse.models.devices.AbridgedMediaDevice
 import com.ivanempire.lighthouse.models.search.SearchRequest
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flattenMerge
@@ -20,7 +20,7 @@ internal class RealLighthouseClient(
     private val logger: LighthouseLogger? = null
 ) : LighthouseClient {
 
-    @OptIn(FlowPreview::class)
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun discoverDevices(searchRequest: SearchRequest): Flow<List<AbridgedMediaDevice>> {
         val foundDevicesFlow = discoveryManager.createNewDeviceFlow(searchRequest)
         val lostDevicesFlow = discoveryManager.createStaleDeviceFlow()

@@ -1,6 +1,5 @@
 package com.ivanempire.lighthouse.parsers.packets
 
-import android.util.Log
 import com.ivanempire.lighthouse.LighthouseLogger
 import com.ivanempire.lighthouse.getAndRemove
 import com.ivanempire.lighthouse.models.Constants.NOT_AVAILABLE_CACHE
@@ -31,7 +30,6 @@ internal abstract class MediaPacketParser {
         return try {
             URL(rawValue)
         } catch (ex: MalformedURLException) {
-            Log.w("MediaPacketParser", "Could not parse location URL: $rawValue")
             NOT_AVAILABLE_LOCATION
         }
     }
@@ -47,13 +45,15 @@ internal abstract class MediaPacketParser {
         return if (maxAgeIndex != -1) {
             rawValue?.substringAfter("max-age=", "-1")?.trim()?.toInt() ?: NOT_AVAILABLE_CACHE
         } else {
-            Log.w("MediaPacketParser", "Could not find max-age marker in cache string: $rawValue")
             NOT_AVAILABLE_CACHE
         }
     }
 
     companion object {
-        operator fun invoke(packetHeaders: HashMap<String, String>, logger: LighthouseLogger?): MediaPacket? {
+        operator fun invoke(
+            packetHeaders: HashMap<String, String>,
+            logger: LighthouseLogger? = null
+        ): MediaPacket? {
             logger?.logPacketMessage(TAG, "Headers to parse into packet: $packetHeaders")
             // Figure out if this is a search response packet; special case with no NTS field
             val isSearchPacket = packetHeaders.getAndRemove(HeaderKeys.SEARCH_TARGET) != null

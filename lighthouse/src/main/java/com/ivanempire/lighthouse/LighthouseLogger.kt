@@ -2,9 +2,7 @@ package com.ivanempire.lighthouse
 
 abstract class LighthouseLogger {
 
-    open fun log1() {}
-
-    open fun log2() {}
+    open fun logStateMessage(tag: String, message: String) {}
 
     open fun logPacketMessage(tag: String, message: String) {}
 

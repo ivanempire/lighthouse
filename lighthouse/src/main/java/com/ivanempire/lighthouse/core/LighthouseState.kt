@@ -29,7 +29,7 @@ internal class LighthouseState(private val logger: LighthouseLogger? = null) {
      * @return A new list of media devices that are as up-to-date as possible given latest packets
      */
     fun setDeviceList(updatedList: List<AbridgedMediaDevice>): List<MediaDevice> {
-        logger?.logStateMessage("$TAG#setDeviceList", "Setting new device list $updatedList")
+        logger?.logStateMessage(TAG, "Setting new device list $updatedList")
         deviceList.clear()
         deviceList.addAll(updatedList)
         return deviceList
@@ -42,7 +42,7 @@ internal class LighthouseState(private val logger: LighthouseLogger? = null) {
      * @return A new version of [deviceList] with the appropriate [AbridgedMediaDevice] updated
      */
     fun parseMediaPacket(latestPacket: MediaPacket): List<AbridgedMediaDevice> {
-        logger?.logStateMessage("$TAG#parseMediaPacket", "Parsing packet for state: $latestPacket")
+        logger?.logStateMessage(TAG, "Parsing packet for state: $latestPacket")
         return when (latestPacket) {
             is AliveMediaPacket -> parseAliveMediaPacket(latestPacket)
             is UpdateMediaPacket -> parseUpdateMediaPacket(latestPacket)
@@ -64,7 +64,7 @@ internal class LighthouseState(private val logger: LighthouseLogger? = null) {
     private fun parseAliveMediaPacket(latestPacket: AliveMediaPacket): List<AbridgedMediaDevice> {
         var targetDevice = deviceList.firstOrNull { it.uuid == latestPacket.usn.uuid }
         val targetComponent = latestPacket.usn
-        logger?.logStateMessage("$TAG#parseByeByeMediaPacket", "Parsing ALIVE packet targeting $targetComponent on device $targetDevice")
+        logger?.logStateMessage(TAG, "Parsing ALIVE packet targeting $targetComponent on device $targetDevice")
 
         // Create a new device since we haven't seen it yet
         if (targetDevice == null) {
@@ -104,7 +104,7 @@ internal class LighthouseState(private val logger: LighthouseLogger? = null) {
     private fun parseUpdateMediaPacket(latestPacket: UpdateMediaPacket): List<AbridgedMediaDevice> {
         var targetDevice = deviceList.firstOrNull { it.uuid == latestPacket.usn.uuid }
         val targetComponent = latestPacket.usn
-        logger?.logStateMessage("$TAG#parseByeByeMediaPacket", "Parsing UPDATE packet targeting $targetComponent on device $targetDevice")
+        logger?.logStateMessage(TAG, "Parsing UPDATE packet targeting $targetComponent on device $targetDevice")
 
         if (targetDevice == null) {
             // Edge-case 1, where UPDATE packet came before ALIVE - build full device, but specify
@@ -156,7 +156,7 @@ internal class LighthouseState(private val logger: LighthouseLogger? = null) {
     private fun parseByeByeMediaPacket(latestPacket: ByeByeMediaPacket): List<AbridgedMediaDevice> {
         val targetComponent = latestPacket.usn
         val targetDevice = deviceList.firstOrNull { it.uuid == targetComponent.uuid } ?: return deviceList
-        logger?.logStateMessage("$TAG#parseByeByeMediaPacket", "Parsing BYEBYE packet targeting $targetComponent on device $targetDevice")
+        logger?.logStateMessage(TAG, "Parsing BYEBYE packet targeting $targetComponent on device $targetDevice")
 
         when (targetComponent) {
             is RootDeviceInformation -> deviceList.remove(targetDevice)

@@ -22,7 +22,7 @@ internal class RealLighthouseClient(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun discoverDevices(searchRequest: SearchRequest): Flow<List<AbridgedMediaDevice>> {
-        logger?.logStatusMessage("$TAG#discoverDevices", "Discovering devices with search request: $searchRequest")
+        logger?.logStatusMessage(TAG, "Discovering devices with search request: $searchRequest")
         val foundDevicesFlow = discoveryManager.createNewDeviceFlow(searchRequest)
         val lostDevicesFlow = discoveryManager.createStaleDeviceFlow()
 

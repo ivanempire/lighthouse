@@ -42,16 +42,16 @@ internal class RealSocketListener(
         try {
             multicastSocket.joinGroup(multicastGroup)
             multicastSocket.bind(InetSocketAddress(MULTICAST_PORT))
-            logger?.logStatusMessage("$TAG#setupSocket", "MulticastSocket has been setup")
+            logger?.logStatusMessage(TAG, "MulticastSocket has been setup")
         } catch (ex: Exception) {
-            logger?.logErrorMessage("$TAG#setupSocket", "Could finish setting up the multicast socket and group", ex)
+            logger?.logErrorMessage(TAG, "Could finish setting up the multicast socket and group", ex)
         }
 
         return multicastSocket
     }
 
     override fun listenForPackets(searchRequest: SearchRequest): Flow<DatagramPacket> {
-        logger?.logStatusMessage("$TAG#listenForPackets", "Setting up datagram packet flow")
+        logger?.logStatusMessage(TAG, "Setting up datagram packet flow")
         val multicastSocket = setupSocket()
 
         return flow {
@@ -66,7 +66,6 @@ internal class RealSocketListener(
                     val discoveryBuffer = ByteArray(MULTICAST_DATAGRAM_SIZE)
                     val discoveryDatagram = DatagramPacket(discoveryBuffer, discoveryBuffer.size)
                     it.receive(discoveryDatagram)
-                    logger?.logPacketMessage("$TAG#listenForPackets", "Received datagram: $discoveryDatagram")
                     emit(discoveryDatagram)
                 }
             }
@@ -74,7 +73,7 @@ internal class RealSocketListener(
     }
 
     override fun teardownSocket(multicastSocket: MulticastSocket) {
-        logger?.logStatusMessage("$TAG#teardownSocket", "Releasing resources")
+        logger?.logStatusMessage(TAG, "Releasing resources")
 
         if (multicastLock.isHeld) {
             multicastLock.release()

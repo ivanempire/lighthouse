@@ -1,6 +1,7 @@
 package com.ivanempire.lighthouse.demo
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.ivanempire.lighthouse.LighthouseClient
+import com.ivanempire.lighthouse.LighthouseLogger
 import com.ivanempire.lighthouse.models.devices.AbridgedMediaDevice
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.map
@@ -30,8 +32,28 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Example implementation of a custom logging system
+        val customLogger = object : LighthouseLogger() {
+            override fun logStateMessage(tag: String, message: String) {
+                Log.d(tag, message)
+            }
+
+            override fun logStatusMessage(tag: String, message: String) {
+                Log.d(tag, message)
+            }
+
+            override fun logPacketMessage(tag: String, message: String) {
+                Log.d(tag, message)
+            }
+
+            override fun logErrorMessage(tag: String, message: String, ex: Throwable?) {
+                Log.e(tag, message, ex)
+            }
+        }
+
         lighthouseClient = LighthouseClient
             .Builder(this)
+            .setLogger(customLogger)
             .setRetryCount(2)
             .build()
 

@@ -28,7 +28,7 @@ internal class RealDiscoveryManager(
 
     override fun createNewDeviceFlow(searchRequest: SearchRequest): Flow<List<AbridgedMediaDevice>> {
         return multicastSocketListener.listenForPackets(searchRequest)
-            .mapNotNull { DatagramPacketTransformer(it) }
+            .mapNotNull { DatagramPacketTransformer(it, logger) }
             .mapNotNull { MediaPacketParser(it, logger) }
             .map { lighthouseState.parseMediaPacket(it) }
     }

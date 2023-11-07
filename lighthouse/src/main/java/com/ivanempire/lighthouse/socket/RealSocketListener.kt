@@ -44,7 +44,7 @@ internal class RealSocketListener(
             multicastSocket.bind(InetSocketAddress(MULTICAST_PORT))
             logger?.logStatusMessage("$TAG#setupSocket", "MulticastSocket has been setup")
         } catch (ex: Exception) {
-            logger?.logErrorMessage("$TAG#setupSocket", "MulticastSocket has been setup", ex)
+            logger?.logErrorMessage("$TAG#setupSocket", "Could finish setting up the multicast socket and group", ex)
         }
 
         return multicastSocket

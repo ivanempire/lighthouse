@@ -20,11 +20,11 @@ interface LighthouseClient {
     /** Builder class for the Lighthouse configuration */
     class Builder(context: Context) {
 
-        private val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
-
         private var retryCount = 1
 
         private var logger: LighthouseLogger? = null
+
+        private val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
 
         /**
          * Specify a retry count in the off-chance the network packet is not received by the
@@ -39,6 +39,11 @@ interface LighthouseClient {
             this.retryCount += retryCount
         }
 
+        /**
+         * Specify
+         *
+         * @param logger Custom implementation of [LighthouseLogger]
+         */
         fun setLogger(logger: LighthouseLogger) = apply {
             this.logger = logger
         }

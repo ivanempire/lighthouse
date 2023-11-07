@@ -1,6 +1,5 @@
 package com.ivanempire.lighthouse.models.devices
 
-import android.util.Log
 import java.lang.IllegalArgumentException
 
 /**
@@ -29,10 +28,6 @@ data class MediaDeviceServer(
                         productVersion = serverInfo[2]
                     )
                 } catch (ex: IllegalArgumentException) {
-                    Log.w(
-                        "#parseFromString",
-                        "SERVER field not properly advertised as 'OS/version UPnP/2.0 product/version', was $rawValue"
-                    )
                     return MediaDeviceServer("N/A", "N/A", "N/A")
                 }
             }

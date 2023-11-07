@@ -1,6 +1,6 @@
 package com.ivanempire.lighthouse.parsers
 
-import android.util.Log
+import com.ivanempire.lighthouse.LighthouseLogger
 import com.ivanempire.lighthouse.models.Constants.FIELD_SEPARATOR
 import com.ivanempire.lighthouse.models.Constants.NEWLINE_SEPARATOR
 import com.ivanempire.lighthouse.models.packets.HeaderKeys
@@ -16,12 +16,12 @@ import java.nio.charset.Charset
 internal class DatagramPacketTransformer {
 
     companion object {
-        operator fun invoke(datagramPacket: DatagramPacket): HashMap<String, String>? {
+        operator fun invoke(datagramPacket: DatagramPacket, logger: LighthouseLogger? = null): HashMap<String, String>? {
             val cleanedDatagram = datagramPacket.cleanPacket()
             val packetFields = cleanedDatagram.split(NEWLINE_SEPARATOR)
 
             if (StartLine.getByRawValue(packetFields[0]) == null) {
-                Log.w("DatagramTransformer", "Invalid start line, ignoring packet: $packetFields")
+                logger?.logStatusMessage(TAG, "Invalid start line, ignoring packet: $packetFields")
                 return null
             }
 
@@ -35,6 +35,7 @@ internal class DatagramPacketTransformer {
 
             return packetHeaders
         }
+        private const val TAG = "DatagramPacketTransformer"
     }
 }
 

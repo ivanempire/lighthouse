@@ -118,7 +118,7 @@ device list is not behaving as expected, here are some debugging notes to consid
 By default, Lighthouse does not log anything. This makes it just a little bit difficult to figure
 out what's going on during the device discovery process. However, the `setLogger()` method allows
 one to specify their own logging system that will be used by Lighthouse. The demo module implements
-a custom logger [here](com/ivanempire/lighthouse/demo/MainActivity.kt#L56) as an example, and the
+a custom logger [here](demo/src/main/java/com/ivanempire/lighthouse/demo/MainActivity.kt#L56) as an example, and the
 source abstract class is [`LighthouseLogger.kt`](lighthouse/src/main/java/com/ivanempire/lighthouse/LighthouseLogger.kt).
 To re-iterate the comments in the code, the provided methods are:
 

@@ -103,7 +103,18 @@ class LighthouseStateTest {
     }
 
     @Test
-    fun `given UPDATE packet updates embedded components correctly`() = runTest {}
+    fun `given UPDATE packet updates embedded components correctly`() = runTest {
+        val RANDOM_UUID_1 = UUID.randomUUID().toString()
+        val ALIVE_PACKET_1 = generateAlivePacket(deviceUUID = RANDOM_UUID_1, uniqueServiceName = generateUSN<EmbeddedService>(deviceUUID = RANDOM_UUID_1))
+        val UPDATE_PACKET_1 = generateUpdatePacket(deviceUUID = RANDOM_UUID_1, uniqueServiceName = generateUSN<EmbeddedService>(deviceUUID = RANDOM_UUID_1, version = "4.5"))
+
+        sut.parseMediaPacket(ALIVE_PACKET_1)
+        sut.parseMediaPacket(UPDATE_PACKET_1)
+
+        val actualDevice = sut.deviceList.first()[0]
+        assertFalse(actualDevice.serviceList.isEmpty())
+        assertEquals("4.5", actualDevice.serviceList[0].serviceVersion)
+    }
 
     @Test
     fun `given BYEBYE packet removes root device correctly`() = runTest {
@@ -137,5 +148,17 @@ class LighthouseStateTest {
     }
 
     @Test
-    fun `given BYEBYE packet and no matching device does not remove anything`() = runTest {}
+    fun `given BYEBYE packet and no matching device does not remove anything`() = runTest {
+        val RANDOM_UUID_1 = UUID.randomUUID().toString()
+        val RANDOM_UUID_2 = UUID.randomUUID().toString()
+
+        val ALIVE_PACKET_1 = generateAlivePacket(deviceUUID = RANDOM_UUID_1)
+        val BYEBYE_PACKET_1 = generateByeByePacket(deviceUUID = RANDOM_UUID_2)
+
+        sut.parseMediaPacket(ALIVE_PACKET_1)
+        assertEquals(1, sut.deviceList.first().size)
+
+        sut.parseMediaPacket(BYEBYE_PACKET_1)
+        assertEquals(1, sut.deviceList.first().size)
+    }
 }

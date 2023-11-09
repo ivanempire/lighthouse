@@ -21,6 +21,7 @@ androidx-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", versio
 android-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 
 # Jetpack Compose
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 material3 = { module = "androidx.compose.material3:material3" }
 compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
 compose-activity = { module = "androidx.activity:activity-compose", version.ref = "compose" }

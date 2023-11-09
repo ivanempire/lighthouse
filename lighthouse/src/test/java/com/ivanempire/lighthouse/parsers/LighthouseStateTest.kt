@@ -9,12 +9,12 @@ import com.ivanempire.lighthouse.parsers.TestUtils.generateByeByePacket
 import com.ivanempire.lighthouse.parsers.TestUtils.generateMediaDevice
 import com.ivanempire.lighthouse.parsers.TestUtils.generateUSN
 import com.ivanempire.lighthouse.parsers.TestUtils.generateUpdatePacket
-import java.net.URL
-import java.util.UUID
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import java.net.URL
+import java.util.UUID
 
 /** Tests [LighthouseState] */
 @Suppress("LocalVariableName")
@@ -98,8 +98,8 @@ class LighthouseStateTest {
         val MEDIA_DEVICE_2 = generateMediaDevice(
             RANDOM_UUID_2,
             embeddedServices = mutableListOf(
-                EmbeddedService(RANDOM_UUID_2, "RenderingControl", "2.0")
-            )
+                EmbeddedService(RANDOM_UUID_2, "RenderingControl", "2.0"),
+            ),
         )
         val MEDIA_DEVICE_3 = generateMediaDevice(RANDOM_UUID_3)
 
@@ -109,7 +109,7 @@ class LighthouseStateTest {
             uniqueServiceName = generateUSN<EmbeddedService>(RANDOM_UUID_1),
             bootId = 600,
             configId = 300,
-            secureLocation = URL("https://127.0.0.1:9999/")
+            secureLocation = URL("https://127.0.0.1:9999/"),
         )
 
         val UPDATE_PACKET_3 = generateUpdatePacket(
@@ -118,7 +118,7 @@ class LighthouseStateTest {
             uniqueServiceName = generateUSN<EmbeddedDevice>(RANDOM_UUID_3),
             bootId = 600,
             configId = 300,
-            secureLocation = URL("https://127.0.0.1:9999/")
+            secureLocation = URL("https://127.0.0.1:9999/"),
         )
 
         sut.setDeviceList(listOf(MEDIA_DEVICE_1, MEDIA_DEVICE_2, MEDIA_DEVICE_3))
@@ -139,17 +139,17 @@ class LighthouseStateTest {
             EmbeddedService(
                 RANDOM_UUID_1,
                 "RenderingControl",
-                "3.0"
+                "3.0",
             ),
-            modifiedOne.serviceList[0]
+            modifiedOne.serviceList[0],
         )
         assertEquals(
             EmbeddedDevice(
                 RANDOM_UUID_3,
                 "RenderingControl",
-                "3.0"
+                "3.0",
             ),
-            modifiedThree.deviceList[0]
+            modifiedThree.deviceList[0],
         )
     }
 

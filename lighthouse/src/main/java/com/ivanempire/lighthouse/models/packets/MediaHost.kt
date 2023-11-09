@@ -12,7 +12,7 @@ import java.net.InetAddress
  */
 data class MediaHost(
     val address: InetAddress,
-    val port: Int
+    val port: Int,
 ) {
     companion object {
         internal fun parseFromString(rawValue: String?): MediaHost {
@@ -22,7 +22,7 @@ data class MediaHost(
                 val splitData = rawValue.split(FIELD_SEPARATOR)
                 MediaHost(
                     address = InetAddress.getByName(splitData[0]),
-                    port = splitData[1].toInt()
+                    port = splitData[1].toInt(),
                 )
             }
         }

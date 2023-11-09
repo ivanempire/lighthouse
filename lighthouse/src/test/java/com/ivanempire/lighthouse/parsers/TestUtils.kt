@@ -37,7 +37,7 @@ object TestUtils {
         embeddedDevices: MutableList<EmbeddedDevice>? = null,
         embeddedServices: MutableList<EmbeddedService>? = null,
         cache: Int? = null,
-        latestTimestamp: Long? = null
+        latestTimestamp: Long? = null,
     ): AbridgedMediaDevice {
         return AbridgedMediaDevice(
             uuid = deviceUUID ?: UUID.randomUUID().toString(),
@@ -51,7 +51,7 @@ object TestUtils {
             mediaDeviceServer = SERVER_LIST.random(),
             latestTimestamp = latestTimestamp ?: System.currentTimeMillis(),
             deviceList = embeddedDevices ?: mutableListOf(),
-            serviceList = embeddedServices ?: mutableListOf()
+            serviceList = embeddedServices ?: mutableListOf(),
         )
     }
 
@@ -60,7 +60,7 @@ object TestUtils {
      */
     internal fun generateAlivePacket(
         deviceUUID: String,
-        uniqueServiceName: UniqueServiceName? = null
+        uniqueServiceName: UniqueServiceName? = null,
     ): AliveMediaPacket {
         return AliveMediaPacket(
             host = MediaHost(InetAddress.getByName("239.255.255.250"), 1900),
@@ -72,7 +72,7 @@ object TestUtils {
             bootId = 100,
             configId = 130,
             searchPort = 1900,
-            secureLocation = URL("https://127.0.0.1:58122/")
+            secureLocation = URL("https://127.0.0.1:58122/"),
         )
     }
 
@@ -85,7 +85,7 @@ object TestUtils {
         uniqueServiceName: UniqueServiceName? = null,
         bootId: Int = 100,
         configId: Int = 110,
-        secureLocation: URL = URL("https://192.168.2.50:58121/")
+        secureLocation: URL = URL("https://192.168.2.50:58121/"),
     ): UpdateMediaPacket {
         return UpdateMediaPacket(
             host = MediaHost(InetAddress.getByName("239.255.255.250"), 1900),
@@ -96,21 +96,21 @@ object TestUtils {
             configId = configId,
             nextBootId = bootId + 1,
             searchPort = 1900,
-            secureLocation = secureLocation
+            secureLocation = secureLocation,
         )
     }
 
     internal fun generateByeByePacket(
         deviceUUID: String,
         uniqueServiceName: UniqueServiceName? = null,
-        bootId: Int = 100
+        bootId: Int = 100,
     ): ByeByeMediaPacket {
         return ByeByeMediaPacket(
             host = MediaHost(InetAddress.getByName("239.255.255.250"), 1900),
             notificationType = NotificationType("upnp:rootdevice"),
             usn = uniqueServiceName ?: UniqueServiceName("uuid:$deviceUUID"),
             bootId = bootId,
-            configId = 110
+            configId = 110,
         )
     }
 
@@ -128,7 +128,7 @@ object TestUtils {
         deviceUUID: String,
         identifier: String = "RenderingControl",
         version: String = "3.0",
-        domain: String = "schemas-upnp-org"
+        domain: String = "schemas-upnp-org",
     ): UniqueServiceName {
         return when (T::class) {
             RootDeviceInformation::class -> {
@@ -149,6 +149,6 @@ object TestUtils {
     private val SERVER_LIST = listOf(
         MediaDeviceServer("Windows", "NT/5.0,", "UPnP/1.0"),
         MediaDeviceServer("N/A", "N/A", "N/A"),
-        MediaDeviceServer("Linux/3.18.71+", "UPnP/1.0", "GUPnP/1.0.5")
+        MediaDeviceServer("Linux/3.18.71+", "UPnP/1.0", "GUPnP/1.0.5"),
     )
 }

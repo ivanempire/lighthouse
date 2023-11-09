@@ -12,10 +12,10 @@ import com.ivanempire.lighthouse.parsers.packets.UpdateMediaPacketParserTest.Fix
 import com.ivanempire.lighthouse.parsers.packets.UpdateMediaPacketParserTest.Fixtures.VALID_UPDATE_PACKET_HEADER_SET_1
 import com.ivanempire.lighthouse.parsers.packets.UpdateMediaPacketParserTest.Fixtures.VALID_UPDATE_PACKET_HEADER_SET_2
 import com.ivanempire.lighthouse.parsers.packets.UpdateMediaPacketParserTest.Fixtures.VALID_UPDATE_PACKET_HEADER_SET_3
-import java.net.InetAddress
-import java.net.URL
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.net.InetAddress
+import java.net.URL
 
 /** Tests [UpdateMediaPacketParser] */
 class UpdateMediaPacketParserTest {
@@ -48,15 +48,15 @@ class UpdateMediaPacketParserTest {
         assertEquals(NotificationSubtype.UPDATE, parsedPacket.notificationSubtype)
         assertEquals(
             NotificationType("urn:schemas-upnp-org:service:SwitchPower:1"),
-            parsedPacket.notificationType
+            parsedPacket.notificationType,
         )
         assertEquals(
             EmbeddedService(
                 "b9783ad2-d548-9793-0eb9-42db373ade07",
                 "SwitchPower",
-                "1"
+                "1",
             ),
-            parsedPacket.usn
+            parsedPacket.usn,
         )
         assertEquals(100, parsedPacket.bootId)
         assertEquals(30, parsedPacket.configId)
@@ -74,16 +74,16 @@ class UpdateMediaPacketParserTest {
         assertEquals(URL("http://192.168.1.1:47343/rootDesc.xml"), parsedPacket.location)
         assertEquals(
             NotificationType("urn:schemas-upnp-org:service:WANPPPConnection:1"),
-            parsedPacket.notificationType
+            parsedPacket.notificationType,
         )
         assertEquals(NotificationSubtype.UPDATE, parsedPacket.notificationSubtype)
         assertEquals(
             EmbeddedService(
                 "3ddcd1d3-2380-45f5-b069-2c4d54008cf2",
                 "WANPPPConnection",
-                "1"
+                "1",
             ),
-            parsedPacket.usn
+            parsedPacket.usn,
         )
         assertEquals(NotificationSubtype.UPDATE, parsedPacket.notificationSubtype)
         assertEquals(1525511561, parsedPacket.bootId)
@@ -101,20 +101,20 @@ class UpdateMediaPacketParserTest {
         assertEquals(MediaHost(InetAddress.getByName("239.255.255.250"), 1900), parsedPacket.host)
         assertEquals(
             URL("http://192.168.1.190:8091/b9783ad2-d548-9793-0eb9-42db373ade07.xml"),
-            parsedPacket.location
+            parsedPacket.location,
         )
         assertEquals(NotificationSubtype.UPDATE, parsedPacket.notificationSubtype)
         assertEquals(
             NotificationType("urn:schemas-upnp-org:service:RenderingControl:1"),
-            parsedPacket.notificationType
+            parsedPacket.notificationType,
         )
         assertEquals(
             EmbeddedService(
                 "b9783ad2-d548-9793-0eb9-42db373ade07",
                 "RenderingControl",
-                "1"
+                "1",
             ),
-            parsedPacket.usn
+            parsedPacket.usn,
         )
         assertEquals(-1, parsedPacket.bootId)
         assertEquals(-1, parsedPacket.configId)
@@ -133,15 +133,15 @@ class UpdateMediaPacketParserTest {
         assertEquals(NotificationSubtype.UPDATE, parsedPacket.notificationSubtype)
         assertEquals(
             NotificationType("urn:schemas-upnp-org:service:Dimming:1"),
-            parsedPacket.notificationType
+            parsedPacket.notificationType,
         )
         assertEquals(
             EmbeddedService(
                 "3f8744cd-30bf-4fc9-8a42-bad80ae660c1",
                 "Dimming",
-                "1"
+                "1",
             ),
-            parsedPacket.usn
+            parsedPacket.usn,
         )
         assertEquals(50, parsedPacket.bootId)
         assertEquals(454, parsedPacket.configId)
@@ -161,7 +161,7 @@ class UpdateMediaPacketParserTest {
             HeaderKeys.CONFIG_ID to "30",
             HeaderKeys.NEXT_BOOT_ID to "101",
             HeaderKeys.SEARCH_PORT to "1900",
-            HeaderKeys.SECURE_LOCATION to "https://127.0.0.1:58122/"
+            HeaderKeys.SECURE_LOCATION to "https://127.0.0.1:58122/",
         )
 
         val VALID_UPDATE_PACKET_HEADER_SET_1 = hashMapOf(
@@ -171,7 +171,7 @@ class UpdateMediaPacketParserTest {
             HeaderKeys.UNIQUE_SERVICE_NAME to "uuid:3ddcd1d3-2380-45f5-b069-2c4d54008cf2::urn:schemas-upnp-org:service:WANPPPConnection:1",
             HeaderKeys.NOTIFICATION_SUBTYPE to "ssdp:update",
             HeaderKeys.BOOT_ID to "1525511561",
-            HeaderKeys.CONFIG_ID to "1337"
+            HeaderKeys.CONFIG_ID to "1337",
         )
 
         val VALID_UPDATE_PACKET_HEADER_SET_2 = hashMapOf(
@@ -179,7 +179,7 @@ class UpdateMediaPacketParserTest {
             HeaderKeys.LOCATION to "http://192.168.1.190:8091/b9783ad2-d548-9793-0eb9-42db373ade07.xml",
             HeaderKeys.NOTIFICATION_SUBTYPE to "ssdp:alive",
             HeaderKeys.NOTIFICATION_TYPE to "urn:schemas-upnp-org:service:RenderingControl:1",
-            HeaderKeys.UNIQUE_SERVICE_NAME to "uuid:b9783ad2-d548-9793-0eb9-42db373ade07::urn:schemas-upnp-org:service:RenderingControl:1"
+            HeaderKeys.UNIQUE_SERVICE_NAME to "uuid:b9783ad2-d548-9793-0eb9-42db373ade07::urn:schemas-upnp-org:service:RenderingControl:1",
         )
 
         val VALID_UPDATE_PACKET_HEADER_SET_3 = hashMapOf(
@@ -192,7 +192,7 @@ class UpdateMediaPacketParserTest {
             HeaderKeys.CONFIG_ID to "454",
             HeaderKeys.NEXT_BOOT_ID to "51",
             HeaderKeys.SEARCH_PORT to "1900",
-            HeaderKeys.SECURE_LOCATION to "https://192.168.2.50:58121/"
+            HeaderKeys.SECURE_LOCATION to "https://192.168.2.50:58121/",
         )
     }
 }

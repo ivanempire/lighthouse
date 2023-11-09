@@ -31,6 +31,6 @@ object Constants {
         mx = 1,
         searchTarget = "ssdp:all",
         osVersion = null,
-        productVersion = null
+        productVersion = null,
     )
 }

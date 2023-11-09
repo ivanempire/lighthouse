@@ -1,9 +1,9 @@
 package com.ivanempire.lighthouse.socket
 
 import com.ivanempire.lighthouse.models.search.SearchRequest
+import kotlinx.coroutines.flow.Flow
 import java.net.DatagramPacket
 import java.net.MulticastSocket
-import kotlinx.coroutines.flow.Flow
 
 /**
  * All socket listeners should conform to this interface in order to set up their sockets, listen

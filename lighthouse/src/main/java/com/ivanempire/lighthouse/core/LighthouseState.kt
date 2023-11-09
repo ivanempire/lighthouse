@@ -3,7 +3,6 @@ package com.ivanempire.lighthouse.core
 import com.ivanempire.lighthouse.LighthouseLogger
 import com.ivanempire.lighthouse.models.Constants.NOT_AVAILABLE_CACHE
 import com.ivanempire.lighthouse.models.devices.AbridgedMediaDevice
-import com.ivanempire.lighthouse.models.devices.MediaDevice
 import com.ivanempire.lighthouse.models.packets.AliveMediaPacket
 import com.ivanempire.lighthouse.models.packets.ByeByeMediaPacket
 import com.ivanempire.lighthouse.models.packets.MediaPacket
@@ -12,6 +11,10 @@ import com.ivanempire.lighthouse.models.packets.SearchResponseMediaPacket
 import com.ivanempire.lighthouse.models.packets.UpdateMediaPacket
 import com.ivanempire.lighthouse.removeEmbeddedComponent
 import com.ivanempire.lighthouse.updateEmbeddedComponent
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 /**
  * The one stateful component of Lighthouse - contains the list of all devices known to the library
@@ -19,21 +22,8 @@ import com.ivanempire.lighthouse.updateEmbeddedComponent
  */
 internal class LighthouseState(private val logger: LighthouseLogger? = null) {
 
-    private val deviceList = arrayListOf<AbridgedMediaDevice>()
-
-    /**
-     * Must be called from one place only so as not to mess up internal state. Clears the internal
-     * state of all devices and adds everything back from [updatedList]
-     *
-     * @param updatedList The list of media devices that have been updated with the latest packets
-     * @return A new list of media devices that are as up-to-date as possible given latest packets
-     */
-    fun setDeviceList(updatedList: List<AbridgedMediaDevice>): List<MediaDevice> {
-        logger?.logStateMessage(TAG, "Setting new device list $updatedList")
-        deviceList.clear()
-        deviceList.addAll(updatedList)
-        return deviceList
-    }
+    private val backingDeviceList = MutableStateFlow<List<AbridgedMediaDevice>>(emptyList())
+    val deviceList: StateFlow<List<AbridgedMediaDevice>> = backingDeviceList.asStateFlow()
 
     /**
      * Delegates all the latest incoming [MediaPacket] instances to the relevant parsing methods
@@ -41,7 +31,7 @@ internal class LighthouseState(private val logger: LighthouseLogger? = null) {
      * @param latestPacket The latest parsed instance of a [MediaPacket]
      * @return A new version of [deviceList] with the appropriate [AbridgedMediaDevice] updated
      */
-    fun parseMediaPacket(latestPacket: MediaPacket): List<AbridgedMediaDevice> {
+    fun parseMediaPacket(latestPacket: MediaPacket) {
         logger?.logStateMessage(TAG, "Parsing packet for state: $latestPacket")
         return when (latestPacket) {
             is AliveMediaPacket -> parseAliveMediaPacket(latestPacket)
@@ -61,36 +51,37 @@ internal class LighthouseState(private val logger: LighthouseLogger? = null) {
      * @param latestPacket Latest instance of an [AliveMediaPacket]
      * @return A new version of [deviceList] with updated information from ALIVE packet
      */
-    private fun parseAliveMediaPacket(latestPacket: AliveMediaPacket): List<AbridgedMediaDevice> {
-        var targetDevice = deviceList.firstOrNull { it.uuid == latestPacket.usn.uuid }
+    private fun parseAliveMediaPacket(latestPacket: AliveMediaPacket) {
+        val updatedList = backingDeviceList.value.toMutableList()
+        val targetIndex = updatedList.indexOfFirst { it.uuid == latestPacket.usn.uuid }
+
         val targetComponent = latestPacket.usn
-        logger?.logStateMessage(TAG, "Parsing ALIVE packet targeting $targetComponent on device $targetDevice")
+//        logger?.logStateMessage(TAG, "Parsing ALIVE packet targeting $targetComponent on device $targetDevice")
 
         // Create a new device since we haven't seen it yet
-        if (targetDevice == null) {
-            val baseDevice = AbridgedMediaDevice(
-                uuid = targetComponent.uuid,
-                host = latestPacket.host,
-                cache = latestPacket.cache,
-                bootId = latestPacket.bootId,
-                mediaDeviceServer = latestPacket.server,
-                configId = latestPacket.configId,
-                location = latestPacket.location,
-                searchPort = latestPacket.searchPort,
-                secureLocation = latestPacket.secureLocation,
-                latestTimestamp = System.currentTimeMillis()
-            )
-            baseDevice.updateEmbeddedComponent(targetComponent)
-            deviceList.add(baseDevice)
+        if (targetIndex != -1) {
+            val updatedDevice = updatedList[targetIndex]
+                .copy(latestTimestamp = System.currentTimeMillis())
+                .updateEmbeddedComponent(targetComponent)
+            updatedList[targetIndex] = updatedDevice
         } else {
-            // Update the existing device
-            deviceList.remove(targetDevice)
-            targetDevice = targetDevice.copy(latestTimestamp = System.currentTimeMillis())
-            targetDevice.updateEmbeddedComponent(targetComponent)
-            deviceList.add(targetDevice)
+            updatedList.add(
+                AbridgedMediaDevice(
+                    uuid = targetComponent.uuid,
+                    host = latestPacket.host,
+                    cache = latestPacket.cache,
+                    bootId = latestPacket.bootId,
+                    mediaDeviceServer = latestPacket.server,
+                    configId = latestPacket.configId,
+                    location = latestPacket.location,
+                    searchPort = latestPacket.searchPort,
+                    secureLocation = latestPacket.secureLocation,
+                    latestTimestamp = System.currentTimeMillis(),
+                ).updateEmbeddedComponent(targetComponent),
+            )
         }
-        targetDevice?.extraHeaders?.putAll(latestPacket.extraHeaders)
-        return deviceList
+
+        backingDeviceList.value = updatedList
     }
 
     /**
@@ -101,15 +92,16 @@ internal class LighthouseState(private val logger: LighthouseLogger? = null) {
      * @param latestPacket Latest instance of an [UpdateMediaPacket]
      * @return A new version of [deviceList] with updated information from UPDATE packet
      */
-    private fun parseUpdateMediaPacket(latestPacket: UpdateMediaPacket): List<AbridgedMediaDevice> {
-        var targetDevice = deviceList.firstOrNull { it.uuid == latestPacket.usn.uuid }
+    private fun parseUpdateMediaPacket(latestPacket: UpdateMediaPacket) {
         val targetComponent = latestPacket.usn
-        logger?.logStateMessage(TAG, "Parsing UPDATE packet targeting $targetComponent on device $targetDevice")
+        val updatedList = backingDeviceList.value.toMutableList()
+        val targetIndex = updatedList.indexOfFirst { it.uuid == latestPacket.usn.uuid }
 
-        if (targetDevice == null) {
-            // Edge-case 1, where UPDATE packet came before ALIVE - build full device, but specify
-            // empty fields
-            val baseDevice = AbridgedMediaDevice(
+        // logger?.logStateMessage(TAG, "Parsing UPDATE packet targeting $targetComponent on device ${updatedDeviceList.getOrNull(targetIndex)}")
+
+        val updatedDevice = if (targetIndex == -1) {
+            // Edge-case 1: UPDATE packet came before ALIVE - build full device, but specify empty fields
+            AbridgedMediaDevice(
                 uuid = targetComponent.uuid,
                 host = latestPacket.host,
                 cache = NOT_AVAILABLE_CACHE,
@@ -119,31 +111,33 @@ internal class LighthouseState(private val logger: LighthouseLogger? = null) {
                 location = latestPacket.location,
                 searchPort = latestPacket.searchPort,
                 secureLocation = latestPacket.secureLocation,
-                latestTimestamp = System.currentTimeMillis()
-            )
-            baseDevice.updateEmbeddedComponent(targetComponent)
-            deviceList.add(baseDevice)
+                latestTimestamp = System.currentTimeMillis(),
+            ).updateEmbeddedComponent(targetComponent)
         } else {
-            deviceList.remove(targetDevice)
-            targetDevice = targetDevice.copy(latestTimestamp = System.currentTimeMillis())
-            when (targetComponent) {
-                // ALIVE came first, UPDATE for root should only update certain fields
-                // cache and server are not affected
-                is RootDeviceInformation -> {
-                    targetDevice = targetDevice.copy(
-                        bootId = latestPacket.bootId,
-                        configId = latestPacket.configId,
-                        searchPort = latestPacket.searchPort,
-                        location = latestPacket.location,
-                        secureLocation = latestPacket.secureLocation
-                    )
-                }
-                else -> targetDevice.updateEmbeddedComponent(targetComponent)
+            // ALIVE came first, UPDATE for root should only update certain fields (cache and server are not affected)
+            val existingDevice = updatedList[targetIndex]
+            val baseUpdatedDevice = existingDevice.copy(latestTimestamp = System.currentTimeMillis()).apply {
+                extraHeaders.putAll(latestPacket.extraHeaders)
             }
-            deviceList.add(targetDevice)
+            when (targetComponent) {
+                is RootDeviceInformation -> baseUpdatedDevice.copy(
+                    bootId = latestPacket.bootId,
+                    configId = latestPacket.configId,
+                    searchPort = latestPacket.searchPort,
+                    location = latestPacket.location,
+                    secureLocation = latestPacket.secureLocation,
+                )
+                else -> baseUpdatedDevice.updateEmbeddedComponent(targetComponent)
+            }
         }
-        targetDevice?.extraHeaders?.putAll(latestPacket.extraHeaders)
-        return deviceList
+
+        if (targetIndex != -1) {
+            updatedList[targetIndex] = updatedDevice
+        } else {
+            updatedList.add(updatedDevice)
+        }
+
+        backingDeviceList.value = updatedList
     }
 
     /**
@@ -153,17 +147,28 @@ internal class LighthouseState(private val logger: LighthouseLogger? = null) {
      * @param latestPacket Latest instance of a [ByeByeMediaPacket]
      * @return A modified version of [deviceList] with the target device/component removed
      */
-    private fun parseByeByeMediaPacket(latestPacket: ByeByeMediaPacket): List<AbridgedMediaDevice> {
-        val targetComponent = latestPacket.usn
-        val targetDevice = deviceList.firstOrNull { it.uuid == targetComponent.uuid } ?: return deviceList
-        logger?.logStateMessage(TAG, "Parsing BYEBYE packet targeting $targetComponent on device $targetDevice")
+    private fun parseByeByeMediaPacket(latestPacket: ByeByeMediaPacket) {
+        val updatedList = backingDeviceList.value.toMutableList()
+        val targetIndex = updatedList.indexOfFirst { it.uuid == latestPacket.usn.uuid }
 
-        when (targetComponent) {
-            is RootDeviceInformation -> deviceList.remove(targetDevice)
-            else -> targetDevice.removeEmbeddedComponent(targetComponent)
+        if (targetIndex == -1) {
+            return
         }
 
-        return deviceList
+        val targetComponent = latestPacket.usn
+        val targetDevice = updatedList[targetIndex]
+
+        logger?.logStateMessage(TAG, "Parsing BYEBYE packet targeting $targetComponent on device $targetDevice")
+
+        when (latestPacket.usn) {
+            is RootDeviceInformation -> updatedList.remove(targetDevice)
+            else -> {
+                val updatedDevice = targetDevice.removeEmbeddedComponent(targetComponent)
+                updatedList[targetIndex] = updatedDevice
+            }
+        }
+
+        backingDeviceList.value = updatedList
     }
 
     /**
@@ -173,9 +178,11 @@ internal class LighthouseState(private val logger: LighthouseLogger? = null) {
      *
      * @return A device list with stale root devices removed
      */
-    fun parseStaleDevices(): List<AbridgedMediaDevice> {
-        return deviceList.filter {
-            System.currentTimeMillis() - it.latestTimestamp > it.cache * 1000
+    fun parseStaleDevices() {
+        backingDeviceList.update { currentList ->
+            currentList.filterNot {
+                System.currentTimeMillis() - it.latestTimestamp > it.cache * 1000
+            }
         }
     }
 
@@ -199,6 +206,6 @@ private fun SearchResponseMediaPacket.toAlivePacket(): AliveMediaPacket {
         bootId = bootId,
         configId = configId,
         searchPort = searchPort,
-        secureLocation = secureLocation
+        secureLocation = secureLocation,
     )
 }

@@ -35,7 +35,7 @@ data class AbridgedMediaDevice(
     val serviceList: MutableList<EmbeddedService> = mutableListOf(),
     val deviceList: MutableList<EmbeddedDevice> = mutableListOf(),
     val latestTimestamp: Long,
-    val extraHeaders: HashMap<String, String> = hashMapOf()
+    val extraHeaders: HashMap<String, String> = hashMapOf(),
 ) : MediaDevice()
 
 /**
@@ -66,7 +66,7 @@ open class DetailedMediaDevice(
     open val modelUrl: URL,
     open val serialNumber: String,
     open val udn: UUID,
-    open val serviceList: List<DetailedEmbeddedMediaService>?
+    open val serviceList: List<DetailedEmbeddedMediaService>?,
 ) : MediaDevice()
 
 /**
@@ -90,9 +90,9 @@ data class RootMediaDevice(
     override val udn: UUID,
     override val serviceList: List<DetailedEmbeddedMediaService>?,
     val deviceList: List<DetailedEmbeddedMediaDevice>?,
-    val presentationUrl: URL?
+    val presentationUrl: URL?,
 ) : DetailedMediaDevice(
-    deviceType, friendlyName, manufacturer, manufacturerURL, modelDescription, modelName, modelNumber, modelUrl, serialNumber, udn, serviceList
+    deviceType, friendlyName, manufacturer, manufacturerURL, modelDescription, modelName, modelNumber, modelUrl, serialNumber, udn, serviceList,
 )
 
 /**
@@ -114,7 +114,7 @@ data class DetailedEmbeddedMediaDevice(
     override val serialNumber: String,
     override val udn: UUID,
     val upc: Int?,
-    override val serviceList: List<DetailedEmbeddedMediaService>?
+    override val serviceList: List<DetailedEmbeddedMediaService>?,
 ) : DetailedMediaDevice(
-    deviceType, friendlyName, manufacturer, manufacturerURL, modelDescription, modelName, modelNumber, modelUrl, serialNumber, udn, serviceList
+    deviceType, friendlyName, manufacturer, manufacturerURL, modelDescription, modelName, modelNumber, modelUrl, serialNumber, udn, serviceList,
 )

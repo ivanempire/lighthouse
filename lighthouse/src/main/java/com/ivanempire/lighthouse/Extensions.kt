@@ -15,13 +15,11 @@ import com.ivanempire.lighthouse.models.packets.UniqueServiceName
 internal fun AbridgedMediaDevice.updateEmbeddedComponent(latestComponent: UniqueServiceName): AbridgedMediaDevice {
     return when (latestComponent) {
         is EmbeddedDevice -> {
-            val updatedDeviceList = this.deviceList.filterNot { it.deviceType == latestComponent.deviceType }.toMutableList()
-            updatedDeviceList.add(latestComponent)
+            val updatedDeviceList = this.deviceList.filterNot { it.deviceType == latestComponent.deviceType } + latestComponent
             this.copy(deviceList = updatedDeviceList)
         }
         is EmbeddedService -> {
-            val updatedServiceList = this.serviceList.filterNot { it.serviceType == latestComponent.serviceType }.toMutableList()
-            updatedServiceList.add(latestComponent)
+            val updatedServiceList = this.serviceList.filterNot { it.serviceType == latestComponent.serviceType } + latestComponent
             this.copy(serviceList = updatedServiceList)
         }
         else -> this
@@ -37,10 +35,10 @@ internal fun AbridgedMediaDevice.updateEmbeddedComponent(latestComponent: Unique
 internal fun AbridgedMediaDevice.removeEmbeddedComponent(latestComponent: UniqueServiceName): AbridgedMediaDevice {
     return when (latestComponent) {
         is EmbeddedDevice -> this.copy(
-            deviceList = deviceList.filterNot { it.deviceType == latestComponent.deviceType }.toMutableList(),
+            deviceList = deviceList.filterNot { it.deviceType == latestComponent.deviceType }
         )
         is EmbeddedService -> this.copy(
-            serviceList = serviceList.filterNot { it.serviceType == latestComponent.serviceType }.toMutableList(),
+            serviceList = serviceList.filterNot { it.serviceType == latestComponent.serviceType }
         )
         else -> this
     }

@@ -32,8 +32,8 @@ data class AbridgedMediaDevice(
     val location: URL?,
     val secureLocation: URL?,
     val mediaDeviceServer: MediaDeviceServer?,
-    val serviceList: MutableList<EmbeddedService> = mutableListOf(),
-    val deviceList: MutableList<EmbeddedDevice> = mutableListOf(),
+    val serviceList: List<EmbeddedService> = listOf(),
+    val deviceList: List<EmbeddedDevice> = listOf(),
     val latestTimestamp: Long,
     val extraHeaders: HashMap<String, String> = hashMapOf(),
 ) : MediaDevice()

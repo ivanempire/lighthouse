@@ -12,7 +12,7 @@ import java.net.URL
 
 /** Parses incoming ssdp:update media packets */
 internal class UpdateMediaPacketParser(
-    private val headerSet: HashMap<String, String>
+    private val headerSet: HashMap<String, String>,
 ) : MediaPacketParser() {
 
     private val host: MediaHost by lazy {
@@ -53,7 +53,7 @@ internal class UpdateMediaPacketParser(
             configId = configId,
             nextBootId = nextBootId,
             searchPort = searchPort,
-            secureLocation = secureLocation
+            secureLocation = secureLocation,
         )
     }
 }

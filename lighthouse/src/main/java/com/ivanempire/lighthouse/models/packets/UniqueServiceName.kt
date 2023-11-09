@@ -37,7 +37,7 @@ interface UniqueServiceName {
                     uuid = uuid,
                     deviceType = extraSegments.getOrNull(3) ?: "",
                     deviceVersion = extraSegments.getOrNull(4) ?: "",
-                    domain = extraSegments.getDomain()
+                    domain = extraSegments.getDomain(),
                 )
             }
 
@@ -47,7 +47,7 @@ interface UniqueServiceName {
                     uuid = uuid,
                     serviceType = extraSegments.getOrNull(3) ?: "",
                     serviceVersion = extraSegments.getOrNull(4) ?: "",
-                    domain = extraSegments.getDomain()
+                    domain = extraSegments.getDomain(),
                 )
             }
 
@@ -63,7 +63,7 @@ interface UniqueServiceName {
  * @param uuid The unique identifier of the root device
  */
 internal data class RootDeviceInformation(
-    override val uuid: String
+    override val uuid: String,
 ) : UniqueServiceName
 
 /**
@@ -77,7 +77,7 @@ data class EmbeddedDevice(
     override val uuid: String,
     val deviceType: String,
     val deviceVersion: String,
-    val domain: String? = null
+    val domain: String? = null,
 ) : UniqueServiceName
 
 /**
@@ -91,7 +91,7 @@ data class EmbeddedService(
     override val uuid: String,
     val serviceType: String,
     val serviceVersion: String,
-    val domain: String? = null
+    val domain: String? = null,
 ) : UniqueServiceName
 
 /**

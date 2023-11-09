@@ -52,7 +52,7 @@ internal abstract class MediaPacketParser {
     companion object {
         operator fun invoke(
             packetHeaders: HashMap<String, String>,
-            logger: LighthouseLogger? = null
+            logger: LighthouseLogger? = null,
         ): MediaPacket? {
             logger?.logPacketMessage(TAG, "Headers to parse into packet: $packetHeaders")
             // Figure out if this is a search response packet; special case with no NTS field
@@ -62,7 +62,7 @@ internal abstract class MediaPacketParser {
             } else {
                 // If this is not a search response packet, determine type by the NTS field
                 val notificationSubtype = NotificationSubtype.getByRawValue(
-                    packetHeaders.getAndRemove(HeaderKeys.NOTIFICATION_SUBTYPE)
+                    packetHeaders.getAndRemove(HeaderKeys.NOTIFICATION_SUBTYPE),
                 )
                 val packetParser = when (notificationSubtype) {
                     NotificationSubtype.ALIVE -> AliveMediaPacketParser(packetHeaders)

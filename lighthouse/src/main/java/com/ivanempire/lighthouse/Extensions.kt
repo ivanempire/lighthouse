@@ -12,15 +12,19 @@ import com.ivanempire.lighthouse.models.packets.UniqueServiceName
  *
  * @param latestComponent The latest ALIVE or BYEBYE packet's parsed [UniqueServiceName] field
  */
-internal fun AbridgedMediaDevice.updateEmbeddedComponent(latestComponent: UniqueServiceName) {
-    if (latestComponent is EmbeddedDevice) {
-        val targetComponent = this.deviceList.firstOrNull { it.deviceType == latestComponent.deviceType }
-        this.deviceList.remove(targetComponent)
-        this.deviceList.add(latestComponent)
-    } else if (latestComponent is EmbeddedService) {
-        val targetComponent = this.serviceList.firstOrNull { it.serviceType == latestComponent.serviceType }
-        this.serviceList.remove(targetComponent)
-        this.serviceList.add(latestComponent)
+internal fun AbridgedMediaDevice.updateEmbeddedComponent(latestComponent: UniqueServiceName): AbridgedMediaDevice {
+    return when (latestComponent) {
+        is EmbeddedDevice -> {
+            val updatedDeviceList = this.deviceList.filterNot { it.deviceType == latestComponent.deviceType }.toMutableList()
+            updatedDeviceList.add(latestComponent)
+            this.copy(deviceList = updatedDeviceList)
+        }
+        is EmbeddedService -> {
+            val updatedServiceList = this.serviceList.filterNot { it.serviceType == latestComponent.serviceType }.toMutableList()
+            updatedServiceList.add(latestComponent)
+            this.copy(serviceList = updatedServiceList)
+        }
+        else -> this
     }
 }
 
@@ -30,11 +34,15 @@ internal fun AbridgedMediaDevice.updateEmbeddedComponent(latestComponent: Unique
  *
  * @param latestComponent The latest BYEBYE packet's parsed [UniqueServiceName] field
  */
-internal fun AbridgedMediaDevice.removeEmbeddedComponent(latestComponent: UniqueServiceName) {
-    if (latestComponent is EmbeddedDevice) {
-        this.deviceList.removeAll { it.deviceType == latestComponent.deviceType }
-    } else if (latestComponent is EmbeddedService) {
-        this.serviceList.removeAll { it.serviceType == latestComponent.serviceType }
+internal fun AbridgedMediaDevice.removeEmbeddedComponent(latestComponent: UniqueServiceName): AbridgedMediaDevice {
+    return when (latestComponent) {
+        is EmbeddedDevice -> this.copy(
+            deviceList = deviceList.filterNot { it.deviceType == latestComponent.deviceType }.toMutableList(),
+        )
+        is EmbeddedService -> this.copy(
+            serviceList = serviceList.filterNot { it.serviceType == latestComponent.serviceType }.toMutableList(),
+        )
+        else -> this
     }
 }
 

@@ -12,15 +12,15 @@ class UniqueServiceNameTest {
         val usn = UniqueServiceName(usnString1)
         assertEquals(
             RootDeviceInformation("709e1cf4-920d-4aa7-8678-6dab1b6c68a9"),
-            usn
+            usn,
         )
 
         val usnString2 = "uuid:66363c8f-408d-47eb-9c5b-9d5301eb93d3::upnp:rootdevice"
         assertEquals(
             RootDeviceInformation(
-                uuid = "66363c8f-408d-47eb-9c5b-9d5301eb93d3"
+                uuid = "66363c8f-408d-47eb-9c5b-9d5301eb93d3",
             ),
-            UniqueServiceName(usnString2)
+            UniqueServiceName(usnString2),
         )
     }
 
@@ -29,13 +29,13 @@ class UniqueServiceNameTest {
         val usnStringService1 = "uuid:709e1cf4-920d-4aa7-8678-6dab1b6c68a9::urn:schemas-upnp-org:service:Dimming:1"
         assertEquals(
             EmbeddedService("709e1cf4-920d-4aa7-8678-6dab1b6c68a9", "Dimming", "1"),
-            UniqueServiceName(usnStringService1)
+            UniqueServiceName(usnStringService1),
         )
 
         val usnStringService2 = "uuid:709e1cf4-920d-4aa7-8678-6dab1b6c68a9::urn:schemas-upnp-org:service:SwitchPower:1"
         assertEquals(
             EmbeddedService("709e1cf4-920d-4aa7-8678-6dab1b6c68a9", "SwitchPower", "1"),
-            UniqueServiceName(usnStringService2)
+            UniqueServiceName(usnStringService2),
         )
     }
 
@@ -44,7 +44,7 @@ class UniqueServiceNameTest {
         val usnStringDevice = "uuid:709e1cf4-920d-4aa7-8678-6dab1b6c68a9::urn:schemas-upnp-org:device:DimmableLight:1"
         assertEquals(
             EmbeddedDevice("709e1cf4-920d-4aa7-8678-6dab1b6c68a9", "DimmableLight", "1"),
-            UniqueServiceName(usnStringDevice)
+            UniqueServiceName(usnStringDevice),
         )
     }
 
@@ -56,9 +56,9 @@ class UniqueServiceNameTest {
                 uuid = "00000000-0000-0000-0200-00125A8A0960",
                 deviceType = "presence",
                 deviceVersion = "1",
-                domain = "schemas-microsoft-com"
+                domain = "schemas-microsoft-com",
             ),
-            UniqueServiceName(usnString)
+            UniqueServiceName(usnString),
         )
     }
 
@@ -69,9 +69,9 @@ class UniqueServiceNameTest {
             EmbeddedService(
                 uuid = "ebf5a0a0-1dd1-11b2-a90f-e0dbd1eb5ad2",
                 serviceType = "DiscoverFriendlies",
-                serviceVersion = "1"
+                serviceVersion = "1",
             ),
-            UniqueServiceName(usnString)
+            UniqueServiceName(usnString),
         )
     }
 
@@ -83,9 +83,9 @@ class UniqueServiceNameTest {
                 uuid = "5f6085cb-5c18-40c6-a299-dbc05135b0c4",
                 serviceType = "ScreenSharingService",
                 domain = "samsung.com",
-                serviceVersion = "1"
+                serviceVersion = "1",
             ),
-            UniqueServiceName(usnString)
+            UniqueServiceName(usnString),
         )
     }
 
@@ -94,7 +94,7 @@ class UniqueServiceNameTest {
         val usnString = "uuid:device_3_0-AMC066F0BC0A3747AF::urn:schemas-upnp-org:device:3.0-AMC066F0BC0A3747AF"
         assertEquals(
             EmbeddedDevice("device_3_0-AMC066F0BC0A3747AF", "3.0-AMC066F0BC0A3747AF", ""),
-            UniqueServiceName(usnString)
+            UniqueServiceName(usnString),
         )
     }
 }

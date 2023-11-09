@@ -12,7 +12,7 @@ import java.lang.IllegalArgumentException
 data class MediaDeviceServer(
     val osVersion: String,
     val upnpVersion: String,
-    val productVersion: String
+    val productVersion: String,
 ) {
     companion object {
         fun parseFromString(rawValue: String?): MediaDeviceServer {
@@ -25,7 +25,7 @@ data class MediaDeviceServer(
                     MediaDeviceServer(
                         osVersion = serverInfo[0],
                         upnpVersion = serverInfo[1],
-                        productVersion = serverInfo[2]
+                        productVersion = serverInfo[2],
                     )
                 } catch (ex: IllegalArgumentException) {
                     return MediaDeviceServer("N/A", "N/A", "N/A")

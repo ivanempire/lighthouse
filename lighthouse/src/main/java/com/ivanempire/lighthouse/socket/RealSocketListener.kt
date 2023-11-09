@@ -5,21 +5,21 @@ import com.ivanempire.lighthouse.LighthouseLogger
 import com.ivanempire.lighthouse.models.Constants.DEFAULT_MULTICAST_ADDRESS
 import com.ivanempire.lighthouse.models.Constants.LIGHTHOUSE_CLIENT
 import com.ivanempire.lighthouse.models.search.SearchRequest
-import java.net.DatagramPacket
-import java.net.InetAddress
-import java.net.InetSocketAddress
-import java.net.MulticastSocket
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.isActive
+import java.net.DatagramPacket
+import java.net.InetAddress
+import java.net.InetSocketAddress
+import java.net.MulticastSocket
 
 /** Specific implementation of [SocketListener] */
 internal class RealSocketListener(
     private val wifiManager: WifiManager,
     private val retryCount: Int,
-    private val logger: LighthouseLogger? = null
+    private val logger: LighthouseLogger? = null,
 ) : SocketListener {
 
     private val multicastLock: WifiManager.MulticastLock by lazy {

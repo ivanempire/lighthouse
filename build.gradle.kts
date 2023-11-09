@@ -5,12 +5,8 @@ plugins {
 subprojects {
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
 
-    repositories {
-        mavenCentral()
-    }
-
     configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
-        version.set("0.45.2")
+        version.set("0.50.0")
         debug.set(false)
         verbose.set(true)
         android.set(true)

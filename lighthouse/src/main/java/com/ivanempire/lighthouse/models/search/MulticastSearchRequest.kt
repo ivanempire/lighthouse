@@ -30,7 +30,7 @@ data class MulticastSearchRequest(
     val osVersion: String? = null,
     val productVersion: String? = null,
     val friendlyName: String = LIGHTHOUSE_CLIENT,
-    val uuid: UUID = UUID.nameUUIDFromBytes(LIGHTHOUSE_CLIENT.toByteArray())
+    val uuid: UUID = UUID.nameUUIDFromBytes(LIGHTHOUSE_CLIENT.toByteArray()),
 ) : SearchRequest {
 
     init {

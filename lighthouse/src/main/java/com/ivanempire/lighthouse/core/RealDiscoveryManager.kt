@@ -9,9 +9,11 @@ import com.ivanempire.lighthouse.socket.SocketListener
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.isActive
 
 /**
@@ -23,22 +25,25 @@ import kotlinx.coroutines.isActive
 internal class RealDiscoveryManager(
     private val lighthouseState: LighthouseState,
     private val multicastSocketListener: SocketListener,
-    private val logger: LighthouseLogger? = null
+    private val logger: LighthouseLogger? = null,
 ) : DiscoveryManager {
 
     override fun createNewDeviceFlow(searchRequest: SearchRequest): Flow<List<AbridgedMediaDevice>> {
         return multicastSocketListener.listenForPackets(searchRequest)
             .mapNotNull { DatagramPacketTransformer(it, logger) }
             .mapNotNull { MediaPacketParser(it, logger) }
-            .map { lighthouseState.parseMediaPacket(it) }
+            .onEach { lighthouseState.parseMediaPacket(it) }
+            .flatMapLatest { lighthouseState.deviceList }
+            .filter { it.isNotEmpty() }
     }
 
     override fun createStaleDeviceFlow(): Flow<List<AbridgedMediaDevice>> {
         return flow {
             while (currentCoroutineContext().isActive) {
                 delay(1000)
-                emit(lighthouseState.parseStaleDevices())
+                lighthouseState.parseStaleDevices()
+                emit(lighthouseState.deviceList.value)
             }
-        }
+        }.filter { it.isNotEmpty() }
     }
 }

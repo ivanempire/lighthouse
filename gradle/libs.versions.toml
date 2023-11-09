@@ -1,5 +1,5 @@
 [versions]
-gradle = "8.1.2"
+gradle = "8.1.3"
 maven = "0.25.2"
 junit = "4.13.2"
 kotlin = "1.8.10"
@@ -21,6 +21,7 @@ androidx-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", versio
 android-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 
 # Jetpack Compose
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 material3 = { module = "androidx.compose.material3:material3" }
 compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
 compose-activity = { module = "androidx.activity:activity-compose", version.ref = "compose" }
@@ -29,4 +30,4 @@ compose-activity = { module = "androidx.activity:activity-compose", version.ref 
 testing-junit = { module = "junit:junit", version.ref = "junit" }
 
 [plugins]
-ktlint = "org.jlleitschuh.gradle.ktlint:11.3.2"
+ktlint = "org.jlleitschuh.gradle.ktlint:11.6.1"

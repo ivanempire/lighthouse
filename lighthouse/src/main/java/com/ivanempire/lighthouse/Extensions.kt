@@ -35,10 +35,10 @@ internal fun AbridgedMediaDevice.updateEmbeddedComponent(latestComponent: Unique
 internal fun AbridgedMediaDevice.removeEmbeddedComponent(latestComponent: UniqueServiceName): AbridgedMediaDevice {
     return when (latestComponent) {
         is EmbeddedDevice -> this.copy(
-            deviceList = deviceList.filterNot { it.deviceType == latestComponent.deviceType }
+            deviceList = deviceList.filterNot { it.deviceType == latestComponent.deviceType },
         )
         is EmbeddedService -> this.copy(
-            serviceList = serviceList.filterNot { it.serviceType == latestComponent.serviceType }
+            serviceList = serviceList.filterNot { it.serviceType == latestComponent.serviceType },
         )
         else -> this
     }

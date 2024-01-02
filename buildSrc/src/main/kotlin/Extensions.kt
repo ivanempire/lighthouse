@@ -2,7 +2,6 @@
 
 package lighthouse
 
-import kotlin.math.pow
 import org.gradle.api.Project
 import org.gradle.api.provider.Property
 

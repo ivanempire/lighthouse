@@ -5,14 +5,7 @@ plugins {
     id("kotlin-android")
 }
 
-setupLibraryModule(moduleName = "com.ivanempire.lighthouse", shouldBePublished = true) {
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = true
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
-        }
-    }
-}
+setupLibraryModule(moduleName = "com.ivanempire.lighthouse", shouldBePublished = true)
 
 dependencies {
     implementation(libs.androidx.core)

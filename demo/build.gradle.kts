@@ -19,5 +19,9 @@ dependencies {
     // Compose integration with activities
     implementation(libs.compose.activity)
 
-    implementation(project(":lighthouse"))
+    // Switch out for local development
+    // implementation(project(":lighthouse"))
+
+    // Always points to latest release
+    implementation("com.ivanempire:lighthouse:2.1.1")
 }

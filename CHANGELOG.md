@@ -1,5 +1,10 @@
 # Changelog
 
+## [2.1.1] - January 2nd 2024
+- Bumped AGP version to 8.2.0
+- Bumped Activity-compose to 1.8.2
+- Primary purpose of this release is to push a new artifact to Maven Central to fix minification issues seen in the last couple of releases
+
 ## [2.1.0] - November 7th 2023
 - **New**: Added support for consumers to implement their own logging mechanism via [LighthouseLogger](lighthouse/src/main/java/com/ivanempire/lighthouse/LighthouseLogger.kt)
 - Bumped AGP version to 8.1.2

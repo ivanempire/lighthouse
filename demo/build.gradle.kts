@@ -20,8 +20,8 @@ dependencies {
     implementation(libs.compose.activity)
 
     // Switch out for local development
-    // implementation(project(":lighthouse"))
+    implementation(project(":lighthouse"))
 
     // Always points to latest release
-    implementation("com.ivanempire:lighthouse:2.1.1")
+    // implementation("com.ivanempire:lighthouse:2.1.1")
 }

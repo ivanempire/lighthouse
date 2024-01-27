@@ -67,5 +67,5 @@ interface LighthouseClient {
      * @param searchRequest The [SearchRequest] to send to the multicast group to discover devices
      * @return Flow of lists of [AbridgedMediaDevice] that have been discovered on the network
      */
-    fun discoverDevices(searchRequest: SearchRequest = DEFAULT_SEARCH_REQUEST): Flow<List<AbridgedMediaDevice>>
+    suspend fun discoverDevices(searchRequest: SearchRequest = DEFAULT_SEARCH_REQUEST): Flow<List<AbridgedMediaDevice>>
 }

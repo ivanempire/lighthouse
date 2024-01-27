@@ -10,6 +10,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 /** Specific implementation of [LighthouseClient] */
 internal class RealLighthouseClient(
@@ -18,7 +21,17 @@ internal class RealLighthouseClient(
     private val logger: LighthouseLogger? = null,
 ) : LighthouseClient {
 
-    override fun discoverDevices(searchRequest: SearchRequest): Flow<List<AbridgedMediaDevice>> {
+    private val discoveryMutex = Mutex()
+    private var isDiscoveryRunning = false
+
+    override suspend fun discoverDevices(searchRequest: SearchRequest): Flow<List<AbridgedMediaDevice>> {
+        discoveryMutex.withLock {
+            if (isDiscoveryRunning) {
+                throw IllegalStateException("Discovery is already in progress - did you call discoverDevices() multiple times?")
+            }
+            isDiscoveryRunning = true
+        }
+
         logger?.logStatusMessage(TAG, "Discovering devices with search request: $searchRequest")
 
         val foundDevicesFlow = discoveryManager.createNewDeviceFlow(searchRequest)
@@ -27,6 +40,11 @@ internal class RealLighthouseClient(
         return merge(foundDevicesFlow, lostDevicesFlow)
             .distinctUntilChanged()
             .flowOn(dispatcher)
+            .onCompletion {
+                discoveryMutex.withLock {
+                    isDiscoveryRunning = false
+                }
+            }
     }
 
     private companion object {

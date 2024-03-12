@@ -21,14 +21,11 @@ class MainActivityViewModel(
     val discoveredDevices = backingDiscoveredDevices.asStateFlow()
 
     fun startDiscovery() {
-        discoveryJob = viewModelScope.launch {
-            lighthouseClient.discoverDevices().collect {
-                backingDiscoveredDevices.value = it
+        discoveryJob =
+            viewModelScope.launch {
+                lighthouseClient.discoverDevices().collect { backingDiscoveredDevices.value = it }
             }
-        }
     }
 
-    fun stopDiscovery() = runBlocking {
-        discoveryJob?.cancelAndJoin()
-    }
+    fun stopDiscovery() = runBlocking { discoveryJob?.cancelAndJoin() }
 }

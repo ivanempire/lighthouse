@@ -26,11 +26,12 @@ object Constants {
     val NOT_AVAILABLE_LOCATION = URL("http://0.0.0.0/")
     val DEFAULT_MEDIA_HOST = MediaHost(InetAddress.getByName(DEFAULT_MULTICAST_ADDRESS), 1900)
 
-    val DEFAULT_SEARCH_REQUEST = MulticastSearchRequest(
-        hostname = DEFAULT_MEDIA_HOST,
-        mx = 1,
-        searchTarget = "ssdp:all",
-        osVersion = null,
-        productVersion = null,
-    )
+    val DEFAULT_SEARCH_REQUEST =
+        MulticastSearchRequest(
+            hostname = DEFAULT_MEDIA_HOST,
+            mx = 1,
+            searchTarget = "ssdp:all",
+            osVersion = null,
+            productVersion = null,
+        )
 }

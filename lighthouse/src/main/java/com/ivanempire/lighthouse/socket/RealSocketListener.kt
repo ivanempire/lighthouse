@@ -5,15 +5,15 @@ import com.ivanempire.lighthouse.LighthouseLogger
 import com.ivanempire.lighthouse.models.Constants.DEFAULT_MULTICAST_ADDRESS
 import com.ivanempire.lighthouse.models.Constants.LIGHTHOUSE_CLIENT
 import com.ivanempire.lighthouse.models.search.SearchRequest
+import java.net.DatagramPacket
+import java.net.InetAddress
+import java.net.InetSocketAddress
+import java.net.MulticastSocket
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.isActive
-import java.net.DatagramPacket
-import java.net.InetAddress
-import java.net.InetSocketAddress
-import java.net.MulticastSocket
 
 /** Specific implementation of [SocketListener] */
 internal class RealSocketListener(
@@ -44,7 +44,11 @@ internal class RealSocketListener(
             multicastSocket.bind(InetSocketAddress(MULTICAST_PORT))
             logger?.logStatusMessage(TAG, "MulticastSocket has been setup")
         } catch (ex: Exception) {
-            logger?.logErrorMessage(TAG, "Could finish setting up the multicast socket and group", ex)
+            logger?.logErrorMessage(
+                TAG,
+                "Could finish setting up the multicast socket and group",
+                ex
+            )
         }
 
         return multicastSocket
@@ -55,21 +59,21 @@ internal class RealSocketListener(
         val multicastSocket = setupSocket()
 
         return flow {
-            multicastSocket.use {
-                val datagramPacketRequest = searchRequest.toDatagramPacket(multicastGroup)
+                multicastSocket.use {
+                    val datagramPacketRequest = searchRequest.toDatagramPacket(multicastGroup)
 
-                repeat(retryCount) {
-                    multicastSocket.send(datagramPacketRequest)
-                }
+                    repeat(retryCount) { multicastSocket.send(datagramPacketRequest) }
 
-                while (currentCoroutineContext().isActive) {
-                    val discoveryBuffer = ByteArray(MULTICAST_DATAGRAM_SIZE)
-                    val discoveryDatagram = DatagramPacket(discoveryBuffer, discoveryBuffer.size)
-                    it.receive(discoveryDatagram)
-                    emit(discoveryDatagram)
+                    while (currentCoroutineContext().isActive) {
+                        val discoveryBuffer = ByteArray(MULTICAST_DATAGRAM_SIZE)
+                        val discoveryDatagram =
+                            DatagramPacket(discoveryBuffer, discoveryBuffer.size)
+                        it.receive(discoveryDatagram)
+                        emit(discoveryDatagram)
+                    }
                 }
             }
-        }.onCompletion { teardownSocket(multicastSocket) }
+            .onCompletion { teardownSocket(multicastSocket) }
     }
 
     override fun teardownSocket(multicastSocket: MulticastSocket) {

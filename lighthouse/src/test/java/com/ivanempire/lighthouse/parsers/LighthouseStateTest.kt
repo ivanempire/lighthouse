@@ -7,6 +7,8 @@ import com.ivanempire.lighthouse.parsers.TestUtils.generateAlivePacket
 import com.ivanempire.lighthouse.parsers.TestUtils.generateByeByePacket
 import com.ivanempire.lighthouse.parsers.TestUtils.generateUSN
 import com.ivanempire.lighthouse.parsers.TestUtils.generateUpdatePacket
+import java.net.URL
+import java.util.UUID
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -14,18 +16,13 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import java.net.URL
-import java.util.UUID
 
 /** Tests [LighthouseState] */
 class LighthouseStateTest {
 
     private lateinit var sut: LighthouseState
 
-    @Before
-    fun setup() = runTest {
-        sut = LighthouseState()
-    }
+    @Before fun setup() = runTest { sut = LighthouseState() }
 
     @Test
     fun `given ALIVE packet creates root device correctly`() = runTest {
@@ -61,7 +58,11 @@ class LighthouseStateTest {
         sut.parseMediaPacket(ALIVE_PACKET_1)
         sut.parseMediaPacket(ALIVE_PACKET_2)
 
-        val ALIVE_PACKET_3 = generateAlivePacket(deviceUUID = RANDOM_UUID_2, uniqueServiceName = generateUSN<EmbeddedDevice>(RANDOM_UUID_2))
+        val ALIVE_PACKET_3 =
+            generateAlivePacket(
+                deviceUUID = RANDOM_UUID_2,
+                uniqueServiceName = generateUSN<EmbeddedDevice>(RANDOM_UUID_2)
+            )
 
         sut.parseMediaPacket(ALIVE_PACKET_3)
 
@@ -73,7 +74,14 @@ class LighthouseStateTest {
     @Test
     fun `given UPDATE packet builds root device correctly`() = runTest {
         val RANDOM_UUID_1 = UUID.randomUUID().toString()
-        val UPDATE_PACKET_1 = generateUpdatePacket(deviceUUID = RANDOM_UUID_1, location = URL("http://127.0.0.1:9999/"), bootId = 200, configId = 300, secureLocation = URL("https://127.0.0.1:9999/"))
+        val UPDATE_PACKET_1 =
+            generateUpdatePacket(
+                deviceUUID = RANDOM_UUID_1,
+                location = URL("http://127.0.0.1:9999/"),
+                bootId = 200,
+                configId = 300,
+                secureLocation = URL("https://127.0.0.1:9999/")
+            )
 
         sut.parseMediaPacket(UPDATE_PACKET_1)
 
@@ -95,7 +103,11 @@ class LighthouseStateTest {
         val initialDevice = sut.deviceList.first()[0]
         assertTrue(initialDevice.deviceList.isEmpty())
 
-        val UPDATE_PACKET_1 = generateUpdatePacket(deviceUUID = RANDOM_UUID_1, uniqueServiceName = generateUSN<EmbeddedDevice>(deviceUUID = RANDOM_UUID_1))
+        val UPDATE_PACKET_1 =
+            generateUpdatePacket(
+                deviceUUID = RANDOM_UUID_1,
+                uniqueServiceName = generateUSN<EmbeddedDevice>(deviceUUID = RANDOM_UUID_1)
+            )
         sut.parseMediaPacket(UPDATE_PACKET_1)
 
         val actualDevice = sut.deviceList.first()[0]
@@ -105,8 +117,17 @@ class LighthouseStateTest {
     @Test
     fun `given UPDATE packet updates embedded components correctly`() = runTest {
         val RANDOM_UUID_1 = UUID.randomUUID().toString()
-        val ALIVE_PACKET_1 = generateAlivePacket(deviceUUID = RANDOM_UUID_1, uniqueServiceName = generateUSN<EmbeddedService>(deviceUUID = RANDOM_UUID_1))
-        val UPDATE_PACKET_1 = generateUpdatePacket(deviceUUID = RANDOM_UUID_1, uniqueServiceName = generateUSN<EmbeddedService>(deviceUUID = RANDOM_UUID_1, version = "4.5"))
+        val ALIVE_PACKET_1 =
+            generateAlivePacket(
+                deviceUUID = RANDOM_UUID_1,
+                uniqueServiceName = generateUSN<EmbeddedService>(deviceUUID = RANDOM_UUID_1)
+            )
+        val UPDATE_PACKET_1 =
+            generateUpdatePacket(
+                deviceUUID = RANDOM_UUID_1,
+                uniqueServiceName =
+                    generateUSN<EmbeddedService>(deviceUUID = RANDOM_UUID_1, version = "4.5")
+            )
 
         sut.parseMediaPacket(ALIVE_PACKET_1)
         sut.parseMediaPacket(UPDATE_PACKET_1)
@@ -134,14 +155,20 @@ class LighthouseStateTest {
     fun `given BYEBYE packet removes embedded components correctly`() = runTest {
         val RANDOM_UUID_1 = UUID.randomUUID().toString()
         val EMBEDDED_SERVICE_1 = generateUSN<EmbeddedService>(deviceUUID = RANDOM_UUID_1)
-        val ALIVE_PACKET_1 = generateAlivePacket(deviceUUID = RANDOM_UUID_1, uniqueServiceName = EMBEDDED_SERVICE_1)
-        val UPDATE_PACKET_1 = generateUpdatePacket(deviceUUID = RANDOM_UUID_1, uniqueServiceName = generateUSN<EmbeddedDevice>(deviceUUID = RANDOM_UUID_1))
+        val ALIVE_PACKET_1 =
+            generateAlivePacket(deviceUUID = RANDOM_UUID_1, uniqueServiceName = EMBEDDED_SERVICE_1)
+        val UPDATE_PACKET_1 =
+            generateUpdatePacket(
+                deviceUUID = RANDOM_UUID_1,
+                uniqueServiceName = generateUSN<EmbeddedDevice>(deviceUUID = RANDOM_UUID_1)
+            )
 
         sut.parseMediaPacket(ALIVE_PACKET_1)
         sut.parseMediaPacket(UPDATE_PACKET_1)
         assertEquals(1, sut.deviceList.first()[0].serviceList.size)
 
-        val BYEBYE_PACKET_1 = generateByeByePacket(deviceUUID = RANDOM_UUID_1, uniqueServiceName = EMBEDDED_SERVICE_1)
+        val BYEBYE_PACKET_1 =
+            generateByeByePacket(deviceUUID = RANDOM_UUID_1, uniqueServiceName = EMBEDDED_SERVICE_1)
         sut.parseMediaPacket(BYEBYE_PACKET_1)
 
         assertTrue(sut.deviceList.first()[0].serviceList.isEmpty())

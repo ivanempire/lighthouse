@@ -24,10 +24,14 @@ internal class RealLighthouseClient(
     private val discoveryMutex = Mutex()
     private var isDiscoveryRunning = false
 
-    override suspend fun discoverDevices(searchRequest: SearchRequest): Flow<List<AbridgedMediaDevice>> {
+    override suspend fun discoverDevices(
+        searchRequest: SearchRequest
+    ): Flow<List<AbridgedMediaDevice>> {
         discoveryMutex.withLock {
             if (isDiscoveryRunning) {
-                throw IllegalStateException("Discovery is already in progress - did you call discoverDevices() multiple times?")
+                throw IllegalStateException(
+                    "Discovery is already in progress - did you call discoverDevices() multiple times?"
+                )
             }
             isDiscoveryRunning = true
         }
@@ -40,11 +44,7 @@ internal class RealLighthouseClient(
         return merge(foundDevicesFlow, lostDevicesFlow)
             .distinctUntilChanged()
             .flowOn(dispatcher)
-            .onCompletion {
-                discoveryMutex.withLock {
-                    isDiscoveryRunning = false
-                }
-            }
+            .onCompletion { discoveryMutex.withLock { isDiscoveryRunning = false } }
     }
 
     private companion object {

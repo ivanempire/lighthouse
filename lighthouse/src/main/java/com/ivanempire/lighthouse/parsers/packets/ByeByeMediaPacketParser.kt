@@ -28,7 +28,8 @@ internal class ByeByeMediaPacketParser(
 
     private val bootId = headerSet.getAndRemove(HeaderKeys.BOOT_ID)?.toInt() ?: NOT_AVAILABLE_NUM
 
-    private val configId = headerSet.getAndRemove(HeaderKeys.CONFIG_ID)?.toInt() ?: NOT_AVAILABLE_NUM
+    private val configId =
+        headerSet.getAndRemove(HeaderKeys.CONFIG_ID)?.toInt() ?: NOT_AVAILABLE_NUM
 
     override fun parseMediaPacket(): MediaPacket {
         return ByeByeMediaPacket(

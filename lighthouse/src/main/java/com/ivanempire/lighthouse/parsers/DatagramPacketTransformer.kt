@@ -16,7 +16,10 @@ import java.nio.charset.Charset
 internal class DatagramPacketTransformer {
 
     companion object {
-        operator fun invoke(datagramPacket: DatagramPacket, logger: LighthouseLogger? = null): HashMap<String, String>? {
+        operator fun invoke(
+            datagramPacket: DatagramPacket,
+            logger: LighthouseLogger? = null
+        ): HashMap<String, String>? {
             val cleanedDatagram = datagramPacket.cleanPacket()
             logger?.logPacketMessage(TAG, "Cleaned datagram packet and got: $cleanedDatagram")
             val packetFields = cleanedDatagram.split(NEWLINE_SEPARATOR)
@@ -36,6 +39,7 @@ internal class DatagramPacketTransformer {
 
             return packetHeaders
         }
+
         private const val TAG = "DatagramTransformer"
     }
 }

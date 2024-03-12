@@ -23,9 +23,7 @@ internal class SearchPacketParser(
 
     private val date = headerSet.getAndRemove(HeaderKeys.DATE) ?: NOT_AVAILABLE
 
-    private val location: URL by lazy {
-        parseUrl(headerSet.getAndRemove(HeaderKeys.LOCATION))
-    }
+    private val location: URL by lazy { parseUrl(headerSet.getAndRemove(HeaderKeys.LOCATION)) }
 
     private val server: MediaDeviceServer by lazy {
         MediaDeviceServer.parseFromString(headerSet.getAndRemove(HeaderKeys.SERVER))
@@ -41,9 +39,11 @@ internal class SearchPacketParser(
 
     private val bootId = headerSet.getAndRemove(HeaderKeys.BOOT_ID)?.toInt() ?: NOT_AVAILABLE_NUM
 
-    private val configId = headerSet.getAndRemove(HeaderKeys.CONFIG_ID)?.toInt() ?: NOT_AVAILABLE_NUM
+    private val configId =
+        headerSet.getAndRemove(HeaderKeys.CONFIG_ID)?.toInt() ?: NOT_AVAILABLE_NUM
 
-    private val searchPort = headerSet.getAndRemove(HeaderKeys.SEARCH_PORT)?.toInt() ?: NOT_AVAILABLE_NUM
+    private val searchPort =
+        headerSet.getAndRemove(HeaderKeys.SEARCH_PORT)?.toInt() ?: NOT_AVAILABLE_NUM
 
     private val secureLocation: URL by lazy {
         parseUrl(headerSet.getAndRemove(HeaderKeys.SECURE_LOCATION))

@@ -12,14 +12,20 @@ import com.ivanempire.lighthouse.models.packets.UniqueServiceName
  *
  * @param latestComponent The latest ALIVE or BYEBYE packet's parsed [UniqueServiceName] field
  */
-internal fun AbridgedMediaDevice.updateEmbeddedComponent(latestComponent: UniqueServiceName): AbridgedMediaDevice {
+internal fun AbridgedMediaDevice.updateEmbeddedComponent(
+    latestComponent: UniqueServiceName
+): AbridgedMediaDevice {
     return when (latestComponent) {
         is EmbeddedDevice -> {
-            val updatedDeviceList = this.deviceList.filterNot { it.deviceType == latestComponent.deviceType } + latestComponent
+            val updatedDeviceList =
+                this.deviceList.filterNot { it.deviceType == latestComponent.deviceType } +
+                    latestComponent
             this.copy(deviceList = updatedDeviceList)
         }
         is EmbeddedService -> {
-            val updatedServiceList = this.serviceList.filterNot { it.serviceType == latestComponent.serviceType } + latestComponent
+            val updatedServiceList =
+                this.serviceList.filterNot { it.serviceType == latestComponent.serviceType } +
+                    latestComponent
             this.copy(serviceList = updatedServiceList)
         }
         else -> this
@@ -32,14 +38,19 @@ internal fun AbridgedMediaDevice.updateEmbeddedComponent(latestComponent: Unique
  *
  * @param latestComponent The latest BYEBYE packet's parsed [UniqueServiceName] field
  */
-internal fun AbridgedMediaDevice.removeEmbeddedComponent(latestComponent: UniqueServiceName): AbridgedMediaDevice {
+internal fun AbridgedMediaDevice.removeEmbeddedComponent(
+    latestComponent: UniqueServiceName
+): AbridgedMediaDevice {
     return when (latestComponent) {
-        is EmbeddedDevice -> this.copy(
-            deviceList = deviceList.filterNot { it.deviceType == latestComponent.deviceType },
-        )
-        is EmbeddedService -> this.copy(
-            serviceList = serviceList.filterNot { it.serviceType == latestComponent.serviceType },
-        )
+        is EmbeddedDevice ->
+            this.copy(
+                deviceList = deviceList.filterNot { it.deviceType == latestComponent.deviceType },
+            )
+        is EmbeddedService ->
+            this.copy(
+                serviceList =
+                    serviceList.filterNot { it.serviceType == latestComponent.serviceType },
+            )
         else -> this
     }
 }

@@ -4,9 +4,7 @@ import com.ivanempire.lighthouse.core.LighthouseState
 import com.ivanempire.lighthouse.models.packets.MediaPacket
 import java.net.DatagramPacket
 
-/**
- * Starting point for consumers to implement their own logging systems.
- */
+/** Starting point for consumers to implement their own logging systems. */
 abstract class LighthouseLogger {
 
     /**

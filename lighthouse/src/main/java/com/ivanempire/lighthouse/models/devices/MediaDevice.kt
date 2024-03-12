@@ -13,8 +13,8 @@ import java.util.UUID
 abstract class MediaDevice
 
 /**
- * A specific version of a [MediaDevice] that is built from SSDP discovery information. This is
- * what Lighthouse will send to users after it has discovered devices
+ * A specific version of a [MediaDevice] that is built from SSDP discovery information. This is what
+ * Lighthouse will send to users after it has discovered devices
  *
  * @param uuid The unique identifier of this device
  * @param location The URL which can be called to get the complete XML description of this device
@@ -70,10 +70,11 @@ open class DetailedMediaDevice(
 ) : MediaDevice()
 
 /**
- * The root media device, populated when an [AbridgedMediaDevice] calls the XML description
- * endpoint to get complete information about itself. Contains all of the information obtained
- * from the XML information in a parsed format. All fields are identical to ones described in the
+ * The root media device, populated when an [AbridgedMediaDevice] calls the XML description endpoint
+ * to get complete information about itself. Contains all of the information obtained from the XML
+ * information in a parsed format. All fields are identical to ones described in the
  * [DetailedEmbeddedMediaService], except for two.
+ *
  * @param deviceList The list of embedded devices found on this root device
  * @param presentationUrl The presentation URL of this root device
  */
@@ -91,15 +92,27 @@ data class RootMediaDevice(
     override val serviceList: List<DetailedEmbeddedMediaService>?,
     val deviceList: List<DetailedEmbeddedMediaDevice>?,
     val presentationUrl: URL?,
-) : DetailedMediaDevice(
-    deviceType, friendlyName, manufacturer, manufacturerURL, modelDescription, modelName, modelNumber, modelUrl, serialNumber, udn, serviceList,
-)
+) :
+    DetailedMediaDevice(
+        deviceType,
+        friendlyName,
+        manufacturer,
+        manufacturerURL,
+        modelDescription,
+        modelName,
+        modelNumber,
+        modelUrl,
+        serialNumber,
+        udn,
+        serviceList,
+    )
 
 /**
  * The embedded media device, populated when an [AbridgedMediaDevice] calls the XML description
- * endpoint to get complete information about itself. Contains all of the information obtained
- * from the XML information in a parsed format. All fields are identical to ones described in the
+ * endpoint to get complete information about itself. Contains all of the information obtained from
+ * the XML information in a parsed format. All fields are identical to ones described in the
  * [DetailedEmbeddedMediaService], except for one.
+ *
  * @param upc Universal product code
  */
 data class DetailedEmbeddedMediaDevice(
@@ -115,6 +128,17 @@ data class DetailedEmbeddedMediaDevice(
     override val udn: UUID,
     val upc: Int?,
     override val serviceList: List<DetailedEmbeddedMediaService>?,
-) : DetailedMediaDevice(
-    deviceType, friendlyName, manufacturer, manufacturerURL, modelDescription, modelName, modelNumber, modelUrl, serialNumber, udn, serviceList,
-)
+) :
+    DetailedMediaDevice(
+        deviceType,
+        friendlyName,
+        manufacturer,
+        manufacturerURL,
+        modelDescription,
+        modelName,
+        modelNumber,
+        modelUrl,
+        serialNumber,
+        udn,
+        serviceList,
+    )

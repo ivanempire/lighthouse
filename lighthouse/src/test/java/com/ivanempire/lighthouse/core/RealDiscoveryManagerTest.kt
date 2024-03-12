@@ -3,6 +3,7 @@ package com.ivanempire.lighthouse.core
 import com.ivanempire.lighthouse.models.devices.AbridgedMediaDevice
 import com.ivanempire.lighthouse.parsers.TestUtils.generateAlivePacket
 import com.ivanempire.lighthouse.socket.SocketListener
+import java.util.UUID
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
@@ -11,7 +12,6 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito
-import java.util.UUID
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class RealDiscoveryManagerTest {
@@ -23,11 +23,12 @@ class RealDiscoveryManagerTest {
 
     @Before
     fun setup() = runTest {
-        sut = RealDiscoveryManager(
-            lighthouseState,
-            mockedSocketListener,
-            null,
-        )
+        sut =
+            RealDiscoveryManager(
+                lighthouseState,
+                mockedSocketListener,
+                null,
+            )
     }
 
     @Test

@@ -37,8 +37,8 @@ jobs:
           echo sonatypeUrl=${SONATYPE_URL} >> ~/.gradle/gradle.properties
           echo sonatypeUsername=${SONATYPE_USERNAME} >> ~/.gradle/gradle.properties
           cat ~/.gradle/gradle.properties
-      - name: Run lint checks on library module
-        run: ./gradlew :lighthouse:ktlintCheck
+#      - name: Run lint checks on library module
+#        run: ./gradlew :lighthouse:ktlintCheck
       - name: Unit test the library module
         run: ./gradlew :lighthouse:test
       - name: Build release version of library

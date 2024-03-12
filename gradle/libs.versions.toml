@@ -30,6 +30,3 @@ compose-activity = { module = "androidx.activity:activity-compose", version.ref 
 # Testing dependencies
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito-core" }
 testing-junit = { module = "junit:junit", version.ref = "junit" }
-
-[plugins]
-ktlint = "org.jlleitschuh.gradle.ktlint:12.1.0"

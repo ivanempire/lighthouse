@@ -1,5 +1,5 @@
 [versions]
-gradle = "8.2.2"
+gradle = "8.3.0"
 maven = "0.26.0"
 junit = "4.13.2"
 kotlin = "1.8.10"
@@ -8,7 +8,7 @@ runtime = "2.7.0"
 compose = "1.8.2"
 androidx = "1.12.0"
 coroutines = "1.7.3"
-compose-bom = "2024.01.00"
+compose-bom = "2024.02.02"
 
 [libraries]
 # Core Gradle dependencies

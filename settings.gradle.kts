@@ -14,7 +14,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Lighthouse"
+rootProject.name = "lighthouse"
 
 include(":lighthouse")
 include(":demo")

@@ -20,6 +20,8 @@ interface LighthouseClient {
 
         private var retryCount = 1
 
+        private var shouldPersist = false
+
         private var logger: LighthouseLogger? = null
 
         private val wifiManager =
@@ -36,8 +38,11 @@ interface LighthouseClient {
             this.retryCount += retryCount
         }
 
+        fun setShouldPersist(shouldPersist: Boolean) = apply { this.shouldPersist = shouldPersist }
+
         /**
-         * Specify
+         * Specify a custom implementation of [LighthouseLogger] in order to log events from the
+         * library at the consumer level
          *
          * @param logger Custom implementation of [LighthouseLogger]
          */
@@ -48,6 +53,7 @@ interface LighthouseClient {
 
             val discoveryManager =
                 RealDiscoveryManager(
+                    shouldPersist,
                     LighthouseState(logger),
                     socketListener,
                     logger,

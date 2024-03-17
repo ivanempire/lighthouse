@@ -26,6 +26,7 @@ import kotlinx.coroutines.isActive
  *   the network
  */
 internal class RealDiscoveryManager(
+    private val shouldPersist: Boolean,
     private val lighthouseState: LighthouseState,
     private val multicastSocketListener: SocketListener,
     private val logger: LighthouseLogger? = null,
@@ -35,6 +36,9 @@ internal class RealDiscoveryManager(
     override fun createNewDeviceFlow(
         searchRequest: SearchRequest
     ): Flow<List<AbridgedMediaDevice>> {
+        if (!shouldPersist) {
+            lighthouseState.resetDeviceList()
+        }
         return multicastSocketListener
             .listenForPackets(searchRequest)
             .mapNotNull { DatagramPacketTransformer(it, logger) }

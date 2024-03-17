@@ -25,6 +25,10 @@ internal class LighthouseState(private val logger: LighthouseLogger? = null) {
     private val backingDeviceList = MutableStateFlow<List<AbridgedMediaDevice>>(emptyList())
     val deviceList: StateFlow<List<AbridgedMediaDevice>> = backingDeviceList.asStateFlow()
 
+    fun resetDeviceList() {
+        backingDeviceList.value = emptyList()
+    }
+
     /**
      * Delegates all the latest incoming [MediaPacket] instances to the relevant parsing methods
      *
@@ -56,8 +60,10 @@ internal class LighthouseState(private val logger: LighthouseLogger? = null) {
         val targetIndex = updatedList.indexOfFirst { it.uuid == latestPacket.usn.uuid }
 
         val targetComponent = latestPacket.usn
-        //        logger?.logStateMessage(TAG, "Parsing ALIVE packet targeting $targetComponent on
-        // device $targetDevice")
+        logger?.logStateMessage(
+            TAG,
+            "Parsing ALIVE packet targeting $targetComponent on device list index $targetIndex"
+        )
 
         // Create a new device since we haven't seen it yet
         if (targetIndex != -1) {
@@ -100,8 +106,10 @@ internal class LighthouseState(private val logger: LighthouseLogger? = null) {
         val updatedList = backingDeviceList.value.toMutableList()
         val targetIndex = updatedList.indexOfFirst { it.uuid == latestPacket.usn.uuid }
 
-        // logger?.logStateMessage(TAG, "Parsing UPDATE packet targeting $targetComponent on device
-        // ${updatedDeviceList.getOrNull(targetIndex)}")
+        logger?.logStateMessage(
+            TAG,
+            "Parsing UPDATE packet targeting $targetComponent on device list index $targetIndex"
+        )
 
         val updatedDevice =
             if (targetIndex == -1) {
@@ -147,6 +155,7 @@ internal class LighthouseState(private val logger: LighthouseLogger? = null) {
             updatedList.add(updatedDevice)
         }
 
+        logger?.logStateMessage(TAG, "Updating device list with: $updatedList")
         backingDeviceList.value = updatedList
     }
 

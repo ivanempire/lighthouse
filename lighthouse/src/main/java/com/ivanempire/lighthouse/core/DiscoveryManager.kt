@@ -19,8 +19,8 @@ internal interface DiscoveryManager {
     fun createNewDeviceFlow(searchRequest: SearchRequest): Flow<List<AbridgedMediaDevice>>
 
     /**
-     * Creates a [Flow] of a list of [AbridgedMediaDevice] instances that have not received any
-     * SSDP packets in the last [AbridgedMediaDevice.cache] seconds. These will be removed from the
+     * Creates a [Flow] of a list of [AbridgedMediaDevice] instances that have not received any SSDP
+     * packets in the last [AbridgedMediaDevice.cache] seconds. These will be removed from the
      * library's device list when this flow is combined with [createNewDeviceFlow].
      *
      * @return [Flow] of a list of stale [AbridgedMediaDevice] instances

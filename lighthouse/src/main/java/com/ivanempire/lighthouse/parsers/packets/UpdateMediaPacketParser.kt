@@ -19,9 +19,7 @@ internal class UpdateMediaPacketParser(
         MediaHost.parseFromString(headerSet.getAndRemove(HeaderKeys.HOST))
     }
 
-    private val location: URL by lazy {
-        parseUrl(headerSet.getAndRemove(HeaderKeys.LOCATION))
-    }
+    private val location: URL by lazy { parseUrl(headerSet.getAndRemove(HeaderKeys.LOCATION)) }
 
     private val notificationType: NotificationType by lazy {
         NotificationType(headerSet.getAndRemove(HeaderKeys.NOTIFICATION_TYPE))
@@ -33,11 +31,14 @@ internal class UpdateMediaPacketParser(
 
     private val bootId = headerSet.getAndRemove(HeaderKeys.BOOT_ID)?.toInt() ?: NOT_AVAILABLE_NUM
 
-    private val configId = headerSet.getAndRemove(HeaderKeys.CONFIG_ID)?.toInt() ?: NOT_AVAILABLE_NUM
+    private val configId =
+        headerSet.getAndRemove(HeaderKeys.CONFIG_ID)?.toInt() ?: NOT_AVAILABLE_NUM
 
-    private val nextBootId = headerSet.getAndRemove(HeaderKeys.NEXT_BOOT_ID)?.toInt() ?: NOT_AVAILABLE_NUM
+    private val nextBootId =
+        headerSet.getAndRemove(HeaderKeys.NEXT_BOOT_ID)?.toInt() ?: NOT_AVAILABLE_NUM
 
-    private val searchPort = headerSet.getAndRemove(HeaderKeys.SEARCH_PORT)?.toInt() ?: NOT_AVAILABLE_NUM
+    private val searchPort =
+        headerSet.getAndRemove(HeaderKeys.SEARCH_PORT)?.toInt() ?: NOT_AVAILABLE_NUM
 
     private val secureLocation: URL by lazy {
         parseUrl(headerSet.getAndRemove(HeaderKeys.SECURE_LOCATION))

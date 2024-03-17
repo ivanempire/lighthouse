@@ -6,17 +6,15 @@ import com.ivanempire.lighthouse.models.Constants.SERVICE_MARKER
 import com.ivanempire.lighthouse.models.Constants.UPNP_SCHEMA_MARKER
 import com.ivanempire.lighthouse.models.Constants.UUID_MARKER
 
-/**
- * Wrapper class around an SSDP packet's USN field.
- */
+/** Wrapper class around an SSDP packet's USN field. */
 interface UniqueServiceName {
     val uuid: String
 
     companion object {
         /**
-         * This parses the string value and figures out if the packet is intended to update
-         * the root device, an embedded device, or an embedded service. The
-         * decision is made based on key markers present in the raw string
+         * This parses the string value and figures out if the packet is intended to update the root
+         * device, an embedded device, or an embedded service. The decision is made based on key
+         * markers present in the raw string
          *
          * @param rawValue The value provided by the USN header
          */

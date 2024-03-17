@@ -12,9 +12,9 @@ import java.net.URL
 
 /**
  * Each SSDP packet parser needs to implement this class. There are some common functions, like
- * [parseCacheControl] and [parseUrl] which help extract shared information. This class takes in
- * the valid header set and figures out which parser to invoke in accordance to the [NotificationSubtype]
- * field.
+ * [parseCacheControl] and [parseUrl] which help extract shared information. This class takes in the
+ * valid header set and figures out which parser to invoke in accordance to the
+ * [NotificationSubtype] field.
  */
 internal abstract class MediaPacketParser {
 
@@ -24,7 +24,8 @@ internal abstract class MediaPacketParser {
      * Parses the XML description endpoint URL from the [HeaderKeys.LOCATION] packet field
      *
      * @param rawValue Raw string value of the XML endpoint obtained from the media packet
-     * @return Returns URL of the XML endpoint, or a loopback value if [MalformedURLException] is thrown
+     * @return Returns URL of the XML endpoint, or a loopback value if [MalformedURLException] is
+     *   thrown
      */
     internal fun parseUrl(rawValue: String?): URL {
         return try {
@@ -61,18 +62,23 @@ internal abstract class MediaPacketParser {
                 return SearchPacketParser(packetHeaders).parseMediaPacket()
             } else {
                 // If this is not a search response packet, determine type by the NTS field
-                val notificationSubtype = NotificationSubtype.getByRawValue(
-                    packetHeaders.getAndRemove(HeaderKeys.NOTIFICATION_SUBTYPE),
-                )
-                val packetParser = when (notificationSubtype) {
-                    NotificationSubtype.ALIVE -> AliveMediaPacketParser(packetHeaders)
-                    NotificationSubtype.UPDATE -> UpdateMediaPacketParser(packetHeaders)
-                    NotificationSubtype.BYEBYE -> ByeByeMediaPacketParser(packetHeaders)
-                    else -> {
-                        logger?.logErrorMessage(TAG, "Received an invalid NotificationSubtype: $notificationSubtype")
-                        null
+                val notificationSubtype =
+                    NotificationSubtype.getByRawValue(
+                        packetHeaders.getAndRemove(HeaderKeys.NOTIFICATION_SUBTYPE),
+                    )
+                val packetParser =
+                    when (notificationSubtype) {
+                        NotificationSubtype.ALIVE -> AliveMediaPacketParser(packetHeaders)
+                        NotificationSubtype.UPDATE -> UpdateMediaPacketParser(packetHeaders)
+                        NotificationSubtype.BYEBYE -> ByeByeMediaPacketParser(packetHeaders)
+                        else -> {
+                            logger?.logErrorMessage(
+                                TAG,
+                                "Received an invalid NotificationSubtype: $notificationSubtype"
+                            )
+                            null
+                        }
                     }
-                }
 
                 val parsedPacket = packetParser?.parseMediaPacket()
                 return if (parsedPacket != null) {
@@ -85,6 +91,7 @@ internal abstract class MediaPacketParser {
                 }
             }
         }
+
         private const val TAG = "MediaPacketParser"
     }
 }

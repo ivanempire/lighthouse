@@ -1,4 +1,5 @@
 [versions]
+ktfmt = "0.17.0"
 gradle = "8.3.0"
 maven = "0.26.0"
 junit = "4.13.2"
@@ -32,4 +33,4 @@ mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito-cor
 testing-junit = { module = "junit:junit", version.ref = "junit" }
 
 [plugins]
-ktlint = "org.jlleitschuh.gradle.ktlint:12.1.0"
+ktfmt = { id = "com.ncorti.ktfmt.gradle", version.ref = "ktfmt" }

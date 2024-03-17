@@ -3,9 +3,7 @@ package com.ivanempire.lighthouse.models.search
 import java.net.DatagramPacket
 import java.net.InetAddress
 
-/**
- * All SSDP search requests conform to this interface for Lighthouse to use
- */
+/** All SSDP search requests conform to this interface for Lighthouse to use */
 interface SearchRequest {
 
     /**

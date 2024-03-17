@@ -19,9 +19,10 @@ internal enum class NotificationSubtype(val rawString: String) {
                 null
             } else {
                 values().firstOrNull {
-                    it.rawString == rawValue.uppercase(
-                        Locale.getDefault(),
-                    )
+                    it.rawString ==
+                        rawValue.uppercase(
+                            Locale.getDefault(),
+                        )
                 }
             }
         }

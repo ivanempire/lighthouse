@@ -28,7 +28,6 @@ object TestUtils {
      * @param embeddedServices List of [EmbeddedService] instances to add to the media device
      * @param cache TTL in seconds of the media device
      * @param latestTimestamp Timestamp of the latest received media packet targeting this device
-     *
      * @return An instance of [AbridgedMediaDevice] to use during unit testing
      */
     fun generateMediaDevice(
@@ -55,9 +54,7 @@ object TestUtils {
         )
     }
 
-    /**
-     * Generates an instance of [AliveMediaPacket]
-     */
+    /** Generates an instance of [AliveMediaPacket] */
     internal fun generateAlivePacket(
         host: MediaHost = MediaHost(InetAddress.getByName("239.255.255.250"), 1900),
         cache: Int = 1900,
@@ -84,9 +81,7 @@ object TestUtils {
         )
     }
 
-    /**
-     * Generates an instance of [UpdateMediaPacket]
-     */
+    /** Generates an instance of [UpdateMediaPacket] */
     internal fun generateUpdatePacket(
         host: MediaHost = MediaHost(InetAddress.getByName("239.255.255.250"), 1900),
         location: URL = URL("http://192.168.2.50:58121/"),
@@ -110,9 +105,7 @@ object TestUtils {
         )
     }
 
-    /**
-     * Generates an instance of [ByeByeMediaPacket]
-     */
+    /** Generates an instance of [ByeByeMediaPacket] */
     internal fun generateByeByePacket(
         host: MediaHost = MediaHost(InetAddress.getByName("239.255.255.250"), 1900),
         deviceUUID: String,
@@ -136,7 +129,6 @@ object TestUtils {
      * @param deviceUUID The device [UUID] to target
      * @param identifier The name of the component to create
      * @param version The version string of the component to create
-     *
      * @return An instance of [UniqueServiceName] to use in unit testing
      */
     internal inline fun <reified T : UniqueServiceName> generateUSN(
@@ -161,9 +153,10 @@ object TestUtils {
         }
     }
 
-    private val SERVER_LIST = listOf(
-        MediaDeviceServer("Windows", "NT/5.0,", "UPnP/1.0"),
-        MediaDeviceServer("N/A", "N/A", "N/A"),
-        MediaDeviceServer("Linux/3.18.71+", "UPnP/1.0", "GUPnP/1.0.5"),
-    )
+    private val SERVER_LIST =
+        listOf(
+            MediaDeviceServer("Windows", "NT/5.0,", "UPnP/1.0"),
+            MediaDeviceServer("N/A", "N/A", "N/A"),
+            MediaDeviceServer("Linux/3.18.71+", "UPnP/1.0", "GUPnP/1.0.5"),
+        )
 }

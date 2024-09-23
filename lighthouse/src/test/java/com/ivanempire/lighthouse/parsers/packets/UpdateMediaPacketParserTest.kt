@@ -51,11 +51,7 @@ class UpdateMediaPacketParserTest {
             parsedPacket.notificationType,
         )
         assertEquals(
-            EmbeddedService(
-                "b9783ad2-d548-9793-0eb9-42db373ade07",
-                "SwitchPower",
-                "1",
-            ),
+            EmbeddedService("b9783ad2-d548-9793-0eb9-42db373ade07", "SwitchPower", "1"),
             parsedPacket.usn,
         )
         assertEquals(100, parsedPacket.bootId)
@@ -78,11 +74,7 @@ class UpdateMediaPacketParserTest {
         )
         assertEquals(NotificationSubtype.UPDATE, parsedPacket.notificationSubtype)
         assertEquals(
-            EmbeddedService(
-                "3ddcd1d3-2380-45f5-b069-2c4d54008cf2",
-                "WANPPPConnection",
-                "1",
-            ),
+            EmbeddedService("3ddcd1d3-2380-45f5-b069-2c4d54008cf2", "WANPPPConnection", "1"),
             parsedPacket.usn,
         )
         assertEquals(NotificationSubtype.UPDATE, parsedPacket.notificationSubtype)
@@ -109,11 +101,7 @@ class UpdateMediaPacketParserTest {
             parsedPacket.notificationType,
         )
         assertEquals(
-            EmbeddedService(
-                "b9783ad2-d548-9793-0eb9-42db373ade07",
-                "RenderingControl",
-                "1",
-            ),
+            EmbeddedService("b9783ad2-d548-9793-0eb9-42db373ade07", "RenderingControl", "1"),
             parsedPacket.usn,
         )
         assertEquals(-1, parsedPacket.bootId)
@@ -136,11 +124,7 @@ class UpdateMediaPacketParserTest {
             parsedPacket.notificationType,
         )
         assertEquals(
-            EmbeddedService(
-                "3f8744cd-30bf-4fc9-8a42-bad80ae660c1",
-                "Dimming",
-                "1",
-            ),
+            EmbeddedService("3f8744cd-30bf-4fc9-8a42-bad80ae660c1", "Dimming", "1"),
             parsedPacket.usn,
         )
         assertEquals(50, parsedPacket.bootId)

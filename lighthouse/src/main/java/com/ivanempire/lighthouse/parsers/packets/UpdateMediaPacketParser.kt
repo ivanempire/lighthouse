@@ -11,9 +11,8 @@ import com.ivanempire.lighthouse.models.packets.UpdateMediaPacket
 import java.net.URL
 
 /** Parses incoming ssdp:update media packets */
-internal class UpdateMediaPacketParser(
-    private val headerSet: HashMap<String, String>,
-) : MediaPacketParser() {
+internal class UpdateMediaPacketParser(private val headerSet: HashMap<String, String>) :
+    MediaPacketParser() {
 
     private val host: MediaHost by lazy {
         MediaHost.parseFromString(headerSet.getAndRemove(HeaderKeys.HOST))

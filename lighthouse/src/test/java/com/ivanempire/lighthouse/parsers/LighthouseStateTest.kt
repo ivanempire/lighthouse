@@ -1,12 +1,18 @@
 package com.ivanempire.lighthouse.parsers
 
 import com.ivanempire.lighthouse.core.LighthouseState
+import com.ivanempire.lighthouse.models.devices.MediaDeviceServer
+import com.ivanempire.lighthouse.models.packets.AliveMediaPacket
 import com.ivanempire.lighthouse.models.packets.EmbeddedDevice
 import com.ivanempire.lighthouse.models.packets.EmbeddedService
+import com.ivanempire.lighthouse.models.packets.MediaHost
+import com.ivanempire.lighthouse.models.packets.NotificationType
+import com.ivanempire.lighthouse.models.packets.UniqueServiceName
 import com.ivanempire.lighthouse.parsers.TestUtils.generateAlivePacket
 import com.ivanempire.lighthouse.parsers.TestUtils.generateByeByePacket
 import com.ivanempire.lighthouse.parsers.TestUtils.generateUSN
 import com.ivanempire.lighthouse.parsers.TestUtils.generateUpdatePacket
+import java.net.InetAddress
 import java.net.URL
 import java.util.UUID
 import kotlinx.coroutines.flow.first
@@ -61,7 +67,7 @@ class LighthouseStateTest {
         val ALIVE_PACKET_3 =
             generateAlivePacket(
                 deviceUUID = RANDOM_UUID_2,
-                uniqueServiceName = generateUSN<EmbeddedDevice>(RANDOM_UUID_2)
+                uniqueServiceName = generateUSN<EmbeddedDevice>(RANDOM_UUID_2),
             )
 
         sut.parseMediaPacket(ALIVE_PACKET_3)
@@ -69,6 +75,30 @@ class LighthouseStateTest {
         val actualDevice = sut.deviceList.first()[1]
         assertEquals(1, actualDevice.deviceList.size)
         assertEquals(0, sut.deviceList.first()[0].deviceList.size)
+    }
+
+    @Test
+    fun `given ALIVE packet adjusts embedded components correctly 2`() = runTest {
+        val reviewAlivePacket =
+            AliveMediaPacket(
+                host = MediaHost(InetAddress.getByName("239.255.255.250"), 1900),
+                cache = 3,
+                location = URL("http://192.168.0.132:8080"),
+                notificationType = NotificationType("urn:caffesta.com:pos:testorama:1"),
+                server = MediaDeviceServer("linux/0.0", "UPnP/1.0", "gossdp/0.1"),
+                usn =
+                    UniqueServiceName(
+                        "uuid:4435d15d-fd4a-41d1-bb59-8d0647c9ad6e::urn:caffesta.com:pos:testorama:1"
+                    ),
+                bootId = 100,
+                configId = 100,
+                searchPort = 100,
+                secureLocation = URL("https://192.168.0.132:8080"),
+            )
+
+        sut.parseMediaPacket(reviewAlivePacket)
+        val actualDevice = sut.deviceList.first()[0]
+        println(actualDevice)
     }
 
     @Test
@@ -80,7 +110,7 @@ class LighthouseStateTest {
                 location = URL("http://127.0.0.1:9999/"),
                 bootId = 200,
                 configId = 300,
-                secureLocation = URL("https://127.0.0.1:9999/")
+                secureLocation = URL("https://127.0.0.1:9999/"),
             )
 
         sut.parseMediaPacket(UPDATE_PACKET_1)
@@ -106,7 +136,7 @@ class LighthouseStateTest {
         val UPDATE_PACKET_1 =
             generateUpdatePacket(
                 deviceUUID = RANDOM_UUID_1,
-                uniqueServiceName = generateUSN<EmbeddedDevice>(deviceUUID = RANDOM_UUID_1)
+                uniqueServiceName = generateUSN<EmbeddedDevice>(deviceUUID = RANDOM_UUID_1),
             )
         sut.parseMediaPacket(UPDATE_PACKET_1)
 
@@ -120,13 +150,13 @@ class LighthouseStateTest {
         val ALIVE_PACKET_1 =
             generateAlivePacket(
                 deviceUUID = RANDOM_UUID_1,
-                uniqueServiceName = generateUSN<EmbeddedService>(deviceUUID = RANDOM_UUID_1)
+                uniqueServiceName = generateUSN<EmbeddedService>(deviceUUID = RANDOM_UUID_1),
             )
         val UPDATE_PACKET_1 =
             generateUpdatePacket(
                 deviceUUID = RANDOM_UUID_1,
                 uniqueServiceName =
-                    generateUSN<EmbeddedService>(deviceUUID = RANDOM_UUID_1, version = "4.5")
+                    generateUSN<EmbeddedService>(deviceUUID = RANDOM_UUID_1, version = "4.5"),
             )
 
         sut.parseMediaPacket(ALIVE_PACKET_1)
@@ -160,7 +190,7 @@ class LighthouseStateTest {
         val UPDATE_PACKET_1 =
             generateUpdatePacket(
                 deviceUUID = RANDOM_UUID_1,
-                uniqueServiceName = generateUSN<EmbeddedDevice>(deviceUUID = RANDOM_UUID_1)
+                uniqueServiceName = generateUSN<EmbeddedDevice>(deviceUUID = RANDOM_UUID_1),
             )
 
         sut.parseMediaPacket(ALIVE_PACKET_1)

@@ -1,15 +1,15 @@
 [versions]
-ktfmt = "0.17.0"
-gradle = "8.3.0"
+ktfmt = "0.20.1"
+gradle = "8.5.2"
 maven = "0.26.0"
 junit = "4.13.2"
 kotlin = "1.8.10"
 mockito-core = "5.7.0"
-runtime = "2.7.0"
-compose = "1.8.2"
-androidx = "1.12.0"
+runtime = "2.8.6"
+compose = "1.9.2"
+androidx = "1.13.1"
 coroutines = "1.7.3"
-compose-bom = "2024.02.02"
+compose-bom = "2024.09.02"
 
 [libraries]
 # Core Gradle dependencies

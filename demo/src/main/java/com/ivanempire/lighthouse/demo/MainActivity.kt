@@ -68,13 +68,8 @@ class MainActivity : ComponentActivity() {
             val discoveredDeviceList = viewModel.discoveredDevices.collectAsState()
 
             Column(modifier = Modifier.padding(16.dp)) {
-                LazyColumn(
-                    modifier = Modifier.weight(1f).fillMaxWidth(),
-                ) {
-                    items(
-                        items = discoveredDeviceList.value,
-                        key = { it.uuid },
-                    ) {
+                LazyColumn(modifier = Modifier.weight(1f).fillMaxWidth()) {
+                    items(items = discoveredDeviceList.value, key = { it.uuid }) {
                         DeviceListItem(device = it)
                     }
                 }
@@ -83,14 +78,14 @@ class MainActivity : ComponentActivity() {
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
+                    horizontalArrangement = Arrangement.SpaceEvenly,
                 ) {
                     Button(
                         onClick = {
                             viewModel.stopDiscovery()
                             isDiscoveryRunning.value = false
                         },
-                        enabled = !isDiscoveryRunning.value
+                        enabled = !isDiscoveryRunning.value,
                     ) {
                         Text(text = "Stop discovery")
                     }
@@ -99,7 +94,7 @@ class MainActivity : ComponentActivity() {
                             viewModel.startDiscovery()
                             isDiscoveryRunning.value = true
                         },
-                        enabled = !isDiscoveryRunning.value
+                        enabled = !isDiscoveryRunning.value,
                     ) {
                         Text(text = "Start discovery")
                     }

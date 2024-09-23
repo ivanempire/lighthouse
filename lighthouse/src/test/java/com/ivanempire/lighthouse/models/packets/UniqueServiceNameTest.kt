@@ -10,16 +10,11 @@ class UniqueServiceNameTest {
     fun `given root device USN correctly parses`() {
         val usnString1 = "uuid:709e1cf4-920d-4aa7-8678-6dab1b6c68a9::upnp:rootdevice"
         val usn = UniqueServiceName(usnString1)
-        assertEquals(
-            RootDeviceInformation("709e1cf4-920d-4aa7-8678-6dab1b6c68a9"),
-            usn,
-        )
+        assertEquals(RootDeviceInformation("709e1cf4-920d-4aa7-8678-6dab1b6c68a9"), usn)
 
         val usnString2 = "uuid:66363c8f-408d-47eb-9c5b-9d5301eb93d3::upnp:rootdevice"
         assertEquals(
-            RootDeviceInformation(
-                uuid = "66363c8f-408d-47eb-9c5b-9d5301eb93d3",
-            ),
+            RootDeviceInformation(uuid = "66363c8f-408d-47eb-9c5b-9d5301eb93d3"),
             UniqueServiceName(usnString2),
         )
     }

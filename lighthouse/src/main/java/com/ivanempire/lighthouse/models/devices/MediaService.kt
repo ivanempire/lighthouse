@@ -6,10 +6,7 @@ package com.ivanempire.lighthouse.models.devices
  * @param serviceType The service type that is obtained from SSDP packets or from the XML endpoint
  * @param bootId
  */
-open class MediaService(
-    open val serviceType: String,
-    open val bootId: Int,
-)
+open class MediaService(open val serviceType: String, open val bootId: Int)
 
 /**
  * A specific version of a [MediaService], populated exclusively from the XML description endpoint

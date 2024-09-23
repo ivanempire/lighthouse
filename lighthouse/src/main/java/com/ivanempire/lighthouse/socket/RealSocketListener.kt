@@ -47,7 +47,7 @@ internal class RealSocketListener(
             logger?.logErrorMessage(
                 TAG,
                 "Could finish setting up the multicast socket and group",
-                ex
+                ex,
             )
         }
 

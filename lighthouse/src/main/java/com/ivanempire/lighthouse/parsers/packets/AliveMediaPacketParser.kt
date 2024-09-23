@@ -12,9 +12,8 @@ import com.ivanempire.lighthouse.models.packets.UniqueServiceName
 import java.net.URL
 
 /** Parses incoming ssdp:alive media packets */
-internal class AliveMediaPacketParser(
-    private val headerSet: HashMap<String, String>,
-) : MediaPacketParser() {
+internal class AliveMediaPacketParser(private val headerSet: HashMap<String, String>) :
+    MediaPacketParser() {
 
     private val host: MediaHost by lazy {
         MediaHost.parseFromString(headerSet.getAndRemove(HeaderKeys.HOST))

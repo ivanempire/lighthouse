@@ -45,9 +45,7 @@ class ByeByeMediaPacketParserTest {
             parsedPacket.notificationType,
         )
         assertEquals(
-            RootDeviceInformation(
-                uuid = "3f8744cd-30bf-4fc9-8a42-bad80ae660c1",
-            ),
+            RootDeviceInformation(uuid = "3f8744cd-30bf-4fc9-8a42-bad80ae660c1"),
             parsedPacket.usn,
         )
         assertEquals(NotificationSubtype.BYEBYE, parsedPacket.notificationSubtype)

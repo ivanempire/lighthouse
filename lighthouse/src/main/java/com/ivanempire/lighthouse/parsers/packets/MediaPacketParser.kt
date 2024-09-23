@@ -64,7 +64,7 @@ internal abstract class MediaPacketParser {
                 // If this is not a search response packet, determine type by the NTS field
                 val notificationSubtype =
                     NotificationSubtype.getByRawValue(
-                        packetHeaders.getAndRemove(HeaderKeys.NOTIFICATION_SUBTYPE),
+                        packetHeaders.getAndRemove(HeaderKeys.NOTIFICATION_SUBTYPE)
                     )
                 val packetParser =
                     when (notificationSubtype) {
@@ -74,7 +74,7 @@ internal abstract class MediaPacketParser {
                         else -> {
                             logger?.logErrorMessage(
                                 TAG,
-                                "Received an invalid NotificationSubtype: $notificationSubtype"
+                                "Received an invalid NotificationSubtype: $notificationSubtype",
                             )
                             null
                         }

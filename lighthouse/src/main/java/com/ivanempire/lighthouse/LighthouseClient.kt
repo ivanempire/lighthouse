@@ -52,12 +52,7 @@ interface LighthouseClient {
             val socketListener = RealSocketListener(wifiManager, retryCount, logger)
 
             val discoveryManager =
-                RealDiscoveryManager(
-                    shouldPersist,
-                    LighthouseState(logger),
-                    socketListener,
-                    logger,
-                )
+                RealDiscoveryManager(shouldPersist, LighthouseState(logger), socketListener, logger)
             return RealLighthouseClient(discoveryManager, logger = logger)
         }
     }

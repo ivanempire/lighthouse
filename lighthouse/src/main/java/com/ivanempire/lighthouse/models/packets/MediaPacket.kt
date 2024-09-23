@@ -46,14 +46,7 @@ internal data class AliveMediaPacket(
     override val configId: Int,
     val searchPort: Int?,
     val secureLocation: URL?,
-) :
-    MediaPacket(
-        host,
-        notificationType,
-        usn,
-        bootId,
-        configId,
-    )
+) : MediaPacket(host, notificationType, usn, bootId, configId)
 
 /**
  * The model class representing a parsed ssdp:update packet
@@ -75,14 +68,7 @@ internal data class UpdateMediaPacket(
     val nextBootId: Int,
     val searchPort: Int?,
     val secureLocation: URL?,
-) :
-    MediaPacket(
-        host,
-        notificationType,
-        usn,
-        bootId,
-        configId,
-    )
+) : MediaPacket(host, notificationType, usn, bootId, configId)
 
 /**
  * The model class representing a parsed ssdp:byebye packet
@@ -96,14 +82,7 @@ internal data class ByeByeMediaPacket(
     override val usn: UniqueServiceName,
     override val bootId: Int,
     override val configId: Int,
-) :
-    MediaPacket(
-        host,
-        notificationType,
-        usn,
-        bootId,
-        configId,
-    )
+) : MediaPacket(host, notificationType, usn, bootId, configId)
 
 /**
  * The model class representing a parsed M-SEARCH response packet
@@ -129,11 +108,4 @@ internal data class SearchResponseMediaPacket(
     val searchPort: Int,
     val secureLocation: URL,
     override val host: MediaHost = DEFAULT_MEDIA_HOST,
-) :
-    MediaPacket(
-        host,
-        notificationType,
-        usn,
-        bootId,
-        configId,
-    )
+) : MediaPacket(host, notificationType, usn, bootId, configId)

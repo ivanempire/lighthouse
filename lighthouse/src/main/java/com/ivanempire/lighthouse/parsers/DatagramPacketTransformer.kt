@@ -18,7 +18,7 @@ internal class DatagramPacketTransformer {
     companion object {
         operator fun invoke(
             datagramPacket: DatagramPacket,
-            logger: LighthouseLogger? = null
+            logger: LighthouseLogger? = null,
         ): HashMap<String, String>? {
             val cleanedDatagram = datagramPacket.cleanPacket()
             logger?.logPacketMessage(TAG, "Cleaned datagram packet and got: $cleanedDatagram")

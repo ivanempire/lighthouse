@@ -53,9 +53,7 @@ class AliveMediaPacketParserTest {
         assertEquals(NotificationSubtype.ALIVE, parsedPacket.notificationSubtype)
         assertEquals(NotificationType("upnp:rootdevice"), parsedPacket.notificationType)
         assertEquals(
-            RootDeviceInformation(
-                uuid = "3f8744cd-30bf-4fc9-8a42-bad80ae660c1",
-            ),
+            RootDeviceInformation(uuid = "3f8744cd-30bf-4fc9-8a42-bad80ae660c1"),
             parsedPacket.usn,
         )
         assertEquals(-1, parsedPacket.bootId)
@@ -109,10 +107,7 @@ class AliveMediaPacketParserTest {
         assertEquals(MediaHost(InetAddress.getByName("239.255.255.250"), 1900), parsedPacket.host)
         assertEquals(900, parsedPacket.cache)
         assertEquals(URL("http://127.0.0.1:58122/"), parsedPacket.location)
-        assertEquals(
-            MediaDeviceServer("N/A", "N/A", "N/A"),
-            parsedPacket.server,
-        )
+        assertEquals(MediaDeviceServer("N/A", "N/A", "N/A"), parsedPacket.server)
         assertEquals(NotificationSubtype.ALIVE, parsedPacket.notificationSubtype)
         assertEquals(
             NotificationType("urn:schemas-upnp-org:service:SwitchPower:1"),
@@ -140,10 +135,7 @@ class AliveMediaPacketParserTest {
         assertEquals(MediaHost(InetAddress.getByName("239.255.255.250"), 1900), parsedPacket.host)
         assertEquals(450, parsedPacket.cache)
         assertEquals(URL("http://192.168.2.50:58121/"), parsedPacket.location)
-        assertEquals(
-            MediaDeviceServer("N/A", "N/A", "N/A"),
-            parsedPacket.server,
-        )
+        assertEquals(MediaDeviceServer("N/A", "N/A", "N/A"), parsedPacket.server)
         assertEquals(NotificationSubtype.ALIVE, parsedPacket.notificationSubtype)
         assertEquals(
             NotificationType("urn:schemas-upnp-org:service:Dimming:1"),

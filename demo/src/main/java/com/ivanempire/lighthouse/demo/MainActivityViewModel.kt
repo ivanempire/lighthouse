@@ -11,9 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-class MainActivityViewModel(
-    private val lighthouseClient: LighthouseClient,
-) : ViewModel() {
+class MainActivityViewModel(private val lighthouseClient: LighthouseClient) : ViewModel() {
 
     private var discoveryJob: Job? = null
 

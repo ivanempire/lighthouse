@@ -62,7 +62,7 @@ internal class LighthouseState(private val logger: LighthouseLogger? = null) {
         val targetComponent = latestPacket.usn
         logger?.logStateMessage(
             TAG,
-            "Parsing ALIVE packet targeting $targetComponent on device list index $targetIndex"
+            "Parsing ALIVE packet targeting $targetComponent on device list index $targetIndex",
         )
 
         // Create a new device since we haven't seen it yet
@@ -86,7 +86,7 @@ internal class LighthouseState(private val logger: LighthouseLogger? = null) {
                         secureLocation = latestPacket.secureLocation,
                         latestTimestamp = System.currentTimeMillis(),
                     )
-                    .updateEmbeddedComponent(targetComponent),
+                    .updateEmbeddedComponent(targetComponent)
             )
         }
 
@@ -108,7 +108,7 @@ internal class LighthouseState(private val logger: LighthouseLogger? = null) {
 
         logger?.logStateMessage(
             TAG,
-            "Parsing UPDATE packet targeting $targetComponent on device list index $targetIndex"
+            "Parsing UPDATE packet targeting $targetComponent on device list index $targetIndex",
         )
 
         val updatedDevice =
@@ -179,7 +179,7 @@ internal class LighthouseState(private val logger: LighthouseLogger? = null) {
 
         logger?.logStateMessage(
             TAG,
-            "Parsing BYEBYE packet targeting $targetComponent on device $targetDevice"
+            "Parsing BYEBYE packet targeting $targetComponent on device $targetDevice",
         )
 
         when (latestPacket.usn) {

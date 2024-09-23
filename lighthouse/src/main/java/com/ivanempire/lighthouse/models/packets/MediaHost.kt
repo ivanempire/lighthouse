@@ -10,10 +10,7 @@ import java.net.InetAddress
  * @param address The multicast address
  * @param port The search port
  */
-data class MediaHost(
-    val address: InetAddress,
-    val port: Int,
-) {
+data class MediaHost(val address: InetAddress, val port: Int) {
     companion object {
         internal fun parseFromString(rawValue: String?): MediaHost {
             return if (rawValue == null) {

@@ -60,9 +60,7 @@ interface UniqueServiceName {
  *
  * @param uuid The unique identifier of the root device
  */
-internal data class RootDeviceInformation(
-    override val uuid: String,
-) : UniqueServiceName
+internal data class RootDeviceInformation(override val uuid: String) : UniqueServiceName
 
 /**
  * Data class indicating that the incoming USN is targeting the an embedded device

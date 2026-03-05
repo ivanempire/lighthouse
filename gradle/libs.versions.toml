@@ -1,9 +1,9 @@
 [versions]
 ktfmt = "0.25.0"
-gradle = "8.9.1"
+gradle = "9.0.1"
 maven = "0.26.0"
 junit = "4.13.2"
-kotlin = "1.8.10"
+kotlin = "2.2.10"
 mockito-core = "5.22.0"
 runtime = "2.10.0"
 compose = "1.12.4"
@@ -34,3 +34,8 @@ testing-junit = { module = "junit:junit", version.ref = "junit" }
 
 [plugins]
 ktfmt = { id = "com.ncorti.ktfmt.gradle", version.ref = "ktfmt" }
+android-library = { id = "com.android.library", version.ref = "gradle" }
+android-application = { id = "com.android.application", version.ref = "gradle" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+maven-publish = {id = "com.vanniktech.maven.publish",  version.ref = "maven" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

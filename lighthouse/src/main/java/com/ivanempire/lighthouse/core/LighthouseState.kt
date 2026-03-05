@@ -1,7 +1,7 @@
 package com.ivanempire.lighthouse.core
 
 import com.ivanempire.lighthouse.LighthouseLogger
-import com.ivanempire.lighthouse.models.Constants.NOT_AVAILABLE_CACHE
+import com.ivanempire.lighthouse.models.Constants.DEFAULT_CACHE_SECONDS
 import com.ivanempire.lighthouse.models.devices.AbridgedMediaDevice
 import com.ivanempire.lighthouse.models.packets.AliveMediaPacket
 import com.ivanempire.lighthouse.models.packets.ByeByeMediaPacket
@@ -118,7 +118,7 @@ internal class LighthouseState(private val logger: LighthouseLogger? = null) {
                 AbridgedMediaDevice(
                         uuid = targetComponent.uuid,
                         host = latestPacket.host,
-                        cache = NOT_AVAILABLE_CACHE,
+                        cache = DEFAULT_CACHE_SECONDS,
                         bootId = latestPacket.bootId,
                         mediaDeviceServer = null,
                         configId = latestPacket.configId,

@@ -2,7 +2,7 @@ package com.ivanempire.lighthouse.parsers.packets
 
 import com.ivanempire.lighthouse.LighthouseLogger
 import com.ivanempire.lighthouse.getAndRemove
-import com.ivanempire.lighthouse.models.Constants.NOT_AVAILABLE_CACHE
+import com.ivanempire.lighthouse.models.Constants.DEFAULT_CACHE_SECONDS
 import com.ivanempire.lighthouse.models.Constants.NOT_AVAILABLE_LOCATION
 import com.ivanempire.lighthouse.models.packets.HeaderKeys
 import com.ivanempire.lighthouse.models.packets.MediaPacket
@@ -44,9 +44,9 @@ internal abstract class MediaPacketParser {
     internal fun parseCacheControl(rawValue: String?): Int {
         val maxAgeIndex = rawValue?.indexOf("max-age=")
         return if (maxAgeIndex != -1) {
-            rawValue?.substringAfter("max-age=", "-1")?.trim()?.toInt() ?: NOT_AVAILABLE_CACHE
+            rawValue?.substringAfter("max-age=", "-1")?.trim()?.toInt() ?: DEFAULT_CACHE_SECONDS
         } else {
-            NOT_AVAILABLE_CACHE
+            DEFAULT_CACHE_SECONDS
         }
     }
 

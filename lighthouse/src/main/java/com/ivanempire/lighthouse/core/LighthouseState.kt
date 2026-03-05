@@ -133,9 +133,10 @@ internal class LighthouseState(private val logger: LighthouseLogger? = null) {
                 // server are not affected)
                 val existingDevice = updatedList[targetIndex]
                 val baseUpdatedDevice =
-                    existingDevice.copy(latestTimestamp = System.currentTimeMillis()).apply {
-                        extraHeaders.putAll(latestPacket.extraHeaders)
-                    }
+                    existingDevice.copy(
+                        latestTimestamp = System.currentTimeMillis(),
+                        extraHeaders = existingDevice.extraHeaders + latestPacket.extraHeaders,
+                    )
                 when (targetComponent) {
                     is RootDeviceInformation ->
                         baseUpdatedDevice.copy(

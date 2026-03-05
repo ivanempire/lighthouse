@@ -3,7 +3,6 @@ package com.ivanempire.lighthouse.models.packets
 import com.ivanempire.lighthouse.models.Constants.DEFAULT_MEDIA_HOST
 import com.ivanempire.lighthouse.models.devices.MediaDeviceServer
 import java.net.URL
-import kotlin.collections.HashMap
 
 /**
  * Base class for all SSDP media packets that have come through the multicast socket
@@ -13,7 +12,6 @@ import kotlin.collections.HashMap
  * @param usn The SSDP packet's [UniqueServiceName] parsed field value
  * @param configId The SSDP packet's configuration ID of the specific device
  * @param bootId The SSDP packet's boot ID of the specific device
- * @param extraHeaders Manufacturer-added headers that were parsed in the SSDP packet
  */
 internal sealed class MediaPacket(
     open val host: MediaHost,
@@ -21,8 +19,9 @@ internal sealed class MediaPacket(
     open val usn: UniqueServiceName,
     open val configId: Int,
     open val bootId: Int,
-    val extraHeaders: HashMap<String, String> = hashMapOf(),
-)
+) {
+    open val extraHeaders: Map<String, String> = emptyMap()
+}
 
 /**
  * The model class representing a parsed ssdp:alive packet
@@ -46,6 +45,7 @@ internal data class AliveMediaPacket(
     override val configId: Int,
     val searchPort: Int?,
     val secureLocation: URL?,
+    override val extraHeaders: Map<String, String> = emptyMap(),
 ) : MediaPacket(host, notificationType, usn, bootId, configId)
 
 /**
@@ -68,6 +68,7 @@ internal data class UpdateMediaPacket(
     val nextBootId: Int,
     val searchPort: Int?,
     val secureLocation: URL?,
+    override val extraHeaders: Map<String, String> = emptyMap(),
 ) : MediaPacket(host, notificationType, usn, bootId, configId)
 
 /**
@@ -82,6 +83,7 @@ internal data class ByeByeMediaPacket(
     override val usn: UniqueServiceName,
     override val bootId: Int,
     override val configId: Int,
+    override val extraHeaders: Map<String, String> = emptyMap(),
 ) : MediaPacket(host, notificationType, usn, bootId, configId)
 
 /**

@@ -35,7 +35,7 @@ data class AbridgedMediaDevice(
     val serviceList: List<EmbeddedService> = listOf(),
     val deviceList: List<EmbeddedDevice> = listOf(),
     val latestTimestamp: Long,
-    val extraHeaders: HashMap<String, String> = hashMapOf(),
+    val extraHeaders: Map<String, String> = emptyMap(),
 ) : MediaDevice()
 
 /**

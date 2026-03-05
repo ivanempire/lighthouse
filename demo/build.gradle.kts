@@ -1,9 +1,41 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.plugin.compose")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.compose.compiler)
 }
 
-setupDemoModule(name = "com.ivanempire.lighthouse.demo")
+android {
+    namespace = "com.ivanempire.demo"
+    compileSdk = 36
+
+    defaultConfig {
+        applicationId = "com.ivanempire.demo"
+        minSdk = 26
+        targetSdk = 36
+        versionCode = 1
+        versionName = "1.0"
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildFeatures { compose = true }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
+        }
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    kotlin { compilerOptions { jvmTarget.set(JvmTarget.JVM_17) } }
+}
 
 dependencies {
     // Core Android libraries

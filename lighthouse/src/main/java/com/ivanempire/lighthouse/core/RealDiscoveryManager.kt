@@ -11,8 +11,8 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.isActive
@@ -44,7 +44,7 @@ internal class RealDiscoveryManager(
             .mapNotNull { DatagramPacketTransformer(it, logger) }
             .mapNotNull { MediaPacketParser(it, logger) }
             .onEach { lighthouseState.parseMediaPacket(it) }
-            .flatMapLatest { lighthouseState.deviceList }
+            .map { lighthouseState.deviceList.value }
             .filter { it.isNotEmpty() }
     }
 

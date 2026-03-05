@@ -71,8 +71,8 @@ open class DetailedMediaDevice(
 
 /**
  * The root media device, populated when an [AbridgedMediaDevice] calls the XML description endpoint
- * to get complete information about itself. Contains all of the information obtained from the XML
- * information in a parsed format. All fields are identical to ones described in the
+ * to get complete information about itself. Contains all the information obtained from the XML in
+ * a parsed format. All fields are identical to ones described in the
  * [DetailedEmbeddedMediaService], except for two.
  *
  * @param deviceList The list of embedded devices found on this root device
@@ -109,8 +109,8 @@ data class RootMediaDevice(
 
 /**
  * The embedded media device, populated when an [AbridgedMediaDevice] calls the XML description
- * endpoint to get complete information about itself. Contains all of the information obtained from
- * the XML information in a parsed format. All fields are identical to ones described in the
+ * endpoint to get complete information about itself. Contains all the information obtained from
+ * the XML in a parsed format. All fields are identical to ones described in the
  * [DetailedEmbeddedMediaService], except for one.
  *
  * @param upc Universal product code

@@ -12,34 +12,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project
-        uses: actions/checkout@v2
-      - name: Make Gradle wrapper executable
-        run: chmod +x ./gradlew
-      - uses: actions/setup-java@v3
+        uses: actions/checkout@v6
+      - name: Setup Java
+        uses: actions/setup-java@v5
         with:
           distribution: "zulu"
-          java-version: "17"
-      - name: Restore gradle.properties
-        env:
-          SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
-          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
-          SIGNING_KEY_RING_FILE: ${{ secrets.SIGNING_KEY_RING_FILE }}
-          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
-          SONATYPE_URL: ${{ secrets.SONATYPE_URL }}
-          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
-        shell: bash
-        run: |
-          mkdir -p ~/.gradle/
-          echo signing.keyId=${SIGNING_KEY_ID} >> ~/.gradle/gradle.properties
-          echo signing.password=${SIGNING_KEY_PASSWORD} >> ~/.gradle/gradle.properties
-          echo signing.secretKeyRingFile=${SIGNING_KEY_RING_FILE} >> ~/.gradle/gradle.properties
-          echo sonatypePassword=${SONATYPE_PASSWORD} >> ~/.gradle/gradle.properties
-          echo sonatypeUrl=${SONATYPE_URL} >> ~/.gradle/gradle.properties
-          echo sonatypeUsername=${SONATYPE_USERNAME} >> ~/.gradle/gradle.properties
-          cat ~/.gradle/gradle.properties
-      - name: Run lint checks on entire project
-        run: ./gradlew ktfmtCheck
-      - name: Unit test the library module
-        run: ./gradlew :lighthouse:test
-      - name: Build release version of library
-        run: ./gradlew :lighthouse:assembleRelease
+          java-version: "21"
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+      - name: Build everything
+        run: ./gradlew build

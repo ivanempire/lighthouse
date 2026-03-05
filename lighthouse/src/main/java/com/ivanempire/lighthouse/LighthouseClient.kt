@@ -18,7 +18,7 @@ interface LighthouseClient {
     /** Builder class for the Lighthouse configuration */
     class Builder(context: Context) {
 
-        private var retryCount = 1
+        private var retryCount = 2
 
         private var shouldPersist = false
 
@@ -35,7 +35,7 @@ interface LighthouseClient {
          */
         fun setRetryCount(retryCount: Int) = apply {
             require(retryCount > 0) { IllegalStateException("Retry count must be greater than 0") }
-            this.retryCount += retryCount
+            this.retryCount = retryCount
         }
 
         fun setShouldPersist(shouldPersist: Boolean) = apply { this.shouldPersist = shouldPersist }

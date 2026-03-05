@@ -25,5 +25,5 @@ class MainActivityViewModel(private val lighthouseClient: LighthouseClient) : Vi
             }
     }
 
-    fun stopDiscovery() = runBlocking { discoveryJob?.cancelAndJoin() }
+    fun stopDiscovery() = viewModelScope.launch { discoveryJob?.cancelAndJoin() }
 }

@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = name
+    namespace = "com.ivanempire.lighthouse"
     compileSdkVersion(36)
 
     defaultConfig {

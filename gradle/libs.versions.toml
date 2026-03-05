@@ -1,9 +1,9 @@
 [versions]
 ktfmt = "0.25.0"
-gradle = "9.0.1"
-maven = "0.26.0"
+gradle = "9.1.0"
+maven = "0.36.0"
 junit = "4.13.2"
-kotlin = "2.2.10"
+kotlin = "2.3.10"
 mockito-core = "5.22.0"
 runtime = "2.10.0"
 compose = "1.12.4"

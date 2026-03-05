@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -107,11 +108,11 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DeviceListItem(device: AbridgedMediaDevice) {
-    var currentTime by remember { mutableStateOf(System.currentTimeMillis()) }
+    var currentTime by remember { mutableLongStateOf(System.currentTimeMillis()) }
     val ttl = device.cache - (currentTime - device.latestTimestamp) / 1000
     ListItem(
-        headlineText = { Text(device.location.toString()) },
-        supportingText = { Text(device.uuid) },
+        headlineContent = { Text(device.location.toString()) },
+        supportingContent = { Text(device.uuid) },
         trailingContent = { Text(ttl.toString()) },
     )
     LaunchedEffect(Unit) {

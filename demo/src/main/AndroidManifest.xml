@@ -9,7 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Lighthouse">
         <activity
-            android:name=".MainActivity"
+            android:name="com.ivanempire.lighthouse.demo.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.Lighthouse">
             <intent-filter>

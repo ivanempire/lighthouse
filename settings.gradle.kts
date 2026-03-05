@@ -1,6 +1,13 @@
 pluginManagement {
     repositories {
-        google()
+        mavenLocal()
+        google {
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
         mavenCentral()
         gradlePluginPortal()
     }
@@ -17,4 +24,4 @@ dependencyResolutionManagement {
 rootProject.name = "lighthouse"
 
 include(":lighthouse")
-include(":demo")
+//include(":demo")

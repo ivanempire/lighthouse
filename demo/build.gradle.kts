@@ -1,8 +1,6 @@
-import lighthouse.setupDemoModule
-
 plugins {
     id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.compose")
 }
 
 setupDemoModule(name = "com.ivanempire.lighthouse.demo")

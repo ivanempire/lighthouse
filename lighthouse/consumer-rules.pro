@@ -1,6 +1,4 @@
 # Basic R8 rules for overall project structure
--allowaccessmodification
--flattenpackagehierarchy
 -mergeinterfacesaggressively
 
 # Remove intrinsic assertions

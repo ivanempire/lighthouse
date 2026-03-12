@@ -34,7 +34,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.ivanempire:lighthouse:2.1.1")
+    implementation("com.ivanempire:lighthouse:2.2.1")
 }
 ```
 

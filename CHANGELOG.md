@@ -1,4 +1,18 @@
 # Changelog
+## [2.2.1] - March 11th 2026
+- Removing `flatMapLatest` in favor of simpler `map` method call for `createNewDeviceFlow()`
+- Adjusting mutability on `MediaDevice` `extraHeaders` in favor of `emptyMap()`
+- Bumped target SDK to 36
+- Bumped `ktfmt` to 0.25.0
+- Bumped `mockito-core` to 5.22.0
+- Bumped AndroidX Runtime to 2.10.0
+- Bumped Compose to 1.12.4
+- Bumped AndroidX Core to 1.17.0
+- Bumped Kotlin Coroutines to 1.10.2
+- Bumped Compose BOM to 2026.02.01
+- Upgraded Gradle wrapper to 9.4.0
+- Upgraded Gradle to 9.0.1
+- Removed `buildSrc` logic since the AGP upgrade was frustrating enough. Planning on putting this back in.
 
 ## [2.1.1] - January 2nd 2024
 - Bumped AGP version to 8.2.0

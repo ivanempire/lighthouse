@@ -4,11 +4,12 @@ gradle = "9.1.0"
 junit = "4.13.2"
 kotlin = "2.3.10"
 runtime = "2.10.0"
-compose = "1.12.4"
-androidx = "1.17.0"
+compose = "1.13.0"
+androidx = "1.18.0"
 coroutines = "1.10.2"
-mockito-core = "5.22.0"
-compose-bom = "2026.02.01"
+mockito-core = "5.23.0"
+maven-publish = "0.36.0"
+compose-bom = "2026.03.00"
 
 [libraries]
 material3 = { module = "androidx.compose.material3:material3" }
@@ -25,4 +26,5 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 ktfmt = { id = "com.ncorti.ktfmt.gradle", version.ref = "ktfmt" }
 android-library = { id = "com.android.library", version.ref = "gradle" }
 android-application = { id = "com.android.application", version.ref = "gradle" }
+maven-publish = {id = "com.vanniktech.maven.publish",  version.ref = "maven-publish" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

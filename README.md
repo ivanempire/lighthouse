@@ -48,7 +48,7 @@ To get started with Lighthouse, simply build an instance of `LighthouseClient` a
 val lighthouseClient = LighthouseClient
     .Builder(context)
     .setLogger(object : LighthouseLogger() {...}) // Optional: Setup a custom logging system
-    .setRetryCount(3) // Optional: Retry sending packets 3 times (4 packets will be sent in total)
+    .setRetryCount(3) // Optional: Retry sending packets 3 times
     .build()
 
 suspend fun startDiscovery() {

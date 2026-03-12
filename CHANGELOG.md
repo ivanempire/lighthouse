@@ -2,6 +2,7 @@
 ## [2.2.1] - March 11th 2026
 - Removing `flatMapLatest` in favor of simpler `map` method call for `createNewDeviceFlow()`
 - Adjusting mutability on `MediaDevice` `extraHeaders` in favor of `emptyMap()`
+- `setRetryCount()` is no longer [additive](main/lighthouse/src/main/java/com/ivanempire/lighthouse/LighthouseClient.kt#L38) - silly take on my part years ago.
 - Bumped target SDK to 36
 - Bumped `ktfmt` to 0.25.0
 - Bumped `mockito-core` to 5.22.0

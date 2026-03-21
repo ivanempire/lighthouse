@@ -1,8 +1,8 @@
 [versions]
-ktfmt = "0.25.0"
+ktfmt = "0.26.0"
 gradle = "9.1.0"
 junit = "4.13.2"
-kotlin = "2.3.10"
+kotlin = "2.3.20"
 runtime = "2.10.0"
 compose = "1.13.0"
 androidx = "1.18.0"

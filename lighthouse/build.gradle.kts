@@ -16,28 +16,16 @@ android {
         consumerProguardFiles("consumer-rules.pro")
     }
 
-    buildTypes {
-        getByName("debug") {
-            isMinifyEnabled = false
-        }
-    }
+    buildTypes { getByName("debug") { isMinifyEnabled = false } }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlin {
-        compilerOptions {
-            jvmTarget = JvmTarget.JVM_17
-        }
-    }
+    kotlin { compilerOptions { jvmTarget = JvmTarget.JVM_17 } }
 
-    testOptions {
-        unitTests {
-            isReturnDefaultValues = true
-        }
-    }
+    testOptions { unitTests { isReturnDefaultValues = true } }
 }
 
 dependencies {

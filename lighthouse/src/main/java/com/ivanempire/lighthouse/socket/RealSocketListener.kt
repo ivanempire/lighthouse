@@ -46,9 +46,12 @@ internal class RealSocketListener(
         } catch (ex: Exception) {
             logger?.logErrorMessage(
                 TAG,
-                "Could finish setting up the multicast socket and group",
+                "Could not finish setting up the multicast socket and group",
                 ex,
             )
+            multicastLock.release()
+            multicastSocket.close()
+            throw ex
         }
 
         return multicastSocket

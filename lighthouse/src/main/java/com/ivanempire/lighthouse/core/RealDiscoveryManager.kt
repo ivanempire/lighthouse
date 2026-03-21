@@ -50,12 +50,11 @@ internal class RealDiscoveryManager(
 
     override fun createStaleDeviceFlow(): Flow<List<AbridgedMediaDevice>> {
         return flow {
-                while (currentCoroutineContext().isActive) {
-                    delay(1000)
-                    lighthouseState.parseStaleDevices()
-                    emit(lighthouseState.deviceList.value)
-                }
+            while (currentCoroutineContext().isActive) {
+                delay(1000)
+                lighthouseState.parseStaleDevices()
+                emit(lighthouseState.deviceList.value)
             }
-            .filter { it.isNotEmpty() }
+        }
     }
 }

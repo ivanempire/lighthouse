@@ -62,20 +62,19 @@ internal class RealSocketListener(
         val multicastSocket = setupSocket()
 
         return flow {
-                multicastSocket.use {
-                    val datagramPacketRequest = searchRequest.toDatagramPacket(multicastGroup)
+            multicastSocket.use {
+                val datagramPacketRequest = searchRequest.toDatagramPacket(multicastGroup)
 
-                    repeat(retryCount) { multicastSocket.send(datagramPacketRequest) }
+                repeat(retryCount) { multicastSocket.send(datagramPacketRequest) }
 
-                    while (currentCoroutineContext().isActive) {
-                        val discoveryBuffer = ByteArray(MULTICAST_DATAGRAM_SIZE)
-                        val discoveryDatagram =
-                            DatagramPacket(discoveryBuffer, discoveryBuffer.size)
-                        it.receive(discoveryDatagram)
-                        emit(discoveryDatagram)
-                    }
+                while (currentCoroutineContext().isActive) {
+                    val discoveryBuffer = ByteArray(MULTICAST_DATAGRAM_SIZE)
+                    val discoveryDatagram = DatagramPacket(discoveryBuffer, discoveryBuffer.size)
+                    it.receive(discoveryDatagram)
+                    emit(discoveryDatagram)
                 }
             }
+        }
             .onCompletion { teardownSocket(multicastSocket) }
     }
 

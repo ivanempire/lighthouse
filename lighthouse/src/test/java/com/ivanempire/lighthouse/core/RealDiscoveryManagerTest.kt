@@ -5,10 +5,10 @@ import com.ivanempire.lighthouse.models.devices.AbridgedMediaDevice
 import com.ivanempire.lighthouse.models.search.SearchRequest
 import com.ivanempire.lighthouse.parsers.TestUtils.generateAlivePacket
 import com.ivanempire.lighthouse.socket.SocketListener
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.net.DatagramPacket
 import java.net.MulticastSocket
 import java.util.UUID
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.take
@@ -35,7 +35,9 @@ class RealDiscoveryManagerTest {
 
     @Test
     fun `given shouldPersist false resets device list before discovery`() = runTest {
-        lighthouseState.parseMediaPacket(generateAlivePacket(deviceUUID = UUID.randomUUID().toString()))
+        lighthouseState.parseMediaPacket(
+            generateAlivePacket(deviceUUID = UUID.randomUUID().toString())
+        )
         assertEquals(1, lighthouseState.deviceList.value.size)
 
         buildSut(shouldPersist = false).createNewDeviceFlow(DEFAULT_SEARCH_REQUEST)
@@ -45,7 +47,9 @@ class RealDiscoveryManagerTest {
 
     @Test
     fun `given shouldPersist true preserves device list before discovery`() = runTest {
-        lighthouseState.parseMediaPacket(generateAlivePacket(deviceUUID = UUID.randomUUID().toString()))
+        lighthouseState.parseMediaPacket(
+            generateAlivePacket(deviceUUID = UUID.randomUUID().toString())
+        )
         assertEquals(1, lighthouseState.deviceList.value.size)
 
         buildSut(shouldPersist = true).createNewDeviceFlow(DEFAULT_SEARCH_REQUEST)
@@ -57,10 +61,11 @@ class RealDiscoveryManagerTest {
     fun `given valid ALIVE packet device is parsed and emitted`() = runTest {
         val uuid = UUID.randomUUID().toString()
 
-        val emissions = buildSut(packets = listOf(alivePacket(uuid)))
-            .createNewDeviceFlow(DEFAULT_SEARCH_REQUEST)
-            .take(1)
-            .toList()
+        val emissions =
+            buildSut(packets = listOf(alivePacket(uuid)))
+                .createNewDeviceFlow(DEFAULT_SEARCH_REQUEST)
+                .take(1)
+                .toList()
 
         assertEquals(1, emissions.size)
         assertEquals(uuid, emissions[0][0].uuid)
@@ -71,9 +76,10 @@ class RealDiscoveryManagerTest {
         val uuid1 = UUID.randomUUID().toString()
         val uuid2 = UUID.randomUUID().toString()
 
-        val emissions = buildSut(packets = listOf(alivePacket(uuid1), alivePacket(uuid2)))
-            .createNewDeviceFlow(DEFAULT_SEARCH_REQUEST)
-            .toList()
+        val emissions =
+            buildSut(packets = listOf(alivePacket(uuid1), alivePacket(uuid2)))
+                .createNewDeviceFlow(DEFAULT_SEARCH_REQUEST)
+                .toList()
 
         assertEquals(2, emissions.size)
         assertEquals(1, emissions[0].size)
@@ -84,9 +90,10 @@ class RealDiscoveryManagerTest {
     fun `given BYEBYE packet device is removed from state`() = runTest {
         val uuid = UUID.randomUUID().toString()
 
-        val emissions = buildSut(packets = listOf(alivePacket(uuid), byeByePacket(uuid)))
-            .createNewDeviceFlow(DEFAULT_SEARCH_REQUEST)
-            .toList()
+        val emissions =
+            buildSut(packets = listOf(alivePacket(uuid), byeByePacket(uuid)))
+                .createNewDeviceFlow(DEFAULT_SEARCH_REQUEST)
+                .toList()
 
         assertEquals(1, emissions.size)
         assertEquals(0, lighthouseState.deviceList.value.size)
@@ -96,9 +103,10 @@ class RealDiscoveryManagerTest {
     fun `given malformed packet it is skipped and no emission is produced`() = runTest {
         val uuid = UUID.randomUUID().toString()
 
-        val emissions = buildSut(packets = listOf(malformedPacket(), alivePacket(uuid)))
-            .createNewDeviceFlow(DEFAULT_SEARCH_REQUEST)
-            .toList()
+        val emissions =
+            buildSut(packets = listOf(malformedPacket(), alivePacket(uuid)))
+                .createNewDeviceFlow(DEFAULT_SEARCH_REQUEST)
+                .toList()
 
         assertEquals(1, emissions.size)
         assertEquals(uuid, emissions[0][0].uuid)
@@ -106,9 +114,7 @@ class RealDiscoveryManagerTest {
 
     @Test
     fun `given no packets from socket no emissions are produced`() = runTest {
-        val emissions = buildSut()
-            .createNewDeviceFlow(DEFAULT_SEARCH_REQUEST)
-            .toList()
+        val emissions = buildSut().createNewDeviceFlow(DEFAULT_SEARCH_REQUEST).toList()
 
         assertTrue(emissions.isEmpty())
     }
@@ -116,9 +122,7 @@ class RealDiscoveryManagerTest {
     @Test
     fun `stale flow emits empty list when no devices are present`() = runTest {
         val emissions = mutableListOf<List<AbridgedMediaDevice>>()
-        val job = launch {
-            buildSut().createStaleDeviceFlow().take(1).toList(emissions)
-        }
+        val job = launch { buildSut().createStaleDeviceFlow().take(1).toList(emissions) }
 
         advanceTimeBy(1001)
         job.join()
@@ -130,9 +134,7 @@ class RealDiscoveryManagerTest {
     @Test
     fun `stale flow emits once per 1-second tick`() = runTest {
         val emissions = mutableListOf<List<AbridgedMediaDevice>>()
-        val job = launch {
-            buildSut().createStaleDeviceFlow().take(3).toList(emissions)
-        }
+        val job = launch { buildSut().createStaleDeviceFlow().take(3).toList(emissions) }
 
         advanceTimeBy(3001)
         job.join()
@@ -146,9 +148,7 @@ class RealDiscoveryManagerTest {
         lighthouseState.parseMediaPacket(generateAlivePacket(deviceUUID = uuid, cache = 9999))
 
         val emissions = mutableListOf<List<AbridgedMediaDevice>>()
-        val job = launch {
-            buildSut().createStaleDeviceFlow().take(1).toList(emissions)
-        }
+        val job = launch { buildSut().createStaleDeviceFlow().take(1).toList(emissions) }
 
         advanceTimeBy(1001)
         job.join()
@@ -159,13 +159,13 @@ class RealDiscoveryManagerTest {
 
     @Test
     fun `stale flow removes expired devices from emissions`() = runTest {
-        lighthouseState.parseMediaPacket(generateAlivePacket(deviceUUID = UUID.randomUUID().toString(), cache = -1))
+        lighthouseState.parseMediaPacket(
+            generateAlivePacket(deviceUUID = UUID.randomUUID().toString(), cache = -1)
+        )
         assertEquals(1, lighthouseState.deviceList.value.size)
 
         val emissions = mutableListOf<List<AbridgedMediaDevice>>()
-        val job = launch {
-            buildSut().createStaleDeviceFlow().take(1).toList(emissions)
-        }
+        val job = launch { buildSut().createStaleDeviceFlow().take(1).toList(emissions) }
 
         advanceTimeBy(1001)
         job.join()
@@ -178,13 +178,13 @@ class RealDiscoveryManagerTest {
     fun `stale flow mixed live and expired devices only keeps live ones`() = runTest {
         val liveUuid = UUID.randomUUID().toString()
         lighthouseState.parseMediaPacket(generateAlivePacket(deviceUUID = liveUuid, cache = 9999))
-        lighthouseState.parseMediaPacket(generateAlivePacket(deviceUUID = UUID.randomUUID().toString(), cache = -1))
+        lighthouseState.parseMediaPacket(
+            generateAlivePacket(deviceUUID = UUID.randomUUID().toString(), cache = -1)
+        )
         assertEquals(2, lighthouseState.deviceList.value.size)
 
         val emissions = mutableListOf<List<AbridgedMediaDevice>>()
-        val job = launch {
-            buildSut().createStaleDeviceFlow().take(1).toList(emissions)
-        }
+        val job = launch { buildSut().createStaleDeviceFlow().take(1).toList(emissions) }
 
         advanceTimeBy(1001)
         job.join()
@@ -195,9 +195,7 @@ class RealDiscoveryManagerTest {
 
     @Test
     fun `stale flow stops emitting when coroutine is cancelled`() = runTest {
-        val job = launch {
-            buildSut().createStaleDeviceFlow().collect { }
-        }
+        val job = launch { buildSut().createStaleDeviceFlow().collect {} }
 
         assertTrue(job.isActive)
         job.cancel()
@@ -209,19 +207,21 @@ class RealDiscoveryManagerTest {
     private fun buildSut(
         shouldPersist: Boolean = false,
         packets: List<DatagramPacket> = emptyList(),
-    ) = RealDiscoveryManager(
-        shouldPersist = shouldPersist,
-        lighthouseState = lighthouseState,
-        multicastSocketListener = FakeSocketListener(packets),
-    )
+    ) =
+        RealDiscoveryManager(
+            shouldPersist = shouldPersist,
+            lighthouseState = lighthouseState,
+            multicastSocketListener = FakeSocketListener(packets),
+        )
 
     private fun ssdpPacket(content: String): DatagramPacket {
         val bytes = content.toByteArray()
         return DatagramPacket(bytes, bytes.size)
     }
 
-    private fun alivePacket(uuid: String, cache: Int = 1800): DatagramPacket = ssdpPacket(
-        "NOTIFY * HTTP/1.1\r\n" +
+    private fun alivePacket(uuid: String, cache: Int = 1800): DatagramPacket =
+        ssdpPacket(
+            "NOTIFY * HTTP/1.1\r\n" +
                 "HOST: 239.255.255.250:1900\r\n" +
                 "CACHE-CONTROL: max-age=$cache\r\n" +
                 "LOCATION: http://192.168.1.1:1234/\r\n" +
@@ -230,27 +230,29 @@ class RealDiscoveryManagerTest {
                 "SERVER: Linux/1.0 UPnP/1.0 TestDevice/1.0\r\n" +
                 "USN: uuid:$uuid\r\n" +
                 "BOOTID.UPNP.ORG: 1\r\n" +
-                "CONFIGID.UPNP.ORG: 1\r\n",
-    )
+                "CONFIGID.UPNP.ORG: 1\r\n"
+        )
 
-    private fun byeByePacket(uuid: String): DatagramPacket = ssdpPacket(
-        "NOTIFY * HTTP/1.1\r\n" +
+    private fun byeByePacket(uuid: String): DatagramPacket =
+        ssdpPacket(
+            "NOTIFY * HTTP/1.1\r\n" +
                 "HOST: 239.255.255.250:1900\r\n" +
                 "NT: upnp:rootdevice\r\n" +
                 "NTS: ssdp:byebye\r\n" +
                 "USN: uuid:$uuid\r\n" +
                 "BOOTID.UPNP.ORG: 1\r\n" +
-                "CONFIGID.UPNP.ORG: 1\r\n",
-    )
+                "CONFIGID.UPNP.ORG: 1\r\n"
+        )
 
     private fun malformedPacket(): DatagramPacket = ssdpPacket("NOT A VALID SSDP PACKET")
 
-    private class FakeSocketListener(
-        private val packets: List<DatagramPacket> = emptyList(),
-    ) : SocketListener {
+    private class FakeSocketListener(private val packets: List<DatagramPacket> = emptyList()) :
+        SocketListener {
         override fun setupSocket(): MulticastSocket = throw UnsupportedOperationException()
+
         override fun listenForPackets(searchRequest: SearchRequest): Flow<DatagramPacket> =
             packets.asFlow()
+
         override fun teardownSocket(multicastSocket: MulticastSocket) = Unit
     }
 }

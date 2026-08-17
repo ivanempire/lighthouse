@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.ivanempire.lighthouse"
-    compileSdkVersion(36)
+    compileSdkVersion(37)
 
     defaultConfig {
         minSdk = 23

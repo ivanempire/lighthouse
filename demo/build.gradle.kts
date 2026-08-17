@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace = "com.ivanempire.demo"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.ivanempire.demo"
         minSdk = 26
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 1
         versionName = "1.0"
 

@@ -4,9 +4,9 @@ import com.ivanempire.lighthouse.LighthouseLogger
 import com.ivanempire.lighthouse.getAndRemove
 import com.ivanempire.lighthouse.models.Constants.DEFAULT_CACHE_SECONDS
 import com.ivanempire.lighthouse.models.Constants.NOT_AVAILABLE_LOCATION
-import com.ivanempire.lighthouse.models.packets.HeaderKeys
 import com.ivanempire.lighthouse.models.packets.AliveMediaPacket
 import com.ivanempire.lighthouse.models.packets.ByeByeMediaPacket
+import com.ivanempire.lighthouse.models.packets.HeaderKeys
 import com.ivanempire.lighthouse.models.packets.MediaPacket
 import com.ivanempire.lighthouse.models.packets.NotificationSubtype
 import com.ivanempire.lighthouse.models.packets.SearchResponseMediaPacket
@@ -86,12 +86,16 @@ internal abstract class MediaPacketParser {
 
                 val parsedPacket = packetParser?.parseMediaPacket()
                 return if (parsedPacket != null) {
-                    val result = when (parsedPacket) {
-                        is AliveMediaPacket -> parsedPacket.copy(extraHeaders = packetHeaders.toMap())
-                        is UpdateMediaPacket -> parsedPacket.copy(extraHeaders = packetHeaders.toMap())
-                        is ByeByeMediaPacket -> parsedPacket.copy(extraHeaders = packetHeaders.toMap())
-                        is SearchResponseMediaPacket -> parsedPacket
-                    }
+                    val result =
+                        when (parsedPacket) {
+                            is AliveMediaPacket ->
+                                parsedPacket.copy(extraHeaders = packetHeaders.toMap())
+                            is UpdateMediaPacket ->
+                                parsedPacket.copy(extraHeaders = packetHeaders.toMap())
+                            is ByeByeMediaPacket ->
+                                parsedPacket.copy(extraHeaders = packetHeaders.toMap())
+                            is SearchResponseMediaPacket -> parsedPacket
+                        }
                     logger?.logPacketMessage(TAG, "Parsed SSDP packet as $result")
                     result
                 } else {

@@ -9,7 +9,6 @@ import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 class MainActivityViewModel(private val lighthouseClient: LighthouseClient) : ViewModel() {
 
@@ -19,10 +18,9 @@ class MainActivityViewModel(private val lighthouseClient: LighthouseClient) : Vi
     val discoveredDevices = backingDiscoveredDevices.asStateFlow()
 
     fun startDiscovery() {
-        discoveryJob =
-            viewModelScope.launch {
-                lighthouseClient.discoverDevices().collect { backingDiscoveredDevices.value = it }
-            }
+        discoveryJob = viewModelScope.launch {
+            lighthouseClient.discoverDevices().collect { backingDiscoveredDevices.value = it }
+        }
     }
 
     fun stopDiscovery() = viewModelScope.launch { discoveryJob?.cancelAndJoin() }
